@@ -1,8 +1,18 @@
 package com.mrgg.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.validation.constraints.NotBlank;
+
+@Entity
 public class Juego extends DomainEntity {
+
+    @NotBlank
     private String nombre;
+
+    @NotBlank
     private String descripcion;
+
+    @NotBlank
     private TipoCategoria categoria;
 
     public Juego() {

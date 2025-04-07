@@ -1,7 +1,10 @@
 package com.mrgg.entity;
 
-public class Admin extends Actor {
+import jakarta.persistence.Entity;
 
+@Entity
+public class Admin extends Actor {
+    
     public Admin() {
         super();
     }

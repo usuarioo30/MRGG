@@ -1,27 +1,49 @@
 package com.mrgg.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Actor extends DomainEntity {
-    private int actor_id;
+
+    @NotBlank
     private String nombre;
-    private String correo_electronico;
+
+    @NotBlank
+    @Email
+    private String email;
+    
     private String clave_segura;
+    
     private int chat_id;
+
+    @NotBlank
     private String foto;
+
+    @NotBlank
+    @Column(unique = true)
     private String username;
+
+    @NotBlank
     private String password;
+
+    @NotBlank
+    @Pattern(regexp = "^[6789]\\d{8}$")
     private String telefono;
+    
+    @NotBlank
     private boolean baneado;
+
+    private Roles rol;
 
     public Actor() {
         
-    }
-
-    public int getActor_id() {
-        return actor_id;
-    }
-
-    public void setActor_id(int actor_id) {
-        this.actor_id = actor_id;
     }
 
     public String getNombre() {
@@ -32,12 +54,12 @@ public abstract class Actor extends DomainEntity {
         this.nombre = nombre;
     }
 
-    public String getCorreo_electronico() {
-        return correo_electronico;
+    public String getEmail() {
+        return email;
     }
 
-    public void setCorreo_electronico(String correo_electronico) {
-        this.correo_electronico = correo_electronico;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getClave_segura() {
@@ -94,5 +116,13 @@ public abstract class Actor extends DomainEntity {
 
     public void setBaneado(boolean baneado) {
         this.baneado = baneado;
+    }
+
+    public Roles getRol() {
+        return rol;
+    }
+
+    public void setRol(Roles rol) {
+        this.rol = rol;
     }
 }

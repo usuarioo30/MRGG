@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.mrgg.entity.Evento;
 import com.mrgg.repository.EventoRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class EventoService {
 
@@ -19,6 +21,7 @@ public class EventoService {
         return eventoRepository.save(evento);
     }
 
+    @Transactional
     public Evento updateEvento(Evento eventoU) {
         Evento eventoExistente = eventoRepository.findById(eventoU.getId()).orElse(null);
         if (eventoExistente == null) {
@@ -46,9 +49,9 @@ public class EventoService {
         return eventoRepository.findAll();
     }
 
-    public Optional<Evento> getEventosByCategoria(String categoria) {
-        return eventoRepository.findByCategoria(categoria);
-    }
+    // public Optional<Evento> getEventosByCategoria(String evento) {
+    //     return eventoRepository.findByEvento(evento);
+    // }
 
     // Código sala?
 

@@ -26,7 +26,7 @@ public class UsuarioService {
         }
 
         usuarioExistente.setNombre(usuarioU.getNombre());
-        usuarioExistente.setCorreo_electronico(usuarioU.getCorreo_electronico());
+        usuarioExistente.setEmail(usuarioU.getEmail());
         usuarioExistente.setFoto(usuarioU.getFoto());
         usuarioExistente.setUsername(usuarioU.getUsername());
         usuarioExistente.setPassword(usuarioU.getPassword());

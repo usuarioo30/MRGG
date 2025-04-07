@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import com.mrgg.entity.Juego;
 import com.mrgg.repository.JuegoRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class JuegoService {
 
@@ -16,6 +18,7 @@ public class JuegoService {
         return juegoRepository.save(juego);
     }
 
+    @Transactional
     public Juego updateJuego(Juego juegoU) {
         Juego juegoExistente = juegoRepository.findById(juegoU.getId()).orElse(null);
         if (juegoExistente == null) {

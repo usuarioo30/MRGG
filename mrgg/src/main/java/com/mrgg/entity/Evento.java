@@ -2,11 +2,25 @@ package com.mrgg.entity;
 
 import java.sql.Date;
 
+import jakarta.persistence.Entity;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+
+@Entity
 public class Evento extends DomainEntity {
+    @NotBlank
     private String codigo_sala;
+
+    @Min(0)
     private int num_usuario;
+
+    @NotBlank
     private EstadoEvento estado;
+
+    @NotBlank
     private Date fecha_inicio;
+    
+    @NotBlank
     private String comentario;
 
     public Evento() {
