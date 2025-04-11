@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.mrgg.entity.Admin;
 import com.mrgg.entity.Roles;
 import com.mrgg.repository.AdminRepository;
+import com.mrgg.security.JWTUtils;
 
 import jakarta.transaction.Transactional;
 
@@ -22,6 +23,9 @@ public class AdminService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JWTUtils JWTUtils;
+
     @Transactional
     public Admin saveAdmin(Admin admin) {
         admin.setRol(Roles.ADMIN);
@@ -30,9 +34,8 @@ public class AdminService {
     }
 
     @Transactional
-    public Admin updateAdmin(Integer adminId, Admin adminU) {
-        Admin admin = adminRepository.findById(adminId)
-                .orElseThrow(() -> new IllegalArgumentException("Admin no encontrado"));
+    public Admin updateAdmin(Admin adminU) {
+        Admin admin = JWTUtils.userLogin();
         if (admin != null) {
             admin.setNombre(adminU.getNombre());
             admin.setFoto(adminU.getFoto());
@@ -40,7 +43,7 @@ public class AdminService {
             admin.setTelefono(adminU.getTelefono());
             admin.setUsername(adminU.getUsername());
             admin.setPassword(adminU.getPassword());
-            admin.setBaneado(adminU.getBaneado());
+
             return adminRepository.save(admin);
         }
         return null;
@@ -59,13 +62,13 @@ public class AdminService {
     }
 
     @Transactional
-    public boolean deleteAdmin(Integer adminId) {
-        Admin admin = adminRepository.findById(adminId)
-                .orElseThrow(() -> new IllegalArgumentException("Admin no encontrado"));
-
-        adminRepository.deleteById(admin.getId());
-
-        return true;
+    public boolean deleteAdmin() {
+        Admin admin = JWTUtils.userLogin();
+        if (admin != null) {
+            adminRepository.deleteById(admin.getId());
+            return true;
+        }
+        return false;
     }
 
     public void adminPorDefecto() {

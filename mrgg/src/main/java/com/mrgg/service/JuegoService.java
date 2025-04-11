@@ -1,5 +1,7 @@
 package com.mrgg.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,5 +40,9 @@ public class JuegoService {
 
     public Juego getJuegoById(int id) {
         return juegoRepository.findById(id).orElse(null);
+    }
+
+    public List<Juego> getAllJuegos() {
+        return juegoRepository.findAll();
     }
 }

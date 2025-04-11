@@ -1,8 +1,11 @@
 package com.mrgg.entity;
 
 import java.sql.Date;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
@@ -19,9 +22,16 @@ public class Evento extends DomainEntity {
 
     @NotBlank
     private Date fecha_inicio;
-    
+
     @NotBlank
     private String comentario;
+
+    @OneToMany
+    private Set<Solicitud> solicitudes;
+
+    // Relacion muchos a uno con juego
+    @ManyToOne
+    private Juego juego;
 
     public Evento() {
         super();
@@ -65,5 +75,21 @@ public class Evento extends DomainEntity {
 
     public void setComentario(String comentario) {
         this.comentario = comentario;
+    }
+
+    public Set<Solicitud> getSolicitudes() {
+        return solicitudes;
+    }
+
+    public void setSolicitudes(Set<Solicitud> solicitudes) {
+        this.solicitudes = solicitudes;
+    }
+
+    public Juego getJuego() {
+        return juego;
+    }
+
+    public void setJuego(Juego juego) {
+        this.juego = juego;
     }
 }

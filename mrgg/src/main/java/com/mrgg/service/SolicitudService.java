@@ -1,5 +1,6 @@
 package com.mrgg.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +55,9 @@ public class SolicitudService {
 
     public Solicitud getSolicitudById(int id) {
         return solicitudRepository.findById(id).orElse(null);
+    }
+
+    public List<Solicitud> getAllSolicitudes() {
+        return solicitudRepository.findAll();
     }
 }

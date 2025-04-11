@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mrgg.entity.Evento;
+import com.mrgg.entity.Usuario;
 import com.mrgg.repository.EventoRepository;
+import com.mrgg.security.JWTUtils;
 
 import jakarta.transaction.Transactional;
 
@@ -17,9 +19,8 @@ public class EventoService {
     @Autowired
     private EventoRepository eventoRepository;
 
-    public Evento saveEvento(Evento evento) {
-        return eventoRepository.save(evento);
-    }
+    @Autowired
+    private JWTUtils jwtUtils;
 
     @Transactional
     public Evento updateEvento(Evento eventoU) {
@@ -37,8 +38,18 @@ public class EventoService {
         return eventoRepository.save(eventoU);
     }
 
-    public void deleteEvento(int id) {
-        eventoRepository.deleteById(id);
+    @Transactional
+    public boolean deleteEvento(Integer id) {
+        Usuario usuario = jwtUtils.userLogin();
+        Optional<Evento> evento = eventoRepository.findById(id);
+
+        if (evento.isPresent()) {
+            if (usuario.getEventos().contains(evento.get())) {
+                eventoRepository.deleteById(id);
+                return true;
+            }
+        }
+        return false;
     }
 
     public Evento getEventoById(int id) {
@@ -48,11 +59,5 @@ public class EventoService {
     public List<Evento> getAllEventos() {
         return eventoRepository.findAll();
     }
-
-    // public Optional<Evento> getEventosByCategoria(String evento) {
-    //     return eventoRepository.findByEvento(evento);
-    // }
-
-    // Código sala?
 
 }
