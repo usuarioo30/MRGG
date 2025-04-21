@@ -1,10 +1,8 @@
 package com.mrgg.controller;
 
-import java.net.http.HttpHeaders;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mrgg.entity.Usuario;
-import com.mrgg.repository.UsuarioRepository;
 import com.mrgg.service.UsuarioService;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,14 +25,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RequestMapping("/usuario")
 public class UsuarioController {
 
-    private final UsuarioRepository usuarioRepository;
 
     @Autowired
     private UsuarioService usuarioService;
-
-    UsuarioController(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-    }
 
     @GetMapping
     @ApiResponses(value = {

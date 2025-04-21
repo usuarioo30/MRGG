@@ -59,7 +59,10 @@ public class SecurityConfiguration {
 
 				// EVENTO
 				.requestMatchers(HttpMethod.GET, "/evento").hasAuthority("USER")
+				.requestMatchers(HttpMethod.GET, "/evento/{id}").hasAuthority("USER")
 				.requestMatchers(HttpMethod.POST, "/evento").hasAuthority("USER")
+				.requestMatchers(HttpMethod.DELETE, "/evento").hasAuthority("USER")
+				.requestMatchers(HttpMethod.PUT, "/evento").hasAuthority("USER")
 
 				// SWAGGER
 				.requestMatchers("/swagger-ui/**").permitAll()

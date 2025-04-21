@@ -56,7 +56,7 @@ public class EventoController {
     }
 
     @PostMapping
-    @Operation(summary = "Guardar un nuevo producto")
+    @Operation(summary = "Guardar un nuevo evento")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Evento creado exitosamente"),
             @ApiResponse(responseCode = "400", description = "Solicitud inválida")
