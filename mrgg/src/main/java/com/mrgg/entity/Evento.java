@@ -29,7 +29,6 @@ public class Evento extends DomainEntity {
     @OneToMany
     private Set<Solicitud> solicitudes;
 
-    // Relacion muchos a uno con juego
     @ManyToOne
     private Juego juego;
 

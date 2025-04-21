@@ -2,6 +2,7 @@ package com.mrgg.controller;
 
 import java.net.http.HttpHeaders;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mrgg.entity.Usuario;
+import com.mrgg.repository.UsuarioRepository;
 import com.mrgg.service.UsuarioService;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -25,8 +28,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RequestMapping("/usuario")
 public class UsuarioController {
 
+    private final UsuarioRepository usuarioRepository;
+
     @Autowired
     private UsuarioService usuarioService;
+
+    UsuarioController(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+    }
 
     @GetMapping
     @ApiResponses(value = {
@@ -37,6 +46,21 @@ public class UsuarioController {
         List<Usuario> usuarios = usuarioService.getAllUsuarios();
 
         return ResponseEntity.ok(usuarios);
+    }
+
+    @GetMapping("/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de usuarios obtenida exitosamente"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    public ResponseEntity<Usuario> finOneUsuarioById(@PathVariable Integer id) {
+        Optional<Usuario> usuario = usuarioService.getUsuarioById(id);
+
+        if (usuario.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(usuario.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @PostMapping

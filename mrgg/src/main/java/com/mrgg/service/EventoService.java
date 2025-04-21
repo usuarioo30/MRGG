@@ -22,20 +22,35 @@ public class EventoService {
     @Autowired
     private JWTUtils jwtUtils;
 
+    @Autowired
+    private UsuarioService usuarioService;
+
     @Transactional
-    public Evento updateEvento(Evento eventoU) {
-        Evento eventoExistente = eventoRepository.findById(eventoU.getId()).orElse(null);
-        if (eventoExistente == null) {
-            return null;
+    public Evento saveEvento(Evento evento) {
+        Usuario usuario = jwtUtils.userLogin();
+        Evento eventoSave = eventoRepository.save(evento);
+
+        usuario.getEventos().add(eventoSave);
+
+        usuarioService.saveUsuario(usuario);
+
+        return eventoSave;
+    }
+
+    @Transactional
+    public Evento updateEvento(int id, Evento evento) {
+        Optional<Evento> eventoO = eventoRepository.findById(id);
+        if (eventoO.isPresent()) {
+            Usuario usuario = jwtUtils.userLogin();
+            if (usuario != null && usuario.getEventos().contains(evento)) {
+                eventoO.get().setNum_usuario(evento.getNum_usuario());
+                eventoO.get().setEstado(evento.getEstado());
+                eventoO.get().setComentario(evento.getComentario());
+
+                return eventoRepository.save(eventoO.get());
+            }
         }
-
-        eventoExistente.setCodigo_sala(eventoU.getCodigo_sala());
-        eventoExistente.setNum_usuario(eventoU.getNum_usuario());
-        eventoExistente.setEstado(eventoU.getEstado());
-        eventoExistente.setFecha_inicio(eventoU.getFecha_inicio());
-        eventoExistente.setComentario(eventoU.getComentario());
-
-        return eventoRepository.save(eventoU);
+        return null;
     }
 
     @Transactional
@@ -52,8 +67,8 @@ public class EventoService {
         return false;
     }
 
-    public Evento getEventoById(int id) {
-        return eventoRepository.findById(id).orElse(null);
+    public Optional<Evento> getEventoById(int id) {
+        return eventoRepository.findById(id);
     }
 
     public List<Evento> getAllEventos() {
