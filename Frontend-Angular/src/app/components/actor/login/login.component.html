@@ -1,0 +1,32 @@
+<div class="card">
+    <h5 class="card-header">Iniciar sesión</h5>
+    <div class="card-body">
+        <div class="card-text">
+            <form (ngSubmit)="login()" [formGroup]="formLogin">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Usuario</label>
+                    <input type="text" class="form-control" formControlName="username" id="username">
+                    <div *ngIf="formLogin.get('username')?.touched && formLogin.get('username')?.invalid">
+                        <span *ngIf="formLogin.get('username')?.errors?.['required']" class="text-danger">Este campo es
+                            obligatorio.</span>
+                        <span *ngIf="formLogin.get('username')?.errors?.['minlength']" class="text-danger">Debe tener al
+                            menos 3
+                            caracteres.</span>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" formControlName="password" id="password">
+                    <div *ngIf="formLogin.get('password')?.touched && formLogin.get('password')?.invalid">
+                        <span *ngIf="formLogin.get('password')?.errors?.['password']" class="text-danger">Este campo es
+                            obligatorio.</span>
+                        <span *ngIf="formLogin.get('password')?.errors?.['password']" class="text-danger">Debe tener al
+                            menos 3
+                            caracteres.</span>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" [disabled]="formLogin.invalid">Guardar</button>
+            </form>
+        </div>
+    </div>
+</div>
