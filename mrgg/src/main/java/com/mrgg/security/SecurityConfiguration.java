@@ -42,7 +42,7 @@ public class SecurityConfiguration {
 				.authorizeHttpRequests()
 				// LOGIN
 				.requestMatchers("/login").permitAll()
-				.requestMatchers("/userLogin").permitAll()
+				.requestMatchers("/actorLogueado").permitAll()
 				.requestMatchers("/actorExiste/**").permitAll()
 
 				// ADMIN
@@ -64,6 +64,13 @@ public class SecurityConfiguration {
 				.requestMatchers(HttpMethod.DELETE, "/evento").hasAuthority("USER")
 				.requestMatchers(HttpMethod.PUT, "/evento").hasAuthority("USER")
 
+				// JUEGO
+				.requestMatchers(HttpMethod.GET, "/juego").permitAll()
+				.requestMatchers(HttpMethod.GET, "/juego/{id}").permitAll()
+				.requestMatchers(HttpMethod.POST, "/juego").hasAuthority("ADMIN")
+				.requestMatchers(HttpMethod.DELETE, "/juego").hasAuthority("ADMIN")
+				.requestMatchers(HttpMethod.PUT, "/juego").hasAuthority("ADMIN")
+
 				// SWAGGER
 				.requestMatchers("/swagger-ui/**").permitAll()
 				.requestMatchers("/v3/api-docs/**").permitAll()
@@ -79,7 +86,7 @@ public class SecurityConfiguration {
 	public CorsFilter corsFilter() {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(List.of("https://frontend-angular-six.vercel.app"));
+		config.setAllowedOrigins(List.of("http://localhost:4200"));
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 		config.setAllowCredentials(true);

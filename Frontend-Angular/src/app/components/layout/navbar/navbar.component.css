@@ -1,0 +1,11 @@
+.navbar {
+    background-color: #581845;
+}
+
+.navbar-nav .nav-link {
+    color: white !important;
+}
+
+button.btn {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}

@@ -1,0 +1,106 @@
+<div class="container vh-100 d-flex justify-content-center align-items-center mt-2 mb-2">
+    <div class="card shadow-lg border-0 rounded-4 p-4 w-100" style="max-width: 600px;">
+        <h4 *ngIf="token == null" class="text-center mb-4">Registro de Usuario</h4>
+        <h4 *ngIf="token != null" class="text-center mb-4">Editar perfil</h4>
+
+        <form [formGroup]="formUsuario" (ngSubmit)="save()">
+            <!-- Nombre -->
+            <div class="form-floating mb-3">
+                <input type="text" formControlName="nombre" class="form-control" id="nombre"
+                    placeholder="Nombre completo">
+                <label for="nombre">Nombre completo</label>
+                <div *ngIf="formUsuario.get('nombre')?.touched && formUsuario.get('nombre')?.invalid">
+                    <small class="text-danger" *ngIf="formUsuario.get('nombre')?.errors?.['required']">Este campo es
+                        obligatorio.</small>
+                    <small class="text-danger" *ngIf="formUsuario.get('nombre')?.errors?.['minlength']">Debe tener al
+                        menos 3 caracteres.</small>
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-floating mb-3">
+                <input type="email" formControlName="email" class="form-control" id="email" placeholder="Email">
+                <label for="email">Correo electrónico</label>
+                <div *ngIf="formUsuario.get('email')?.touched && formUsuario.get('email')?.invalid">
+                    <small class="text-danger" *ngIf="formUsuario.get('email')?.errors?.['required']">Este campo es
+                        obligatorio.</small>
+                    <small class="text-danger" *ngIf="formUsuario.get('email')?.errors?.['email']">Formato de email
+                        inválido.</small>
+                </div>
+            </div>
+
+            <!-- Foto -->
+            <div class="form-floating mb-3">
+                <input type="text" formControlName="foto" class="form-control" id="foto" placeholder="URL de la foto">
+                <label for="foto">URL de la foto</label>
+                <div *ngIf="formUsuario.get('foto')?.touched && formUsuario.get('foto')?.invalid">
+                    <small class="text-danger" *ngIf="formUsuario.get('foto')?.errors?.['pattern']">Debe ser una URL
+                        válida.</small>
+                </div>
+            </div>
+
+            <!-- Username -->
+            <div class="form-floating mb-3">
+                <input type="text" formControlName="username" class="form-control" id="username"
+                    placeholder="Nombre de usuario">
+                <label for="username">Nombre de usuario</label>
+                <div *ngIf="formUsuario.get('username')?.touched && formUsuario.get('username')?.invalid">
+                    <small class="text-danger" *ngIf="formUsuario.get('username')?.errors?.['required']">Este campo es
+                        obligatorio.</small>
+                    <small class="text-danger" *ngIf="formUsuario.get('username')?.errors?.['minlength']">Mínimo 3
+                        caracteres.</small>
+                    <small class="text-danger" *ngIf="formUsuario.get('username')?.errors?.['maxLength']">Máximo 20
+                        caracteres.</small>
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-floating mb-3">
+                <input type="password" formControlName="password" class="form-control" id="password"
+                    placeholder="Contraseña">
+                <label for="password">Contraseña</label>
+                <div *ngIf="formUsuario.get('password')?.touched && formUsuario.get('password')?.invalid && token == null">
+                    <small class="text-danger" *ngIf="formUsuario.get('password')?.errors?.['required']">Este campo es
+                        obligatorio.</small>
+                    <small class="text-danger" *ngIf="formUsuario.get('password')?.errors?.['minlength']">Mínimo 3
+                        caracteres.</small>
+                    <small class="text-danger" *ngIf="formUsuario.get('password')?.errors?.['maxLength']">Máximo 20
+                        caracteres.</small>
+                </div>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="password" formControlName="passconfirm" class="form-control" id="passconfirm"
+                    placeholder="Confirmar contraseña">
+                <label for="passconfirm">Confirmar Contraseña</label>
+                <div *ngIf="formUsuario.get('passconfirm')?.touched && formUsuario.get('passconfirm')?.invalid && token == null">
+                    <small class="text-danger" *ngIf="formUsuario.get('password')?.errors?.['required']">La confirmación
+                        de la contraseña es obligatoria.</small>
+                </div>
+                <div *ngIf="formUsuario.hasError('passNoCoinciden')" class="text-danger">
+                    <small>Las contraseñas no coinciden.</small>
+                </div>
+            </div>
+
+
+            <!-- Teléfono -->
+            <div class="form-floating mb-3">
+                <input type="text" formControlName="telefono" class="form-control" id="telefono" placeholder="Teléfono">
+                <label for="telefono">Teléfono</label>
+                <div *ngIf="formUsuario.get('telefono')?.touched && formUsuario.get('telefono')?.invalid">
+                    <small class="text-danger" *ngIf="formUsuario.get('telefono')?.errors?.['required']">Este campo es
+                        obligatorio.</small>
+                    <small class="text-danger" *ngIf="formUsuario.get('telefono')?.errors?.['pattern']">Debe ser un
+                        teléfono válido (empiece con 6-9, 9 dígitos).</small>
+                </div>
+            </div>
+
+            <!-- Botón -->
+            <div class="d-grid">
+                <button class="btn btn-success btn-lg" type="submit" [disabled]="formUsuario.invalid">
+                    Registrar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -12,7 +12,6 @@ public class Juego extends DomainEntity {
     @NotBlank
     private String descripcion;
 
-    @NotBlank
     private TipoCategoria categoria;
 
     public Juego() {

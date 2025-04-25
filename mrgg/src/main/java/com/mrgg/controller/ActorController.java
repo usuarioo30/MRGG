@@ -55,7 +55,7 @@ public class ActorController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/userLogin")
+    @GetMapping("/actorLogueado")
     public ResponseEntity<Actor> login() {
         Actor a = JWTUtils.userLogin();
         if (a == null) {

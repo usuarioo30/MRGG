@@ -11,9 +11,17 @@ export class ActorService {
   constructor(private http: HttpClient) { }
 
   // URL API Backend
-  private urlAPI = "http://localhost:8080/login"
+  private urlAPI = "http://localhost:8080"
 
   login(actorLogin: ActorLogin): Observable<any> {
-    return this.http.post<any>(this.urlAPI, actorLogin);
+    return this.http.post<any>(`${this.urlAPI}/login`, actorLogin);
+  }
+
+  usuarioLogueado(): Observable<any> {
+    return this.http.get<any>(`${this.urlAPI}/actorLogueado`);
+  }
+
+  actorExist(username: string): Observable<any> {
+    return this.http.get<any>(`${this.urlAPI}/actorExiste/${username}`);
   }
 }

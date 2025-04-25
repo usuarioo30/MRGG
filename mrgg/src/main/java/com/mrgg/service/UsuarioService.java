@@ -43,7 +43,6 @@ public class UsuarioService {
             usuario.setFoto(usuarioU.getFoto());
             usuario.setUsername(usuarioU.getUsername());
             usuario.setPassword(usuarioU.getPassword());
-            usuario.setBaneado(usuarioU.getBaneado());
 
             return usuarioRepository.save(usuarioU);
         }

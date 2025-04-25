@@ -1,0 +1,12 @@
+.card-bg {
+    background-image: url('../../../../../public/imagen1.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 12rem;
+    color: white;
+    position: relative;
+}
+
+.card-title {
+    margin-top: 8rem;
+}

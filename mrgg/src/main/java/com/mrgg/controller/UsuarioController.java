@@ -25,7 +25,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RequestMapping("/usuario")
 public class UsuarioController {
 
-
     @Autowired
     private UsuarioService usuarioService;
 
@@ -60,17 +59,17 @@ public class UsuarioController {
             @ApiResponse(responseCode = "201", description = "Usuario creado exitosamente"),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
-    public ResponseEntity<String> crearUsuario(@RequestBody Usuario usuario) {
+    public ResponseEntity<Void> crearUsuario(@RequestBody Usuario usuario) {
         if (usuarioService.findByUsername(usuario.getUsername()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El usuario ya existe");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         Usuario u = usuarioService.saveUsuario(usuario);
 
         if (u != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("Usuario creado exitosamente");
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se puede crear el usuario");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
@@ -80,13 +79,13 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
             @ApiResponse(responseCode = "400", description = "Solicitud inválida")
     })
-    public ResponseEntity<String> actualizarUsuario(@RequestBody Usuario usuarioActualizado) {
+    public ResponseEntity<Void> actualizarUsuario(@RequestBody Usuario usuarioActualizado) {
         Usuario respuesta = usuarioService.updateUsuario(usuarioActualizado);
 
         if (respuesta != null) {
-            return ResponseEntity.status(HttpStatus.OK).body("Usuario actualizado con éxito");
+            return ResponseEntity.status(HttpStatus.OK).build();
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
@@ -95,11 +94,11 @@ public class UsuarioController {
             @ApiResponse(responseCode = "200", description = "Usuario eliminado exitosamente"),
             @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     })
-    public ResponseEntity<String> eliminarUsuario() {
+    public ResponseEntity<Void> eliminarUsuario() {
         if (usuarioService.deleteUsuario()) {
-            return ResponseEntity.status(HttpStatus.OK).body("Usuario eliminado exitosamente");
+            return ResponseEntity.status(HttpStatus.OK).build();
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 }

@@ -1,7 +1,7 @@
 import { Categoria } from "./categoria";
 
 export interface Juego {
-    nomnbre: string;
+    nombre: string;
     descripcion: string;
     categoria: Categoria;
 }
