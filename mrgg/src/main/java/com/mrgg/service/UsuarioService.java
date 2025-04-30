@@ -41,12 +41,20 @@ public class UsuarioService {
             usuario.setNombre(usuarioU.getNombre());
             usuario.setEmail(usuarioU.getEmail());
             usuario.setFoto(usuarioU.getFoto());
-            usuario.setUsername(usuarioU.getUsername());
-            usuario.setPassword(usuarioU.getPassword());
-
-            return usuarioRepository.save(usuarioU);
+            return usuarioRepository.save(usuario);
         }
 
+        return null;
+    }
+
+    @Transactional
+    public Usuario updatePassword(String contrasena) {
+        Usuario usuario = jwtUtils.userLogin();
+        System.out.println("hola he entrado aqui");
+        if (usuario != null) {
+            usuario.setPassword(passwordEncoder.encode(contrasena));
+            return usuarioRepository.save(usuario);
+        }
         return null;
     }
 

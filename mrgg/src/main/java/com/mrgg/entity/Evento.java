@@ -8,6 +8,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Evento extends DomainEntity {
@@ -17,10 +18,10 @@ public class Evento extends DomainEntity {
     @Min(0)
     private int num_usuario;
 
-    @NotBlank
+    @NotNull
     private EstadoEvento estado;
 
-    @NotBlank
+    @NotNull
     private Date fecha_inicio;
 
     @NotBlank

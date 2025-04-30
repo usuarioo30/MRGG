@@ -2,13 +2,16 @@ package com.mrgg.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mrgg.entity.Evento;
+import com.mrgg.entity.Juego;
 import com.mrgg.entity.Usuario;
 import com.mrgg.repository.EventoRepository;
+import com.mrgg.repository.JuegoRepository;
 import com.mrgg.security.JWTUtils;
 
 import jakarta.transaction.Transactional;
@@ -18,6 +21,9 @@ public class EventoService {
 
     @Autowired
     private EventoRepository eventoRepository;
+
+    @Autowired
+    private JuegoRepository juegoRepository;
 
     @Autowired
     private JWTUtils jwtUtils;
@@ -31,10 +37,27 @@ public class EventoService {
         Evento eventoSave = eventoRepository.save(evento);
 
         usuario.getEventos().add(eventoSave);
-
         usuarioService.saveUsuario(usuario);
 
         return eventoSave;
+    }
+
+    @Transactional
+    public Evento saveEventoPorJuego(Evento evento, Integer juegoId) {
+        Optional<Juego> juegoOpt = juegoRepository.findById(juegoId);
+
+        if (juegoOpt.isEmpty()) {
+            return null;
+        }
+
+        Usuario usuario = jwtUtils.userLogin();
+        evento.setJuego(juegoOpt.get());
+
+        Evento eventoGuardado = eventoRepository.save(evento);
+        usuario.getEventos().add(eventoGuardado);
+        usuarioService.saveUsuario(usuario);
+
+        return eventoGuardado;
     }
 
     @Transactional
@@ -58,11 +81,9 @@ public class EventoService {
         Usuario usuario = jwtUtils.userLogin();
         Optional<Evento> evento = eventoRepository.findById(id);
 
-        if (evento.isPresent()) {
-            if (usuario.getEventos().contains(evento.get())) {
-                eventoRepository.deleteById(id);
-                return true;
-            }
+        if (evento.isPresent() && usuario.getEventos().contains(evento.get())) {
+            eventoRepository.deleteById(id);
+            return true;
         }
         return false;
     }
@@ -73,6 +94,19 @@ public class EventoService {
 
     public List<Evento> getAllEventos() {
         return eventoRepository.findAll();
+    }
+
+    public Set<Evento> getAllEventosByUsuario() {
+        Usuario usuario = jwtUtils.userLogin();
+        return usuario.getEventos();
+    }
+
+    public List<Evento> getEventosByJuegoId(Integer idJuego) {
+        return eventoRepository.findByJuegosId(idJuego);
+    }
+
+    public int obtenerCantidadEventosPorJuego(Long juegoId) {
+        return eventoRepository.contarEventosPorJuego(juegoId);
     }
 
 }

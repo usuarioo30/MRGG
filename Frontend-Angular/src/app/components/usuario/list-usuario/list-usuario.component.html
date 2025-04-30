@@ -1,0 +1,47 @@
+<div class="container mt-4 mb-4">
+    <div class="card shadow-sm">
+        <div class="card-header text-white">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <h5 class="mb-0">Lista de Usuarios</h5>
+                <div class="d-flex align-items-center">
+                    <span class="me-2">Filtrar baneado:</span>
+                    <select class="form-select form-select-sm w-auto" [(ngModel)]="filtroBaneado">
+                        <option value="todos">Todos</option>
+                        <option value="true">Baneados</option>
+                        <option value="false">No baneados</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Usuario</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Teléfono</th>
+                            <th scope="col">Baneado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (usuario of usuariosFiltrados(); track usuario.id) {
+                        <tr>
+                            <th scope="row">{{usuario.id}}</th>
+                            <td>{{usuario.username}}</td>
+                            <td>{{usuario.email}}</td>
+                            <td>{{usuario.telefono}}</td>
+                            <td>
+                                <span class="badge bg-{{usuario.baneado ? 'danger' : 'success'}}">
+                                    {{usuario.baneado ? 'Sí' : 'No'}}
+                                </span>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -13,7 +13,7 @@ import { jwtDecode } from 'jwt-decode';
 export class NavbarComponent implements OnInit {
   token: string | null = sessionStorage.getItem("token");
   rol!: string;
-  nombreUsuario !: any;
+  nombreUsuario!: any;
   id!: number;
 
   constructor(

@@ -89,6 +89,22 @@ public class UsuarioController {
         }
     }
 
+    @PutMapping("/updateContrasena")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Contraseña actualziado correctamente"),
+            @ApiResponse(responseCode = "404", description = "Contraseña no encontrada"),
+            @ApiResponse(responseCode = "400", description = "Solicitud inválida")
+    })
+    public ResponseEntity<Void> actualizarContrasena(@RequestBody String contrasena) {
+        Usuario respuesta = usuarioService.updatePassword(contrasena);
+
+        if (respuesta != null) {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
     @DeleteMapping
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuario eliminado exitosamente"),

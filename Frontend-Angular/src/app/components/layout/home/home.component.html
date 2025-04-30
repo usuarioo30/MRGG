@@ -2,13 +2,21 @@
     <div class="container">
         <div class="row g-4 justify-content-center">
             <div class="ms-4" style="width: 18rem;" *ngFor="let juego of juegos">
+                <!-- Clickable card -->
+                <div class="flip-card" [routerLink]="['/eventos', juego.id]" style="cursor: pointer;">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <p class="heading_8264 nombre ms-5">{{ juego.nombre }}</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <div>
+                                <p class="code">Eventos: {{ contadorEventos[juego.id] || 0 }}</p>
+                            </div>
+                        </div>
 
-                <div class="card card-bg shadow-lg">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ juego.nombre }}</h5>
                     </div>
                 </div>
-
+                <!-- End clickable card -->
             </div>
         </div>
     </div>

@@ -40,10 +40,6 @@ public class AdminService {
             admin.setNombre(adminU.getNombre());
             admin.setFoto(adminU.getFoto());
             admin.setEmail(adminU.getEmail());
-            admin.setTelefono(adminU.getTelefono());
-            admin.setUsername(adminU.getUsername());
-            admin.setPassword(adminU.getPassword());
-
             return adminRepository.save(admin);
         }
         return null;

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navegacion mb-1">
+<nav class="navbar navbar-expand-lg navegacion">
     <a class="navbar-brand ms-3" href="#" style="color: white;">MRGG</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -7,16 +7,11 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="#"><i class="bi bi-house"></i> Inicio</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Features</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Pricing</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
+                <a class="nav-link" *ngIf="rol == 'ADMIN'" [routerLink]="['/usuarios']"><i class="bi bi-people"></i>
+                    Usuarios</a>
             </li>
         </ul>
     </div>
@@ -25,12 +20,20 @@
         <div class="dropdown" *ngIf="token != null">
             <span class="dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
-                {{ nombreUsuario }}
+                <img src="" alt="avatar" class="me-2">{{ nombreUsuario }} ({{rol}})
             </span>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item" [routerLink]="['/usuario/editar']">Editar usuario</a></li>
-                <li><button class="dropdown-item" (click)="logout()">Cerrar sesión</button></li>
-
+                <li *ngIf="rol == 'USER' || rol == 'ADMIN'">
+                    <a class="dropdown-item" [routerLink]="[rol === 'ADMIN' ? '/admin/editar' : '/usuario/editar']">
+                        Editar usuario
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" [routerLink]="['/usuario/actualizarContrasena']">Cambiar contraseña</a>
+                </li>
+                <li>
+                    <button class="btn btn-danger ms-4 mt-2" (click)="logout()">Cerrar sesión</button>
+                </li>
             </ul>
         </div>
 

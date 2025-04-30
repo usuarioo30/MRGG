@@ -17,7 +17,7 @@ export class ActorService {
     return this.http.post<any>(`${this.urlAPI}/login`, actorLogin);
   }
 
-  usuarioLogueado(): Observable<any> {
+  actorLogueado(): Observable<any> {
     return this.http.get<any>(`${this.urlAPI}/actorLogueado`);
   }
 

@@ -31,12 +31,19 @@ export class UsuarioService {
   }
 
   editUsuario(usuario: Actor): Observable<Actor> {
-    const url = `${this.urlApi}/${usuario.id}`;
+    const url = `${this.urlApi}`;
     return this.http.put<Actor>(url, usuario);
   }
 
-  deleteUsuario(id: number): Observable<Actor> {
-    const url = `${this.urlApi}/${id}`;
+  deleteUsuario(): Observable<Actor> {
+    const url = `${this.urlApi}`;
     return this.http.delete<Actor>(url);
   }
+
+  updateContrasena(contrasena: string) {
+    const url = `${this.urlApi}/updateContrasena`;
+    return this.http.put<void>(url, contrasena);
+  }
+
+
 }

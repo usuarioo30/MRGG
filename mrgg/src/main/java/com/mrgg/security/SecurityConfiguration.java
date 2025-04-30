@@ -47,19 +47,25 @@ public class SecurityConfiguration {
 
 				// ADMIN
 				.requestMatchers(HttpMethod.GET, "/admin").hasAuthority("ADMIN")
-				.requestMatchers(HttpMethod.PUT, "/admin/{id}").hasAuthority("ADMIN")
+				.requestMatchers(HttpMethod.PUT, "/admin").hasAuthority("ADMIN")
 				.requestMatchers(HttpMethod.POST, "/admin").hasAuthority("ADMIN")
 				.requestMatchers(HttpMethod.DELETE, "/admin").hasAuthority("ADMIN")
 
 				// USUARIO
+				.requestMatchers(HttpMethod.GET, "/usuario").hasAuthority("ADMIN")
 				.requestMatchers(HttpMethod.GET, "/usuario").hasAuthority("USER")
 				.requestMatchers(HttpMethod.POST, "/usuario").permitAll()
 				.requestMatchers(HttpMethod.PUT, "/usuario").hasAuthority("USER")
+				.requestMatchers(HttpMethod.PUT, "/usuario/actualizarContrasena").hasAuthority("USER")
 				.requestMatchers(HttpMethod.DELETE, "/usuario").hasAuthority("USER")
 
 				// EVENTO
 				.requestMatchers(HttpMethod.GET, "/evento").hasAuthority("USER")
+				.requestMatchers(HttpMethod.GET, "/evento/deUsuario").hasAuthority("USER")
+				.requestMatchers(HttpMethod.GET, "/evento/porJuego/{id}").hasAuthority("USER")
+				.requestMatchers(HttpMethod.GET, "/evento/cantidad/{juegoId}").permitAll()
 				.requestMatchers(HttpMethod.GET, "/evento/{id}").hasAuthority("USER")
+				.requestMatchers(HttpMethod.POST, "/evento/crear/{juegoId}").hasAuthority("USER")
 				.requestMatchers(HttpMethod.POST, "/evento").hasAuthority("USER")
 				.requestMatchers(HttpMethod.DELETE, "/evento").hasAuthority("USER")
 				.requestMatchers(HttpMethod.PUT, "/evento").hasAuthority("USER")

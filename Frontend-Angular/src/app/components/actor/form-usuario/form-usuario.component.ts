@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../../../service/usuario.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActorService } from '../../../service/actor.service';
 
 @Component({
   selector: 'app-form-usuario',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './form-usuario.component.html',
   styleUrl: './form-usuario.component.css'
 })
@@ -17,7 +17,6 @@ export class FormUsuarioComponent implements OnInit {
   id!: number;
   registro: boolean = true;
   token!: string | null;
-  usernameOriginal!: string;
 
   constructor(
     private usuarioService: UsuarioService,
@@ -28,65 +27,49 @@ export class FormUsuarioComponent implements OnInit {
   ) {
     // Creamos el formulario sin validaciones aún
     this.formUsuario = this.fb.group({
-      id: [null],
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       foto: ['', [Validators.required, Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]],
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
-      passconfirm: [''],
-      password: [''],
+      passconfirm: ['', [Validators.required, Validators.minLength(3)]],
+      password: ['', [Validators.required, Validators.minLength(3)]],
       telefono: ['', [Validators.required, Validators.pattern('[6-9]{1}[0-9]{8}')]],
       chat_id: [''],
       clave_segura: [''],
       baneado: [false]
     }, { validator: this.comprobarContrasena });
+    if (this.router.url.includes("editar")) {
+      this.formUsuario.get("username")?.disable();
+      this.formUsuario.get("password")?.setValidators(null);
+      this.formUsuario.get("passconfirm")?.setValidators(null);
+    }
   }
 
   ngOnInit(): void {
     this.token = sessionStorage.getItem("token");
 
     if (this.token) {
-      this.registro = false;
-      this.actorService.usuarioLogueado().subscribe(
+      this.actorService.actorLogueado().subscribe(
         result => {
           this.formUsuario.patchValue(result);
-          this.usernameOriginal = result.username;
-
-          // Si está editando, quitamos las validaciones de contraseña
-          this.formUsuario.get("password")?.clearValidators();
-          this.formUsuario.get("passconfirm")?.clearValidators();
-          this.formUsuario.get("password")?.updateValueAndValidity();
-          this.formUsuario.get("passconfirm")?.updateValueAndValidity();
-
-          this.formUsuario.get("password")?.setValue("");
-          this.formUsuario.get("passconfirm")?.setValue("");
         },
-        error => { console.log("Usuario no encontrado") }
+        error => {
+          this.router.navigateByUrl("/");
+        },
       );
-    } else {
-      // Si está registrando, aplicamos validaciones de contraseña
-      this.formUsuario.get("password")?.setValidators([Validators.required, Validators.minLength(3), Validators.maxLength(20)]);
-      this.formUsuario.get("passconfirm")?.setValidators([Validators.required]);
-      this.formUsuario.get("password")?.updateValueAndValidity();
-      this.formUsuario.get("passconfirm")?.updateValueAndValidity();
     }
   }
 
   save() {
     const usuario = this.formUsuario.value;
 
-    // Si está editando y no ha cambiado contraseña, la eliminamos del objeto a enviar
-    if (this.token && !usuario.password) {
-      delete usuario.password;
-      delete usuario.passconfirm;
-    }
-
     this.actorService.actorExist(usuario.username).subscribe(
       exists => {
-        if (exists && usuario.username !== this.usernameOriginal) {
+        if (exists) {
           window.alert("El nombre de usuario ya está en uso. Por favor, elige otro.");
         } else {
           if (this.token) {
+            // Edición de usuario
             this.usuarioService.editUsuario(usuario).subscribe(
               result => {
                 window.alert("Perfil actualizado correctamente");
@@ -97,10 +80,25 @@ export class FormUsuarioComponent implements OnInit {
           } else {
             this.usuarioService.saveUsuario(usuario).subscribe(
               result => {
-                window.alert("Usuario creado correctamente");
-                this.router.navigateByUrl("/");
+                const actorLogin = {
+                  username: usuario.username,
+                  password: usuario.password
+                };
+                this.actorService.login(actorLogin).subscribe(
+                  loginResult => {
+                    sessionStorage.setItem("token", loginResult.token);
+                    sessionStorage.setItem("username", usuario.username);
+                    this.router.navigateByUrl("/").then(() => window.location.reload());;
+                  },
+                  loginError => {
+                    console.log("Error al iniciar sesión automáticamente", loginError);
+                    window.alert("Usuario registrado, pero no se pudo iniciar sesión automáticamente.");
+                  }
+                );
               },
-              error => { console.log(error); }
+              error => {
+                console.log(error);
+              }
             );
           }
         }
@@ -111,14 +109,29 @@ export class FormUsuarioComponent implements OnInit {
     );
   }
 
+
+  eliminarUsuario() {
+    var confirmacion = window.confirm("¿Estas seguro de eliminar el admin?");
+    if (confirmacion) {
+      this.usuarioService.deleteUsuario().subscribe(
+        result => { this.logout() },
+        error => { console.log(error.status) }
+      );
+    }
+  }
+
+  logout() {
+    sessionStorage.removeItem("token");
+    this.router.navigate(['/']).then(() => window.location.reload());
+  }
+
   private comprobarContrasena(group: FormGroup) {
     const password = group.get('password')?.value;
     const confirmPassword = group.get('passconfirm')?.value;
 
-    if (!password && !confirmPassword) {
-      return null;
+    if (password && confirmPassword && password !== confirmPassword) {
+      return { passNoCoinciden: true };
     }
-
-    return password !== confirmPassword ? { passNoCoinciden: true } : null;
+    return null;
   }
 }
