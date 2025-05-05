@@ -15,6 +15,7 @@ export class NavbarComponent implements OnInit {
   rol!: string;
   nombreUsuario!: any;
   id!: number;
+  foto!: string;
 
   constructor(
     private usuarioService: UsuarioService,
@@ -33,6 +34,7 @@ export class NavbarComponent implements OnInit {
       this.usuarioService.getOneUsuarioLogin().subscribe(
         result => {
           this.id = result.id
+          this.foto = result.foto
         },
         error => { console.log("Ha ocurrido un error") }
       )

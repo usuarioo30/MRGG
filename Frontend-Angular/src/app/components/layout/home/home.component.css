@@ -1,87 +1,11 @@
-.card-bg {
-    background-image: url('../../../../../public/imagen1.jpg');
-    background-size: cover;
-    background-position: center;
-    height: 12rem;
-    color: white;
-    position: relative;
-}
-
-.card-title {
-    margin-top: 8rem;
-}
-
-/* CARD */
-/* From Uiverse.io by Praashoo7 */
+/* CARD vertical */
 .flip-card {
     background-color: transparent;
-    width: 240px;
-    height: 154px;
+    width: 200px;
+    /* Más estrecho */
+    height: 300px;
+    /* Más alto */
     perspective: 1000px;
-    color: white;
-}
-
-.heading_8264 {
-    position: absolute;
-    letter-spacing: .2em;
-    font-size: 0.8em;
-    top: 2em;
-}
-
-.logo {
-    position: absolute;
-    top: 6.8em;
-    left: 11.7em;
-}
-
-.chip {
-    position: absolute;
-    top: 2.3em;
-    left: 1.5em;
-}
-
-.contactless {
-    position: absolute;
-    top: 3.5em;
-    left: 12.4em;
-}
-
-.number {
-    position: absolute;
-    font-weight: bold;
-    font-size: .6em;
-    top: 8.3em;
-    left: 1.6em;
-}
-
-.valid_thru {
-    position: absolute;
-    font-weight: bold;
-    top: 635.8em;
-    font-size: .01em;
-    left: 140.3em;
-}
-
-.date_8264 {
-    position: absolute;
-    font-weight: bold;
-    font-size: 0.5em;
-    top: 13.6em;
-    left: 3.2em;
-}
-
-.name {
-    position: absolute;
-    font-weight: bold;
-    font-size: 0.5em;
-    top: 16.1em;
-    left: 2em;
-}
-
-.code {
-    font-weight: bold;
-    text-align: center;
-    margin: .2em;
     color: white;
 }
 
@@ -92,6 +16,7 @@
     text-align: center;
     transition: transform 0.8s;
     transform-style: preserve-3d;
+    border-radius: 1rem;
 }
 
 .flip-card:hover .flip-card-inner {
@@ -102,24 +27,63 @@
 .flip-card-back {
     box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.2);
     position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    /* texto al pie de la imagen */
+    align-items: center;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     border-radius: 1rem;
+    padding: 1rem;
+    box-sizing: border-box;
 }
 
+/* Imagen de fondo en la cara frontal */
 .flip-card-front {
-    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 2px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -1px 0px inset;
-    /* background-color: #171717; */
-    background-image: url(../../../../../public/imagen1.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .flip-card-back {
-    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 2px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -1px 0px inset;
-    background-color: #171717;
     transform: rotateY(180deg);
+    color: white;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+/* Añade esto */
+.flip-card-back::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* oscurece solo el fondo */
+    border-radius: 1rem;
+    z-index: 0;
+}
+
+.flip-card-back .code {
+    position: relative;
+    z-index: 1;
+    color: white;
+    font-weight: bold;
+}
+
+/* Texto de nombre en la parte frontal */
+.heading_8264 {
+    font-size: 1em;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    margin: 0;
+    padding: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    text-align: center;
+    border-radius: 0.5rem;
 }

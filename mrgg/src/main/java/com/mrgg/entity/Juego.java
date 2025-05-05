@@ -1,5 +1,7 @@
 package com.mrgg.entity;
 
+import org.hibernate.validator.constraints.URL;
+
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotBlank;
 
@@ -11,6 +13,9 @@ public class Juego extends DomainEntity {
 
     @NotBlank
     private String descripcion;
+
+    @URL
+    private String foto;
 
     private TipoCategoria categoria;
 
@@ -40,6 +45,14 @@ public class Juego extends DomainEntity {
 
     public void setCategoria(TipoCategoria categoria) {
         this.categoria = categoria;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
+
+    public String getFoto() {
+        return foto;
     }
 
 }

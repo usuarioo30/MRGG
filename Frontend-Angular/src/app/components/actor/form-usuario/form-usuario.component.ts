@@ -29,7 +29,6 @@ export class FormUsuarioComponent implements OnInit {
     this.formUsuario = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      foto: ['', [Validators.required, Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]],
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
       passconfirm: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(3)]],

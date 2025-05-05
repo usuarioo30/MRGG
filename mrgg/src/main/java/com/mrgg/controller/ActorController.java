@@ -69,31 +69,4 @@ public class ActorController {
         boolean exists = actorService.findByUsername(username).isPresent();
         return ResponseEntity.ok(exists);
     }
-
-    public String imagenGeneratedUrl(String textoParaImagen) throws IOException {
-        OkHttpClient client = new OkHttpClient();
-
-        Request request = new Request.Builder()
-                .url("https://free-images-api.p.rapidapi.com/v2/" + textoParaImagen + "/1")
-                .get()
-                .header("x-rapidapi-key", "53dc8b2a7emsh438d417686c202cp142797jsn2f0a25e199b5")
-                .header("x-rapidapi-host", "free-images-api.p.rapidapi.com")
-                .build();
-
-        Response response = client.newCall(request).execute();
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode rootNode = objectMapper.readTree(response.body().string());
-        JsonNode resultsNode = rootNode.path("results");
-
-        String imageUrl = "https://www.gipuzkoa.eus/documents/20933/32665092/03-deportes_3.png.jpg/e35046ab-3cfd-d709-0d65-6b1221001f3b?t=1637930583543";
-        if (resultsNode.isArray() && resultsNode.size() > 0) {
-            JsonNode firstResult = resultsNode.get(0);
-            if (firstResult.has("image")) {
-                imageUrl = firstResult.path("image").asText();
-            }
-        }
-
-        return imageUrl;
-    }
 }

@@ -4,7 +4,7 @@ button.btn {
 
 /* NAVBAR */
 .navegacion {
-    background-color: #581845; /* fondo oscuro */
+    background-color: #581845;
 }
 
 .navbar-nav .nav-link {
@@ -13,7 +13,7 @@ button.btn {
 }
 
 .navbar-nav .nav-link:hover {
-    color: #ffc107; /* amarillo Bootstrap */
+    color: #ffc107;
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 5px;
 }
@@ -25,4 +25,8 @@ button.btn {
 
 .dropdown-toggle {
     cursor: pointer;
+}
+
+.me-2 {
+    width: 30px !important;
 }

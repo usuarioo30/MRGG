@@ -30,16 +30,6 @@
                 </div>
             </div>
 
-            <!-- Foto -->
-            <div class="form-floating mb-3">
-                <input type="text" formControlName="foto" class="form-control" id="foto" placeholder="URL de la foto">
-                <label for="foto">URL de la foto</label>
-                <div *ngIf="formUsuario.get('foto')?.touched && formUsuario.get('foto')?.invalid">
-                    <small class="text-danger" *ngIf="formUsuario.get('foto')?.errors?.['pattern']">Debe ser una URL
-                        válida.</small>
-                </div>
-            </div>
-
             <!-- Username -->
             <div class="form-floating mb-3">
                 <input type="text" formControlName="username" class="form-control" id="username"

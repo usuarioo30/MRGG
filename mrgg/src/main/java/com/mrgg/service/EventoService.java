@@ -55,7 +55,7 @@ public class EventoService {
 
         Evento eventoGuardado = eventoRepository.save(evento);
         usuario.getEventos().add(eventoGuardado);
-        usuarioService.saveUsuario(usuario);
+        usuarioService.saveUsuarioByEventos(usuario);
 
         return eventoGuardado;
     }

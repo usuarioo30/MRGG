@@ -27,7 +27,6 @@ public abstract class Actor extends DomainEntity {
     private int chat_id;
 
     @NotBlank
-    @URL
     private String foto;
 
     @NotBlank

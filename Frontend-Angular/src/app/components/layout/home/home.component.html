@@ -1,19 +1,19 @@
 <section class="section mt-5 mb-5">
     <div class="container">
         <div class="row g-4 justify-content-center">
-            <div class="ms-4" style="width: 18rem;" *ngFor="let juego of juegos">
+            <div class="col-auto" *ngFor="let juego of juegos">
                 <!-- Clickable card -->
                 <div class="flip-card" [routerLink]="['/eventos', juego.id]" style="cursor: pointer;">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front">
-                            <p class="heading_8264 nombre ms-5">{{ juego.nombre }}</p>
-                        </div>
-                        <div class="flip-card-back">
-                            <div>
-                                <p class="code">Eventos: {{ contadorEventos[juego.id] || 0 }}</p>
-                            </div>
+                        <!-- Front of the card -->
+                        <div class="flip-card-front" [style.backgroundImage]="'url(' + juego.foto + ')'">
+                            <p class="heading_8264">{{ juego.nombre }}</p>
                         </div>
 
+                        <!-- Back of the card -->
+                        <div class="flip-card-back" [style.backgroundImage]="'url(' + juego.foto + ')'">
+                            <p class="code">Eventos: {{ contadorEventos[juego.id] || 0 }}</p>
+                        </div>
                     </div>
                 </div>
                 <!-- End clickable card -->

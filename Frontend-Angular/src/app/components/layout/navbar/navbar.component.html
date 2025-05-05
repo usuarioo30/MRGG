@@ -20,7 +20,7 @@
         <div class="dropdown" *ngIf="token != null">
             <span class="dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
-                <img src="" alt="avatar" class="me-2">{{ nombreUsuario }} ({{rol}})
+                <img [src]="foto" alt="avatar" class="me-2">{{ nombreUsuario }} ({{rol}})
             </span>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                 <li *ngIf="rol == 'USER' || rol == 'ADMIN'">

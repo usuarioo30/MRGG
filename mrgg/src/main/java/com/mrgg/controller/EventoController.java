@@ -52,7 +52,7 @@ public class EventoController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Buscar un producto por ID")
+    @Operation(summary = "Buscar un evento por ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Producto encontrado"),
             @ApiResponse(responseCode = "404", description = "Producto no encontrado")
@@ -137,7 +137,7 @@ public class EventoController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Eliminar un producto por ID")
+    @Operation(summary = "Eliminar un evento por ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Evento eliminado exitosamente"),
             @ApiResponse(responseCode = "404", description = "Evento no encontrado o no es propietario el usuario logueado")

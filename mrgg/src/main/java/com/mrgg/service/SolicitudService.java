@@ -6,8 +6,6 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.yaml.snakeyaml.events.Event;
-
 import com.mrgg.entity.EstadoSolicitud;
 import com.mrgg.entity.Evento;
 import com.mrgg.entity.Solicitud;
