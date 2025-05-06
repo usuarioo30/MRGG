@@ -75,6 +75,41 @@
     font-weight: bold;
 }
 
+.flip-card-back .descripcion {
+    position: relative;
+    z-index: 1;
+    color: white;
+    font-size: 0.85em;
+    margin-top: 0.5rem;
+    text-align: center;
+    padding: 0 0.5rem;
+    font-weight: 300;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    line-height: 1.2em;
+}
+
+.flip-card-back .btn-eliminar {
+    position: relative;
+    z-index: 1;
+    background-color: #dc3545; /* rojo Bootstrap */
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85em;
+    font-weight: bold;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.flip-card-back .btn-eliminar:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+
+
 /* Texto de nombre en la parte frontal */
 .heading_8264 {
     font-size: 1em;
@@ -86,4 +121,10 @@
     width: 100%;
     text-align: center;
     border-radius: 0.5rem;
+}
+
+/* =================================================== */
+
+.categoria {
+    color: #581845;
 }

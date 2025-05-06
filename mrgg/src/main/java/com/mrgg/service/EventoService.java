@@ -3,6 +3,7 @@ package com.mrgg.service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,9 @@ public class EventoService {
         Usuario usuario = jwtUtils.userLogin();
         evento.setJuego(juegoOpt.get());
 
+        String codigoSala = UUID.randomUUID().toString().substring(0, 8);
+        evento.setCodigo_sala(codigoSala);
+
         Evento eventoGuardado = eventoRepository.save(evento);
         usuario.getEventos().add(eventoGuardado);
         usuarioService.saveUsuarioByEventos(usuario);
@@ -66,9 +70,9 @@ public class EventoService {
         if (eventoO.isPresent()) {
             Usuario usuario = jwtUtils.userLogin();
             if (usuario != null && usuario.getEventos().contains(evento)) {
-                eventoO.get().setNum_usuario(evento.getNum_usuario());
+                eventoO.get().setNum_jugadores(evento.getNum_jugadores());
                 eventoO.get().setEstado(evento.getEstado());
-                eventoO.get().setComentario(evento.getComentario());
+                eventoO.get().setDescripcion(evento.getDescripcion());
 
                 return eventoRepository.save(eventoO.get());
             }

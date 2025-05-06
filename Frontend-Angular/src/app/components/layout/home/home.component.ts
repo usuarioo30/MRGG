@@ -14,41 +14,84 @@ import { EventoService } from '../../../service/evento.service';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
-  public juegos: Juego[] = [];
+  public juegosDeportivos: Juego[] = [];
+  public juegosShooter: Juego[] = [];
+  public juegosCarreras: Juego[] = [];
+  public juegosLucha: Juego[] = [];
+  public juegosSurvival: Juego[] = [];
   public contadorEventos: { [juegoId: number]: number } = {};
 
-  token: string | null = sessionStorage.getItem("token");
-  nombre: any;
-  rol!: string;
+  token: string | null = sessionStorage.getItem('token');
+  nombre: string | undefined;
+  rol: string | undefined;
 
   constructor(
     private router: Router,
     private juegoService: JuegoService,
     private eventoService: EventoService
   ) {
-    if (this.token) {
-      this.nombre = jwtDecode(this.token).sub;
+    if (this.token !== null && this.token) {
       this.rol = jwtDecode<{ rol: string }>(this.token).rol;
     }
   }
 
   ngOnInit(): void {
-    this.findAllJuegos();
+    this.loadJuegosByCategoria('DEPORTES');
+    this.loadJuegosByCategoria('SHOOTER');
+    this.loadJuegosByCategoria('CARRERAS');
+    this.loadJuegosByCategoria('LUCHA');
+    this.loadJuegosByCategoria('SURVIVAL');
   }
 
-  findAllJuegos() {
-    this.juegoService.getAllJuegos().subscribe(
-      result => {
-        this.juegos = result;
+  loadJuegosByCategoria(categoria: string): void {
+    this.juegoService.getAllJuegosPorCategoria(categoria).subscribe(
+      (result: Juego[]) => {
+        if (categoria === 'DEPORTES') {
+          this.juegosDeportivos = result;
+        } else if (categoria === 'SHOOTER') {
+          this.juegosShooter = result;
+        } else if (categoria === 'CARRERAS') {
+          this.juegosCarreras = result;
+        } else if (categoria === 'LUCHA') {
+          this.juegosLucha = result;
+        } else if (categoria === 'SURVIVAL') {
+          this.juegosSurvival = result;
+        }
 
-        this.juegos.forEach(juego => {
+        result.forEach(juego => {
           this.eventoService.getCantidadEventosPorJuego(juego.id).subscribe(
-            count => this.contadorEventos[juego.id] = count,
-            error => this.contadorEventos[juego.id] = 0
+            (count: number) => {
+              this.contadorEventos[juego.id] = count;
+            },
+            (error) => {
+              console.error('Error al obtener la cantidad de eventos', error);
+              this.contadorEventos[juego.id] = 0;
+            }
           );
         });
       },
-      error => { console.log(error); }
+      (error) => {
+        console.error('Error al obtener los juegos', error);
+      }
     );
   }
+
+  deleteJuego(id: number, event: MouseEvent): void {
+    event.stopPropagation();
+
+    this.juegoService.deleteJuego(id).subscribe(
+      () => {
+        window.location.reload();
+        this.loadJuegosByCategoria('DEPORTES');
+        this.loadJuegosByCategoria('SHOOTER');
+        this.loadJuegosByCategoria('CARRERAS');
+        this.loadJuegosByCategoria('LUCHA');
+        this.loadJuegosByCategoria('SURVIVAL');
+      },
+      (error) => {
+        console.error('Error al eliminar el juego', error);
+      }
+    );
+  }
+
 }

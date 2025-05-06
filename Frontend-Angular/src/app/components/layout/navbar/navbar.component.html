@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navegacion">
-    <a class="navbar-brand ms-3" href="#" style="color: white;">MRGG</a>
+    <a class="navbar-brand ms-3" [routerLink]="['/']" style="color: white;">MRGG</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -7,11 +7,16 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="#"><i class="bi bi-house"></i> Inicio</a>
+                <a class="nav-link" [routerLink]="['/']"><i class="bi bi-house"></i> Inicio</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" *ngIf="rol == 'ADMIN'" [routerLink]="['/usuarios']"><i class="bi bi-people"></i>
                     Usuarios</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" *ngIf="rol == 'ADMIN'" [routerLink]="['/juego/crear']"><i
+                        class="bi bi-controller"></i>
+                    Crear juego</a>
             </li>
         </ul>
     </div>

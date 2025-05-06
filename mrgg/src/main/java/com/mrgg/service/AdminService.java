@@ -76,7 +76,7 @@ public class AdminService {
             defaultAdmin.setEmail("admin@default.com");
             defaultAdmin.setTelefono("623456789");
             defaultAdmin.setBaneado(false);
-            defaultAdmin.setFoto("http://default.png");
+            defaultAdmin.setFoto("https://www.gravatar.com/avatar/" + Math.random() * 9000000 + "?d=retro&f=y&s=128)");
             defaultAdmin.setRol(Roles.ADMIN);
 
             System.out.println("Usuario Admin creado por defecto");

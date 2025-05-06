@@ -73,9 +73,10 @@ public class SecurityConfiguration {
 				// JUEGO
 				.requestMatchers(HttpMethod.GET, "/juego").permitAll()
 				.requestMatchers(HttpMethod.GET, "/juego/{id}").permitAll()
+				.requestMatchers(HttpMethod.GET, "/juego/categoria").permitAll()
 				.requestMatchers(HttpMethod.POST, "/juego").hasAuthority("ADMIN")
-				.requestMatchers(HttpMethod.DELETE, "/juego").hasAuthority("ADMIN")
 				.requestMatchers(HttpMethod.PUT, "/juego").hasAuthority("ADMIN")
+				.requestMatchers(HttpMethod.DELETE, "/juego/{id}").hasAuthority("ADMIN")
 
 				// SWAGGER
 				.requestMatchers("/swagger-ui/**").permitAll()

@@ -6,6 +6,7 @@ import { FormContrasenaComponent } from './components/actor/form-contrasena/form
 import { ListUsuarioComponent } from './components/usuario/list-usuario/list-usuario.component';
 import { FormAdminComponent } from './components/actor/form-admin/form-admin.component';
 import { ListEventosComponent } from './components/evento/list-eventos/list-eventos.component';
+import { FormJuegoComponent } from './components/juego/form-juego/form-juego.component';
 
 export const routes: Routes = [
 
@@ -25,4 +26,7 @@ export const routes: Routes = [
 
     // EVENTO
     { path: "eventos/:id", component: ListEventosComponent },
+
+    // JUEGO
+    { path: "juego/crear", component: FormJuegoComponent },
 ];

@@ -1,23 +1,130 @@
 <section class="section mt-5 mb-5">
-    <div class="container">
-        <div class="row g-4 justify-content-center">
-            <div class="col-auto" *ngFor="let juego of juegos">
-                <!-- Clickable card -->
-                <div class="flip-card" [routerLink]="['/eventos', juego.id]" style="cursor: pointer;">
-                    <div class="flip-card-inner">
-                        <!-- Front of the card -->
-                        <div class="flip-card-front" [style.backgroundImage]="'url(' + juego.foto + ')'">
-                            <p class="heading_8264">{{ juego.nombre }}</p>
-                        </div>
+    <div class="container-xl">
 
-                        <!-- Back of the card -->
-                        <div class="flip-card-back" [style.backgroundImage]="'url(' + juego.foto + ')'">
-                            <p class="code">Eventos: {{ contadorEventos[juego.id] || 0 }}</p>
+        <!-- Sección por categoría -->
+        <div *ngIf="juegosDeportivos.length > 0" class="mb-5 border-bottom pb-4">
+            <h2 class="text-uppercase fw-bold mb-4 border-start border-4 ps-3 categoria">Deportes</h2>
+            <div class="row g-4 justify-content-center">
+                <div class="col-auto me-5 ms-5" *ngFor="let juego of juegosDeportivos">
+                    <!-- Tarjeta existente -->
+                    <div class="flip-card" [routerLink]="['/eventos', juego.id]" style="cursor: pointer;">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front" [style.backgroundImage]="'url(' + juego.foto + ')'">
+                                <p class="heading_8264">{{ juego.nombre }}</p>
+                            </div>
+                            <!-- Parte trasera de la tarjeta -->
+                            <div class="flip-card-back" [style.backgroundImage]="'url(' + juego.foto + ')'">
+                                <p class="code">Eventos: {{ contadorEventos[juego.id] || 0 }}</p>
+                                <p class="descripcion">{{ juego.descripcion | slice:0:100 }}...</p>
+                                <button *ngIf="rol == 'ADMIN'" class="btn-eliminar mt-2"
+                                    (click)="deleteJuego(juego.id, $event)">
+                                    Eliminar
+                                </button>
+
+                            </div>
+
                         </div>
                     </div>
                 </div>
-                <!-- End clickable card -->
             </div>
         </div>
+
+        <!-- Repite esta estructura para cada categoría -->
+        <div *ngIf="juegosShooter.length > 0" class="mb-5 border-bottom pb-4">
+            <h2 class="text-uppercase fw-bold mb-4 border-start border-4 ps-3 categoria">Shooter</h2>
+            <div class="row g-4 justify-content-center">
+                <div class="col-auto me-5 ms-5" *ngFor="let juego of juegosShooter">
+                    <!-- Tarjeta existente -->
+                    <div class="flip-card" [routerLink]="['/eventos', juego.id]" style="cursor: pointer;">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front" [style.backgroundImage]="'url(' + juego.foto + ')'">
+                                <p class="heading_8264">{{ juego.nombre }}</p>
+                            </div>
+                            <div class="flip-card-back" [style.backgroundImage]="'url(' + juego.foto + ')'">
+                                <p class="code">Eventos: {{ contadorEventos[juego.id] || 0 }}</p>
+                                <p class="descripcion">{{ juego.descripcion | slice:0:100 }}...</p>
+                                <button *ngIf="rol == 'ADMIN'" class="btn-eliminar mt-2"
+                                    (click)="deleteJuego(juego.id, $event)">
+                                    Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="juegosCarreras.length > 0" class="mb-5 border-bottom pb-4">
+            <h2 class="text-uppercase fw-bold mb-4 border-start border-4 ps-3 categoria">Carreras</h2>
+            <div class="row g-4 justify-content-center">
+                <div class="col-auto me-5 ms-5" *ngFor="let juego of juegosCarreras">
+                    <!-- Tarjeta existente -->
+                    <div class="flip-card" [routerLink]="['/eventos', juego.id]" style="cursor: pointer;">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front" [style.backgroundImage]="'url(' + juego.foto + ')'">
+                                <p class="heading_8264">{{ juego.nombre }}</p>
+                            </div>
+                            <div class="flip-card-back" [style.backgroundImage]="'url(' + juego.foto + ')'">
+                                <p class="code">Eventos: {{ contadorEventos[juego.id] || 0 }}</p>
+                                <p class="descripcion">{{ juego.descripcion | slice:0:100 }}...</p>
+                                <button *ngIf="rol == 'ADMIN'" class="btn-eliminar mt-2"
+                                    (click)="deleteJuego(juego.id, $event)">
+                                    Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="juegosLucha.length > 0" class="mb-5 border-bottom pb-4">
+            <h2 class="text-uppercase fw-bold mb-4 border-start border-4 ps-3 categoria">Lucha</h2>
+            <div class="row g-4 justify-content-center">
+                <div class="col-auto me-5 ms-5" *ngFor="let juego of juegosLucha">
+                    <!-- Tarjeta existente -->
+                    <div class="flip-card" [routerLink]="['/eventos', juego.id]" style="cursor: pointer;">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front" [style.backgroundImage]="'url(' + juego.foto + ')'">
+                                <p class="heading_8264">{{ juego.nombre }}</p>
+                            </div>
+                            <div class="flip-card-back" [style.backgroundImage]="'url(' + juego.foto + ')'">
+                                <p class="code">Eventos: {{ contadorEventos[juego.id] || 0 }}</p>
+                                <p class="descripcion">{{ juego.descripcion | slice:0:100 }}...</p>
+                                <button *ngIf="rol == 'ADMIN'" class="btn-eliminar mt-2"
+                                    (click)="deleteJuego(juego.id, $event)">
+                                    Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="juegosSurvival.length > 0" class="mb-5">
+            <h2 class="text-uppercase fw-bold mb-4 border-start border-4 ps-3 categoria">Survival</h2>
+            <div class="row g-4 justify-content-center">
+                <div class="col-auto me-5 ms-5" *ngFor="let juego of juegosSurvival">
+                    <!-- Tarjeta existente -->
+                    <div class="flip-card" [routerLink]="['/eventos', juego.id]" style="cursor: pointer;">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front" [style.backgroundImage]="'url(' + juego.foto + ')'">
+                                <p class="heading_8264">{{ juego.nombre }}</p>
+                            </div>
+                            <div class="flip-card-back" [style.backgroundImage]="'url(' + juego.foto + ')'">
+                                <p class="code">Eventos: {{ contadorEventos[juego.id] || 0 }}</p>
+                                <p class="descripcion">{{ juego.descripcion | slice:0:100 }}...</p>
+                                <button *ngIf="rol == 'ADMIN'" class="btn-eliminar mt-2"
+                                    (click)="deleteJuego(juego.id, $event)">
+                                    Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </section>

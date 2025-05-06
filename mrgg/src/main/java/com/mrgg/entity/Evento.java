@@ -16,7 +16,7 @@ public class Evento extends DomainEntity {
     private String codigo_sala;
 
     @Min(0)
-    private int num_usuario;
+    private int num_jugadores;
 
     @NotNull
     private EstadoEvento estado;
@@ -25,7 +25,7 @@ public class Evento extends DomainEntity {
     private Date fecha_inicio;
 
     @NotBlank
-    private String comentario;
+    private String descripcion;
 
     @OneToMany
     private Set<Solicitud> solicitudes;
@@ -45,12 +45,12 @@ public class Evento extends DomainEntity {
         this.codigo_sala = codigo_sala;
     }
 
-    public int getNum_usuario() {
-        return num_usuario;
+    public int getNum_jugadores() {
+        return num_jugadores;
     }
 
-    public void setNum_usuario(int num_usuario) {
-        this.num_usuario = num_usuario;
+    public void setNum_jugadores(int num_jugadores) {
+        this.num_jugadores = num_jugadores;
     }
 
     public EstadoEvento getEstado() {
@@ -69,12 +69,12 @@ public class Evento extends DomainEntity {
         this.fecha_inicio = fecha_inicio;
     }
 
-    public String getComentario() {
-        return comentario;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setComentario(String comentario) {
-        this.comentario = comentario;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public Set<Solicitud> getSolicitudes() {

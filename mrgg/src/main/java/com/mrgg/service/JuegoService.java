@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mrgg.entity.Admin;
 import com.mrgg.entity.Evento;
 import com.mrgg.entity.Juego;
-import com.mrgg.entity.Roles;
 import com.mrgg.entity.TipoCategoria;
 import com.mrgg.repository.JuegoRepository;
 import com.mrgg.security.JWTUtils;
@@ -29,18 +28,19 @@ public class JuegoService {
     private JuegoRepository juegoRepository;
 
     @Autowired
-    private EventoService eventoService;
-
-    @Autowired
     private JWTUtils jwtUtils;
 
     @Transactional
-    public Juego saveJuego(Juego juego) {
-        Evento evento = jwtUtils.userLogin();
-        Juego juegoSave = juegoRepository.save(juego);
+    public Juego saveJuego(Juego juego) throws IOException {
+        Admin admin = jwtUtils.userLogin();
 
-        evento.getJuego();
-        eventoService.saveEvento(evento);
+        if (admin == null) {
+            return null;
+        }
+
+        juego.setFoto(imagenGeneratedUrl(juego.getNombre()));
+
+        Juego juegoSave = juegoRepository.save(juego);
 
         return juegoSave;
     }
@@ -69,8 +69,8 @@ public class JuegoService {
     public boolean deleteJuego(int id) {
         Juego juego = juegoRepository.findById(id).orElse(null);
         if (juego != null) {
-            Evento evento = jwtUtils.userLogin();
-            if (evento != null && evento.getJuego() != null) {
+            Admin admin = jwtUtils.userLogin();
+            if (admin != null) {
                 juegoRepository.deleteById(id);
                 return true;
             }
@@ -84,6 +84,10 @@ public class JuegoService {
 
     public List<Juego> getAllJuegos() {
         return juegoRepository.findAll();
+    }
+
+    public List<Juego> getAllJuegosByCategoria(TipoCategoria categoria) {
+        return juegoRepository.findByCategoria(categoria);
     }
 
     @Transactional

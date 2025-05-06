@@ -5,5 +5,6 @@ export interface Evento {
     num_usuario: number;
     estado: EstadoEvento;
     fecha_inicio: Date;
-    comentario: string;
+    descripcion: string;
+    num_jugadores: number;
 }

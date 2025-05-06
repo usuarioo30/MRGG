@@ -7,14 +7,16 @@
                 </div>
             </div>
 
-            <div *ngFor="let evento of eventos" class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ evento.codigo_sala }}</h5>
-                        <p class="card-text">Estado: {{ evento.estado }}</p>
-                        <p class="card-text">Fecha de inicio: {{ evento.fecha_inicio | date:'short' }}</p>
-                        <p class="card-text">Comentario: {{ evento.comentario }}</p>
-                        <!-- <p class="card-text"><small class="text-muted">Creado por: {{ evento.usuario }}</small></p> -->
+            <div *ngFor="let evento of eventos" class="col-auto">
+                <div class="notification">
+                    <div class="notiglow"></div>
+                    <div class="notiborderglow"></div>
+                    <div class="notititle">Código de Sala: {{ evento.codigo_sala }}</div>
+                    <div class="notibody">
+                        <p><strong>Estado:</strong> {{ evento.estado }}</p>
+                        <p><strong>Inicio:</strong> {{ evento.fecha_inicio | date: 'short' }}</p>
+                        <p><strong>Descripción:</strong> {{ evento.descripcion }}</p>
+                        <p><strong>Jugadores:</strong> {{ evento.num_jugadores }}</p>
                     </div>
                 </div>
             </div>
