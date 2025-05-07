@@ -80,7 +80,7 @@ export class ListEventosComponent implements OnInit {
         this.eventos = result;
       },
       error => {
-        console.error('Error al obtener los eventos:');
+        console.error('No hay eventos para este juego:', error);
       }
     );
   }

@@ -16,7 +16,8 @@
                     </div>
                 </div>
 
-                <button class="btn btn-success mt-3 mt-md-0" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <button *ngIf="rol == 'USER'" class="btn btn-success mt-3 mt-md-0" data-bs-toggle="modal"
+                    data-bs-target="#exampleModal">
                     <i class="bi bi-plus-lg me-2"></i>Crear Evento
                 </button>
             </div>
@@ -30,7 +31,7 @@
             </div>
 
             <div *ngFor="let evento of eventos" class="col-12 col-md-4 d-flex mb-3">
-                <div class="notification flex-fill h-100 d-flex flex-column">
+                <div class="notification flex-fill h-100 d-flex flex-column" style="min-height: 260px;">
                     <div class="notiglow"></div>
                     <div class="notiborderglow"></div>
                     <div class="notititle d-flex align-items-center justify-content-between">
@@ -49,16 +50,7 @@
                             <p><strong>Estado:</strong> {{ evento.estado }}</p>
                             <p><strong>Inicio:</strong> {{ evento.fecha_inicio | date: 'dd/MM/yyyy, HH:mm' }}</p>
 
-                            <!-- Descripción truncada con tooltip -->
-                            <p [attr.title]="evento.descripcion" data-bs-toggle="tooltip" data-bs-placement="top" style="
-                                    display: -webkit-box;
-                                    -webkit-line-clamp: 3;
-                                    line-clamp: 3;
-                                    -webkit-box-orient: vertical;
-                                    overflow: hidden;
-                                    text-overflow: ellipsis;
-                                    max-height: 4.5em;
-                                ">
+                            <p class="truncar-descripcion" [attr.title]="evento.descripcion">
                                 <strong>Descripción:</strong> {{ evento.descripcion }}
                             </p>
 

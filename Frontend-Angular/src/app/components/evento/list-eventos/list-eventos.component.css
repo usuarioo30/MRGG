@@ -104,3 +104,16 @@
 .juego {
     color: #581845;
 }
+.truncar-descripcion {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  
+    word-break: break-word;
+    hyphens: auto;
+    max-height: 4.5em;
+  }
+  
