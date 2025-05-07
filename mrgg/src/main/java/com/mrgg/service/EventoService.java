@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mrgg.entity.EstadoEvento;
 import com.mrgg.entity.Evento;
 import com.mrgg.entity.Juego;
 import com.mrgg.entity.Usuario;
@@ -56,6 +57,7 @@ public class EventoService {
 
         String codigoSala = UUID.randomUUID().toString().substring(0, 8);
         evento.setCodigo_sala(codigoSala);
+        evento.setEstado(EstadoEvento.ABIERTO);
 
         Evento eventoGuardado = eventoRepository.save(evento);
         usuario.getEventos().add(eventoGuardado);

@@ -24,6 +24,10 @@ export class EventoService {
     return this.http.post<void>(this.urlApi, evento);
   }
 
+  saveEventoPorJuego(juegoId: number, evento: Evento): Observable<void> {
+    return this.http.post<void>(`${this.urlApi}/crear/${juegoId}`, evento);
+  }
+
   editEvento(id: number, evento: Evento): Observable<void> {
     const url = `${this.urlApi}/${id}`;
     return this.http.put<void>(url, evento);

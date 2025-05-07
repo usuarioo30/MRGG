@@ -1,6 +1,7 @@
 package com.mrgg.entity;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import jakarta.persistence.Entity;
@@ -15,14 +16,14 @@ public class Evento extends DomainEntity {
     @NotBlank
     private String codigo_sala;
 
-    @Min(0)
+    @Min(2)
     private int num_jugadores;
 
     @NotNull
     private EstadoEvento estado;
 
     @NotNull
-    private Date fecha_inicio;
+    private LocalDateTime fecha_inicio;
 
     @NotBlank
     private String descripcion;
@@ -61,11 +62,11 @@ public class Evento extends DomainEntity {
         this.estado = estado;
     }
 
-    public Date getFecha_inicio() {
+    public LocalDateTime getFecha_inicio() {
         return fecha_inicio;
     }
 
-    public void setFecha_inicio(Date fecha_inicio) {
+    public void setFecha_inicio(LocalDateTime fecha_inicio) {
         this.fecha_inicio = fecha_inicio;
     }
 

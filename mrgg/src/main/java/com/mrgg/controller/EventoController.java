@@ -94,14 +94,14 @@ public class EventoController {
             @ApiResponse(responseCode = "201", description = "Evento creado exitosamente"),
             @ApiResponse(responseCode = "400", description = "Solicitud inválida o juego no encontrado")
     })
-    public ResponseEntity<String> guardarEventoPorJuego(@PathVariable Integer juegoId, @RequestBody Evento evento) {
+    public ResponseEntity<Void> guardarEventoPorJuego(@PathVariable Integer juegoId, @RequestBody Evento evento) {
         Evento e = eventoService.saveEventoPorJuego(evento, juegoId);
         if (e != null) {
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("Evento creado exitosamente para el juego con ID: " + juegoId);
+                    .build();
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("No se pudo crear el evento. El juego no existe o los datos son inválidos.");
+                    .build();
         }
     }
 

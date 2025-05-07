@@ -1,7 +1,7 @@
 import { EstadoEvento } from "./estado-evento";
 
 export interface Evento {
-    codigo_sala: number;
+    codigo_sala: string;
     num_usuario: number;
     estado: EstadoEvento;
     fecha_inicio: Date;

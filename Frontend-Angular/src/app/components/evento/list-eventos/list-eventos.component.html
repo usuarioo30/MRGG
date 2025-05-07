@@ -1,25 +1,144 @@
-<section class="section mt-5 mb-5">
+<section class="section mt-4 mb-5">
     <div class="container">
+        <div class="card shadow-sm border-0 mb-4">
+            <div
+                class="card-body d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+
+                <div class="d-flex align-items-start gap-3">
+                    <div style="width: 80px; height: 120px;">
+                        <img [src]="juego.foto" alt="Carátula del juego"
+                            class="rounded shadow-sm w-100 h-100 object-fit-cover" />
+                    </div>
+
+                    <div>
+                        <h2 class="fw-bold mb-2 juego">🎮 {{ juego.nombre }}</h2>
+                        <p class="text-muted mb-0">Gestiona aquí los eventos activos para este juego.</p>
+                    </div>
+                </div>
+
+                <button class="btn btn-success mt-3 mt-md-0" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <i class="bi bi-plus-lg me-2"></i>Crear Evento
+                </button>
+            </div>
+        </div>
+
         <div class="row g-4 justify-content-center">
             <div *ngIf="eventos.length === 0" class="col-12">
-                <div class="alert alert-warning" role="alert">
-                    No hay eventos disponibles.
+                <div class="alert alert-warning text-center" role="alert">
+                    No hay eventos disponibles para este juego.
                 </div>
             </div>
 
-            <div *ngFor="let evento of eventos" class="col-auto">
-                <div class="notification">
+            <div *ngFor="let evento of eventos" class="col-12 col-md-4 d-flex mb-3">
+                <div class="notification flex-fill h-100 d-flex flex-column">
                     <div class="notiglow"></div>
                     <div class="notiborderglow"></div>
-                    <div class="notititle">Código de Sala: {{ evento.codigo_sala }}</div>
-                    <div class="notibody">
-                        <p><strong>Estado:</strong> {{ evento.estado }}</p>
-                        <p><strong>Inicio:</strong> {{ evento.fecha_inicio | date: 'short' }}</p>
-                        <p><strong>Descripción:</strong> {{ evento.descripcion }}</p>
-                        <p><strong>Jugadores:</strong> {{ evento.num_jugadores }}</p>
+                    <div class="notititle d-flex align-items-center justify-content-between">
+                        <span class="d-flex align-items-center">
+                            Código de Sala: {{ evento.codigo_sala }}
+                            <!-- Ícono junto al código de sala -->
+                            <button type="button" class="btn btn-sm btn-outline-light ms-2 p-0" title="Copiar código"
+                                (click)="copiarCodigo(evento.codigo_sala)">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </span>
+                    </div>
+
+                    <div class="notibody flex-grow-1 d-flex flex-column justify-content-between">
+                        <div>
+                            <p><strong>Estado:</strong> {{ evento.estado }}</p>
+                            <p><strong>Inicio:</strong> {{ evento.fecha_inicio | date: 'dd/MM/yyyy, HH:mm' }}</p>
+
+                            <!-- Descripción truncada con tooltip -->
+                            <p [attr.title]="evento.descripcion" data-bs-toggle="tooltip" data-bs-placement="top" style="
+                                    display: -webkit-box;
+                                    -webkit-line-clamp: 3;
+                                    line-clamp: 3;
+                                    -webkit-box-orient: vertical;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                    max-height: 4.5em;
+                                ">
+                                <strong>Descripción:</strong> {{ evento.descripcion }}
+                            </p>
+
+                            <p><strong>Jugadores:</strong> {{ evento.num_jugadores }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Toast de éxito para copiar -->
+    <div class="toast-container position-fixed top-0 end-0 p-4" style="z-index: 9999;">
+        <div id="toast" class="toast fade" role="alert" aria-live="assertive" aria-atomic="true"
+            [class.show]="mostrarToastFlag">
+            <div class="toast-header bg-success text-white">
+                <i class="bi bi-clipboard-check me-2"></i>
+                <strong class="me-auto">Código Copiado</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"
+                    aria-label="Cerrar"></button>
+            </div>
+            <div class="toast-body">
+                El código de sala se ha copiado al portapapeles.
+            </div>
+        </div>
+    </div>
+
 </section>
+
+<!-- Modal para crear evento -->
+<div class="modal fade" tabindex="-1" id="exampleModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Crear Evento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="eventoForm" (ngSubmit)="saveEvento()">
+                    <div class="mb-3">
+                        <label for="num_jugadores" class="form-label">Número de Jugadores</label>
+                        <input type="number" class="form-control" id="num_jugadores" formControlName="num_jugadores">
+                        <small
+                            *ngIf="eventoForm.get('num_jugadores')?.hasError('required') && eventoForm.get('num_jugadores')?.touched"
+                            class="text-danger">
+                            El número de jugadores es obligatorio.
+                        </small>
+                        <small
+                            *ngIf="eventoForm.get('num_jugadores')?.hasError('min') && eventoForm.get('num_jugadores')?.touched"
+                            class="text-danger">
+                            El número de jugadores debe ser al menos 2.
+                        </small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="descripcion" formControlName="descripcion"
+                            rows="3"></textarea>
+                        <small
+                            *ngIf="eventoForm.get('descripcion')?.hasError('required') && eventoForm.get('descripcion')?.touched"
+                            class="text-danger">
+                            La descripción es obligatoria.
+                        </small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="fecha_inicio" class="form-label">Fecha de Inicio</label>
+                        <input type="datetime-local" class="form-control" id="fecha_inicio"
+                            formControlName="fecha_inicio">
+                        <small
+                            *ngIf="eventoForm.get('fecha_inicio')?.hasError('required') && eventoForm.get('fecha_inicio')?.touched"
+                            class="text-danger">
+                            La fecha de inicio es obligatoria.
+                        </small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100" [disabled]="eventoForm.invalid">Crear
+                        Evento</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
