@@ -19,6 +19,7 @@ export class HomeComponent implements OnInit {
   public juegosCarreras: Juego[] = [];
   public juegosLucha: Juego[] = [];
   public juegosSurvival: Juego[] = [];
+  public juegosSandbox: Juego[] = [];
   public contadorEventos: { [juegoId: number]: number } = {};
 
   token: string | null = sessionStorage.getItem('token');
@@ -41,6 +42,7 @@ export class HomeComponent implements OnInit {
     this.loadJuegosByCategoria('CARRERAS');
     this.loadJuegosByCategoria('LUCHA');
     this.loadJuegosByCategoria('SURVIVAL');
+    this.loadJuegosByCategoria('SANDBOX');
   }
 
   loadJuegosByCategoria(categoria: string): void {
@@ -56,6 +58,8 @@ export class HomeComponent implements OnInit {
           this.juegosLucha = result;
         } else if (categoria === 'SURVIVAL') {
           this.juegosSurvival = result;
+        } else if (categoria === 'SANDBOX') {
+          this.juegosSandbox = result;
         }
 
         result.forEach(juego => {
@@ -87,6 +91,7 @@ export class HomeComponent implements OnInit {
         this.loadJuegosByCategoria('CARRERAS');
         this.loadJuegosByCategoria('LUCHA');
         this.loadJuegosByCategoria('SURVIVAL');
+        this.loadJuegosByCategoria('SANDBOX');
       },
       (error) => {
         console.error('Error al eliminar el juego', error);

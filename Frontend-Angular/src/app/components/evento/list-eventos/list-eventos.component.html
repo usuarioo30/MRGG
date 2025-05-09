@@ -6,12 +6,12 @@
 
                 <div class="d-flex align-items-start gap-3">
                     <div style="width: 80px; height: 120px;">
-                        <img [src]="juego.foto" alt="Carátula del juego"
+                        <img [src]="juego?.foto" alt="Carátula del juego"
                             class="rounded shadow-sm w-100 h-100 object-fit-cover" />
                     </div>
 
                     <div>
-                        <h2 class="fw-bold mb-2 juego">🎮 {{ juego.nombre }}</h2>
+                        <h2 class="fw-bold mb-2 juego">🎮 {{ juego?.nombre }}</h2>
                         <p class="text-muted mb-0">Gestiona aquí los eventos activos para este juego.</p>
                     </div>
                 </div>
@@ -54,7 +54,11 @@
                                 <strong>Descripción:</strong> {{ evento.descripcion }}
                             </p>
 
-                            <p><strong>Jugadores:</strong> {{ evento.num_jugadores }}</p>
+                            <p><strong>Jugadores para la:</strong> 1/{{ evento.num_jugadores }}</p>
+                            <p><strong>Creado por:</strong>&nbsp;
+                                <img [src]="evento.usuario.foto" alt="Foto de perfil" class="rounded-circle" width="20"
+                                    height="20" /> {{ evento.usuario.username }}
+                            </p>
                         </div>
                     </div>
                 </div>

@@ -58,6 +58,7 @@ public class EventoService {
         String codigoSala = UUID.randomUUID().toString().substring(0, 8);
         evento.setCodigo_sala(codigoSala);
         evento.setEstado(EstadoEvento.ABIERTO);
+        evento.setUsuario(usuario);
 
         Evento eventoGuardado = eventoRepository.save(evento);
         usuario.getEventos().add(eventoGuardado);
@@ -94,6 +95,32 @@ public class EventoService {
         return false;
     }
 
+    @Transactional
+    public boolean unirseAlEvento(int eventoId) {
+        Optional<Evento> eventoOpt = eventoRepository.findById(eventoId);
+
+        if (eventoOpt.isEmpty()) {
+            return false;
+        }
+
+        Evento evento = eventoOpt.get();
+
+        if (evento.getEstado() != EstadoEvento.ABIERTO) {
+            return false;
+        }
+
+        Usuario usuario = jwtUtils.userLogin();
+
+        if (usuario.getEventos().contains(evento)) {
+            return false;
+        }
+
+        usuario.getEventos().add(evento);
+        usuarioService.saveUsuario(usuario);
+
+        return true;
+    }
+
     public Optional<Evento> getEventoById(int id) {
         return eventoRepository.findById(id);
     }
@@ -113,6 +140,14 @@ public class EventoService {
 
     public int obtenerCantidadEventosPorJuego(Long juegoId) {
         return eventoRepository.contarEventosPorJuego(juegoId);
+    }
+
+    public Usuario getUsuarioByEventoId(int id) {
+        Optional<Evento> evento = eventoRepository.findById(id);
+        if (evento.isPresent()) {
+            return evento.get().getUsuario();
+        }
+        return null;
     }
 
 }

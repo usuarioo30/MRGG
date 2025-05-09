@@ -88,6 +88,36 @@ public class EventoController {
         return ResponseEntity.ok(cantidad);
     }
 
+    @GetMapping("/usuario/{id}")
+    @Operation(summary = "Obtener el usuario propietario de un evento por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuario encontrado"),
+            @ApiResponse(responseCode = "404", description = "Evento no encontrado")
+    })
+    public ResponseEntity<String> getUsuarioByEventoId(@PathVariable int id) {
+        Optional<Evento> evento = eventoService.getEventoById(id);
+        if (evento.isPresent()) {
+            return ResponseEntity.ok(evento.get().getUsuario().getUsername());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Evento no encontrado");
+        }
+    }
+
+    @PostMapping("/{eventoId}/unirse")
+    @Operation(summary = "Unirse a un evento")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuario unido al evento correctamente"),
+            @ApiResponse(responseCode = "400", description = "No se pudo unir al evento (ya unido, cerrado, no existe, etc.)")
+    })
+    public ResponseEntity<String> unirseAlEvento(@PathVariable int eventoId) {
+        boolean unido = eventoService.unirseAlEvento(eventoId);
+        if (unido) {
+            return ResponseEntity.ok("Usuario unido al evento correctamente.");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se pudo unir al evento.");
+        }
+    }
+
     @PostMapping("/crear/{juegoId}")
     @Operation(summary = "Crear un nuevo evento asociado a un juego específico")
     @ApiResponses(value = {
@@ -102,21 +132,6 @@ public class EventoController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .build();
-        }
-    }
-
-    @PostMapping
-    @Operation(summary = "Guardar un nuevo evento")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Evento creado exitosamente"),
-            @ApiResponse(responseCode = "400", description = "Solicitud inválida")
-    })
-    public ResponseEntity<String> guardarEvento(@RequestBody Evento evento) {
-        Evento e = eventoService.saveEvento(evento);
-        if (e != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("Evento creado exitosamente");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se pudo crear el producto");
         }
     }
 

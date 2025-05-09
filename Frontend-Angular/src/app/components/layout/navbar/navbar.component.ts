@@ -21,7 +21,6 @@ export class NavbarComponent implements OnInit {
     private usuarioService: UsuarioService,
     private router: Router
   ) {
-
     if (this.token !== null && this.token) {
       this.nombreUsuario = jwtDecode(this.token).sub;
       this.rol = jwtDecode<{ rol: string }>(this.token).rol;

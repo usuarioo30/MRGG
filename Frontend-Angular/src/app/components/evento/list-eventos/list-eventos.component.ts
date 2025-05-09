@@ -104,9 +104,25 @@ export class ListEventosComponent implements OnInit {
     }
   }
 
+  // unirseAlEvento(evento: Evento): void {
+  //   console.log('Unirse al evento con ID:', evento.id);
+  
+  //   this.eventoService.unirseAlEvento(evento.id).subscribe(
+  //     response => {
+  //       console.log('Unido al evento correctamente:', response);
+  //       this.findEventosByJuego(this.juegoId);
+  //     },
+  //     error => {
+  //       console.error('Error al unirse al evento:', error);
+  //       alert('No se pudo unir al evento. Posiblemente ya estés unido o el evento está lleno.');
+  //     }
+  //   );
+  // }
+  
+
   copiarCodigo(codigo: string): void {
     navigator.clipboard.writeText(codigo).then(() => {
-      this.mostrarToastFlag = true; // Solo activar el toast si se copia el código
+      this.mostrarToastFlag = true;
       this.mostrarToast();
     }).catch(err => {
       console.error('Error al copiar el código:', err);
@@ -115,8 +131,7 @@ export class ListEventosComponent implements OnInit {
 
   mostrarToast(): void {
     setTimeout(() => {
-      this.mostrarToastFlag = false // Desactivar el toast después de unos segundos
+      this.mostrarToastFlag = false
     }, 2000);
   }
-
 }

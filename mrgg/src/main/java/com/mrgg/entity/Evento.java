@@ -34,6 +34,9 @@ public class Evento extends DomainEntity {
     @ManyToOne
     private Juego juegos;
 
+    @ManyToOne
+    private Usuario usuario;
+
     public Evento() {
         super();
     }
@@ -92,5 +95,13 @@ public class Evento extends DomainEntity {
 
     public void setJuego(Juego juegos) {
         this.juegos = juegos;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+    
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

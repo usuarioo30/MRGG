@@ -37,4 +37,9 @@ export class EventoService {
     const url = `${this.urlApi}/${id}`
     return this.http.delete<void>(url)
   }
+
+  unirseAlEvento(eventoId: number) {
+    return this.http.post(`/api/eventos/${eventoId}/unirse`, {});
+  }
+
 }
