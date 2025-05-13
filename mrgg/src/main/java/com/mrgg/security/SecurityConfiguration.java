@@ -71,6 +71,15 @@ public class SecurityConfiguration {
 				.requestMatchers(HttpMethod.DELETE, "/evento/{id}").permitAll()
 				.requestMatchers(HttpMethod.PUT, "/evento").hasAuthority("USER")
 
+				// SOLICITUD
+				.requestMatchers(HttpMethod.GET, "/solicitud/deUsuario").hasAuthority("USER")
+				.requestMatchers(HttpMethod.GET, "/solicitud/deEvento").hasAuthority("USER")
+				.requestMatchers(HttpMethod.GET, "/solicitud/{id}").hasAuthority("USER")
+				.requestMatchers(HttpMethod.GET, "/solicitud/create/{idUser}").hasAuthority("USER")
+				.requestMatchers(HttpMethod.GET, "/solicitud/accept/{id}").hasAuthority("USER")
+				.requestMatchers(HttpMethod.GET, "/solicitud/refuse/{id}").hasAuthority("USER")
+				.requestMatchers(HttpMethod.DELETE, "/solicitud/{id}").hasAuthority("USER")
+
 				// JUEGO
 				.requestMatchers(HttpMethod.GET, "/juego").permitAll()
 				.requestMatchers(HttpMethod.GET, "/juego/{id}").permitAll()

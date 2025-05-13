@@ -20,6 +20,10 @@ export class EventoService {
     return this.http.get<Evento[]>(`${this.urlApi}/porJuego/${juegoId}`);
   }
 
+  getAllEvento(): Observable<Evento[]> {
+    return this.http.get<Evento[]>(this.urlApi);
+  }
+
   saveEvento(evento: Evento): Observable<void> {
     return this.http.post<void>(this.urlApi, evento);
   }

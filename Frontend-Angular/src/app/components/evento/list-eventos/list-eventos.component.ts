@@ -104,22 +104,6 @@ export class ListEventosComponent implements OnInit {
     }
   }
 
-  // unirseAlEvento(evento: Evento): void {
-  //   console.log('Unirse al evento con ID:', evento.id);
-  
-  //   this.eventoService.unirseAlEvento(evento.id).subscribe(
-  //     response => {
-  //       console.log('Unido al evento correctamente:', response);
-  //       this.findEventosByJuego(this.juegoId);
-  //     },
-  //     error => {
-  //       console.error('Error al unirse al evento:', error);
-  //       alert('No se pudo unir al evento. Posiblemente ya estés unido o el evento está lleno.');
-  //     }
-  //   );
-  // }
-  
-
   copiarCodigo(codigo: string): void {
     navigator.clipboard.writeText(codigo).then(() => {
       this.mostrarToastFlag = true;

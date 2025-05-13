@@ -11,6 +11,7 @@ export class UsuarioService {
   constructor(private http: HttpClient) { }
 
   private urlApi = "http://localhost:8080/usuario";
+  private idUsuario!: number;
 
   getAllUsuarios(): Observable<Actor[]> {
     return this.http.get<Actor[]>(this.urlApi);
@@ -24,6 +25,10 @@ export class UsuarioService {
   getOneUsuarioLogin(): Observable<Actor> {
     const url = "http://localhost:8080/actorLogueado";
     return this.http.get<Actor>(url);
+  }
+
+  getUsuarioId(): number {
+    return this.idUsuario;
   }
 
   saveUsuario(usuario: Actor): Observable<Actor> {

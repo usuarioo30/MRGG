@@ -26,25 +26,25 @@ public class SolicitudController {
     @Autowired
     private SolicitudService solicitudService;
 
-    @GetMapping("/deCaseta")
-    @Operation(summary = "Obtener todas las solicitudes de caseta")
+    @GetMapping("/deUsuarioSolicitante")
+    @Operation(summary = "Obtener todas las solicitudes de usuario")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de solicitudes de caseta obtenida exitosamente"),
+            @ApiResponse(responseCode = "200", description = "Lista de solicitudes de usuario obtenida exitosamente"),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
-    public ResponseEntity<Set<Solicitud>> getAllSolicitudesByCaseta() {
-        Set<Solicitud> listSolicitud = solicitudService.getAllSolicitudesByUsuario();
+    public ResponseEntity<Set<Solicitud>> getAllSolicitudesByUsuarioSolicitante() {
+        Set<Solicitud> listSolicitud = solicitudService.getAllSolicitudesByUsuarioSolicitante();
         return ResponseEntity.ok(listSolicitud);
     }
 
-    @GetMapping("/deAyuntamiento")
-    @Operation(summary = "Obtener todas las solicitudes de ayuntamiento")
+    @GetMapping("/deUsuarioRecibe")
+    @Operation(summary = "Obtener todas las solicitudes de usuario")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de solicitudes de ayuntamiento obtenida exitosamente"),
+            @ApiResponse(responseCode = "200", description = "Lista de solicitudes de usuario obtenida exitosamente"),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
-    public ResponseEntity<Set<Solicitud>> getAllSolicitudesByAyuntamiento() {
-        Set<Solicitud> listSolicitud = solicitudService.getAllSolicitudesByEvento();
+    public ResponseEntity<Set<Solicitud>> getAllSolicitudesByUsuarioRecibe() {
+        Set<Solicitud> listSolicitud = solicitudService.getAllSolicitudesByUsuarioRecibe();
         return ResponseEntity.ok(listSolicitud);
     }
 
@@ -93,18 +93,18 @@ public class SolicitudController {
         }
     }
 
-    @PostMapping("/{idAyunt}")
-    @Operation(summary = "Crear una nueva solicitud para un ayuntamiento")
+    @GetMapping("create/{idEvento}")
+    @Operation(summary = "Crear una nueva solicitud para un evento")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Solicitud creada exitosamente"),
             @ApiResponse(responseCode = "400", description = "Error al crear la solicitud")
     })
-    public ResponseEntity<String> save(@RequestBody Solicitud s, @PathVariable int idAyunt) {
-        Solicitud solicitudSave = solicitudService.createSolicitud(s, idAyunt);
+    public ResponseEntity<Void> save(@PathVariable int idEvento) {
+        Solicitud solicitudSave = solicitudService.createSolicitud(idEvento);
         if (solicitudSave == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al crear la solicitud");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } else {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Solicitud creada correctamente");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }
     }
 
@@ -114,12 +114,12 @@ public class SolicitudController {
             @ApiResponse(responseCode = "202", description = "Solicitud eliminada exitosamente"),
             @ApiResponse(responseCode = "400", description = "Error al borrar la solicitud")
     })
-    public ResponseEntity<String> delete(@PathVariable int id) {
+    public ResponseEntity<Void> delete(@PathVariable int id) {
         Boolean verEstadoBorrado = solicitudService.deleteSolicitud(id);
         if (verEstadoBorrado == false) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al borrar la solicitud");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } else {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Solicitud borrada correctamente");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }
     }
 }

@@ -30,7 +30,7 @@ public class UsuarioService {
     public Usuario saveUsuario(Usuario usuario) {
         usuario.setRol(Roles.USER);
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-        usuario.setFoto("https://www.gravatar.com/avatar/" + Math.random() * 9000000 + "?d=retro&f=y&s=128)");
+        usuario.setFoto("https://www.gravatar.com/avatar/" + Math.random() * 9000 + "?d=retro&f=y&s=128)");
 
         return usuarioRepository.save(usuario);
     }

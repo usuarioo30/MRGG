@@ -103,21 +103,6 @@ public class EventoController {
         }
     }
 
-    @PostMapping("/{eventoId}/unirse")
-    @Operation(summary = "Unirse a un evento")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuario unido al evento correctamente"),
-            @ApiResponse(responseCode = "400", description = "No se pudo unir al evento (ya unido, cerrado, no existe, etc.)")
-    })
-    public ResponseEntity<String> unirseAlEvento(@PathVariable int eventoId) {
-        boolean unido = eventoService.unirseAlEvento(eventoId);
-        if (unido) {
-            return ResponseEntity.ok("Usuario unido al evento correctamente.");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se pudo unir al evento.");
-        }
-    }
-
     @PostMapping("/crear/{juegoId}")
     @Operation(summary = "Crear un nuevo evento asociado a un juego específico")
     @ApiResponses(value = {

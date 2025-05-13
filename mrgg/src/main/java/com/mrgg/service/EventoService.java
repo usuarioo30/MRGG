@@ -30,16 +30,11 @@ public class EventoService {
     @Autowired
     private JWTUtils jwtUtils;
 
-    @Autowired
-    private UsuarioService usuarioService;
-
     @Transactional
     public Evento saveEvento(Evento evento) {
         Usuario usuario = jwtUtils.userLogin();
+        evento.setUsuario(usuario);
         Evento eventoSave = eventoRepository.save(evento);
-
-        usuario.getEventos().add(eventoSave);
-        usuarioService.saveUsuario(usuario);
 
         return eventoSave;
     }
@@ -61,8 +56,6 @@ public class EventoService {
         evento.setUsuario(usuario);
 
         Evento eventoGuardado = eventoRepository.save(evento);
-        usuario.getEventos().add(eventoGuardado);
-        usuarioService.saveUsuarioByEventos(usuario);
 
         return eventoGuardado;
     }
@@ -72,7 +65,7 @@ public class EventoService {
         Optional<Evento> eventoO = eventoRepository.findById(id);
         if (eventoO.isPresent()) {
             Usuario usuario = jwtUtils.userLogin();
-            if (usuario != null && usuario.getEventos().contains(evento)) {
+            if (usuario != null && eventoO.get().getUsuario().equals(usuario)) {
                 eventoO.get().setNum_jugadores(evento.getNum_jugadores());
                 eventoO.get().setEstado(evento.getEstado());
                 eventoO.get().setDescripcion(evento.getDescripcion());
@@ -88,37 +81,11 @@ public class EventoService {
         Usuario usuario = jwtUtils.userLogin();
         Optional<Evento> evento = eventoRepository.findById(id);
 
-        if (evento.isPresent() && usuario.getEventos().contains(evento.get())) {
+        if (evento.isPresent() && evento.get().getUsuario().equals(usuario)) {
             eventoRepository.deleteById(id);
             return true;
         }
         return false;
-    }
-
-    @Transactional
-    public boolean unirseAlEvento(int eventoId) {
-        Optional<Evento> eventoOpt = eventoRepository.findById(eventoId);
-
-        if (eventoOpt.isEmpty()) {
-            return false;
-        }
-
-        Evento evento = eventoOpt.get();
-
-        if (evento.getEstado() != EstadoEvento.ABIERTO) {
-            return false;
-        }
-
-        Usuario usuario = jwtUtils.userLogin();
-
-        if (usuario.getEventos().contains(evento)) {
-            return false;
-        }
-
-        usuario.getEventos().add(evento);
-        usuarioService.saveUsuario(usuario);
-
-        return true;
     }
 
     public Optional<Evento> getEventoById(int id) {
@@ -131,7 +98,7 @@ public class EventoService {
 
     public Set<Evento> getAllEventosByUsuario() {
         Usuario usuario = jwtUtils.userLogin();
-        return usuario.getEventos();
+        return eventoRepository.getAllEventosByUsuario(usuario);
     }
 
     public List<Evento> getEventosByJuegoId(Integer idJuego) {

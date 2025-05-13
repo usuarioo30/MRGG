@@ -26,5 +26,4 @@ public class MrggApplication implements CommandLineRunner {
 		adminService.adminPorDefecto();
 		juegoService.juegoPorDefecto();
 	}
-
 }

@@ -22,9 +22,6 @@ public class SolicitudService {
     private SolicitudRepository solicitudRepository;
 
     @Autowired
-    private EventoService eventoService;
-
-    @Autowired
     private UsuarioService usuarioService;
 
     @Autowired
@@ -35,21 +32,23 @@ public class SolicitudService {
         return solicitudRepository.save(solicitud);
     }
 
-    public Solicitud createSolicitud(Solicitud solicitud, int idEvento) {
-        Solicitud res = null;
-        Optional<Evento> eventoO = eventoService.getEventoById(idEvento);
+    public Solicitud createSolicitud(int idUsuario) {
+        Solicitud res;
+        Optional<Usuario> usuarioO = usuarioService.getUsuarioById(idUsuario);
+        if (usuarioO.isEmpty()) {
+            res = new Solicitud();
+            res.setEstado(EstadoSolicitud.PENDIENTE);
+            Usuario usuarioSolicitante = jwtUtils.userLogin();
 
-        if (!eventoO.isEmpty()) {
-            solicitud.setEstado(EstadoSolicitud.PENDIENTE);
-            Usuario usuario = jwtUtils.userLogin();
+            solicitudRepository.save(res);
+            usuarioSolicitante.getSolicitudes().add(res);
+            usuarioService.saveUsuario(usuarioSolicitante);
 
-            res = solicitudRepository.save(solicitud);
-            usuario.getSolicitudes().add(res);
-            usuarioService.saveUsuario(usuario);
-
-            Evento evento = eventoO.get();
-            evento.getSolicitudes().add(solicitud);
-            eventoService.saveEvento(evento);
+            Usuario usuarioRecibe = usuarioO.get();
+            usuarioRecibe.getSolicitudes().add(res);
+            usuarioService.saveUsuario(usuarioRecibe);
+        } else {
+            res = null;
         }
 
         return res;
@@ -59,8 +58,8 @@ public class SolicitudService {
         boolean res = false;
         Optional<Solicitud> solicitudO = solicitudRepository.findById(id);
         if (solicitudO.isPresent()) {
-            Evento evento = jwtUtils.userLogin();
-            if (evento.getSolicitudes().contains(solicitudO.get())) {
+            Usuario usuario = jwtUtils.userLogin();
+            if (usuario.getSolicitudes().contains(solicitudO.get())) {
                 solicitudO.get().setEstado(EstadoSolicitud.ACEPTADA);
                 this.saveSolicitud(solicitudO.get());
                 res = true;
@@ -73,8 +72,8 @@ public class SolicitudService {
         boolean res = false;
         Optional<Solicitud> solicitudO = solicitudRepository.findById(id);
         if (solicitudO.isPresent()) {
-            Evento evento = jwtUtils.userLogin();
-            if (evento.getSolicitudes().contains(solicitudO.get())) {
+            Usuario usuario = jwtUtils.userLogin();
+            if (usuario.getSolicitudes().contains(solicitudO.get())) {
                 solicitudO.get().setEstado(EstadoSolicitud.RECHAZADA);
                 this.saveSolicitud(solicitudO.get());
                 res = true;
@@ -87,8 +86,18 @@ public class SolicitudService {
         boolean res = false;
         Optional<Solicitud> solicitudO = solicitudRepository.findById(id);
         if (solicitudO.isPresent() && solicitudO.get().getEstado().equals(EstadoSolicitud.PENDIENTE)) {
-            Evento evento = jwtUtils.userLogin();
-            if (evento.getSolicitudes().contains(solicitudO.get())) {
+            Usuario usuario = jwtUtils.userLogin();
+            if (usuario.getSolicitudes().contains(solicitudO.get())) {
+                usuario.getSolicitudes().remove(solicitudO.get());
+                usuarioService.saveUsuario(usuario);
+
+                for (Usuario usuarioRecibe : usuarioService.getAllUsuarios()) {
+                    if (usuarioRecibe.getSolicitudes().contains(solicitudO.get())) {
+                        usuarioRecibe.getSolicitudes().remove(solicitudO.get());
+                        usuarioService.saveUsuario(usuarioRecibe);
+                    }
+                }
+
                 solicitudRepository.deleteById(id);
                 res = true;
             }
@@ -115,12 +124,12 @@ public class SolicitudService {
         return solicitudRepository.findAll();
     }
 
-    public Set<Solicitud> getAllSolicitudesByEvento() {
-        Evento evento = jwtUtils.userLogin();
-        return evento.getSolicitudes();
+    public Set<Solicitud> getAllSolicitudesByUsuarioSolicitante() {
+        Usuario usuario = jwtUtils.userLogin();
+        return usuario.getSolicitudes();
     }
 
-    public Set<Solicitud> getAllSolicitudesByUsuario() {
+    public Set<Solicitud> getAllSolicitudesByUsuarioRecibe() {
         Usuario usuario = jwtUtils.userLogin();
         return usuario.getSolicitudes();
     }

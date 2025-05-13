@@ -69,7 +69,7 @@ public class JuegoController {
         // Llamamos al servicio que obtiene los juegos por categoría
         List<Juego> juegos = juegoService.getAllJuegosByCategoria(categoria);
         if (juegos.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            // return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         return ResponseEntity.ok(juegos);
     }
