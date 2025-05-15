@@ -61,33 +61,29 @@ export class ListEventosComponent implements OnInit {
   ngOnInit(): void {
     this.minFechaInicio = this.getMinFechaInicio();
 
-    // Siempre obtenemos el ID del juego y cargamos la información del juego
     this.activatedRoute.params.subscribe(params => {
       this.juegoId = +params['id'];
-      this.findJuegoById(this.juegoId); // Mostrar carátula SIEMPRE
+      this.findJuegoById(this.juegoId);
     });
 
     if (this.token) {
       this.usuarioService.getOneUsuarioLogin().subscribe({
         next: (usuario) => {
           this.userLogin = usuario;
-          this.nombreUsuario = usuario.username; // Usa esto mejor que el token
+          this.nombreUsuario = usuario.username;
 
           const isBaneado = usuario.baneado;
 
           if (!isBaneado) {
             this.findEventosByJuego(this.juegoId);
           }
-          // Si está baneado, no cargamos eventos
         },
         error: (err) => {
           console.error('Error al cargar el usuario:', err);
-          // Si ocurre un error, como token inválido, aún así carga los eventos de forma anónima
           this.findEventosByJuego(this.juegoId);
         }
       });
     } else {
-      // Usuario no logueado => cargar eventos igualmente
       this.findEventosByJuego(this.juegoId);
     }
   }
@@ -125,7 +121,6 @@ export class ListEventosComponent implements OnInit {
       result => {
         this.eventos = result;
 
-        // Clasifica los eventos
         this.misEventos = this.eventos.filter(evento => evento.usuario.username === this.nombreUsuario);
         this.otrosEventos = this.eventos.filter(evento => evento.usuario.username !== this.nombreUsuario);
       },

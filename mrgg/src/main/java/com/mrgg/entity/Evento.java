@@ -1,8 +1,6 @@
 package com.mrgg.entity;
 
-import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Set;
 
 import jakarta.persistence.Entity;

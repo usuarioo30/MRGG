@@ -8,6 +8,7 @@ import { FormAdminComponent } from './components/actor/form-admin/form-admin.com
 import { ListEventosComponent } from './components/evento/list-eventos/list-eventos.component';
 import { FormJuegoComponent } from './components/juego/form-juego/form-juego.component';
 import { ListSolicitudesComponent } from './components/solicitud/list-solicitudes/list-solicitudes.component';
+import { MisEventosComponent } from './components/evento/mis-eventos/mis-eventos.component';
 
 export const routes: Routes = [
 
@@ -27,10 +28,12 @@ export const routes: Routes = [
 
     // EVENTO
     { path: "eventos/:id", component: ListEventosComponent },
+    { path: "misEventos", component: MisEventosComponent },
 
     // JUEGO
     { path: "juego/crear", component: FormJuegoComponent },
 
     // SOLICITUD
     { path: "solicitudes", component: ListSolicitudesComponent },
+    { path: "solicitudes/delEvento/:id", component: ListSolicitudesComponent },
 ];

@@ -56,11 +56,15 @@ export class ListSolicitudesComponent implements OnInit {
 
   usernameBySolicitud(id: number): void {
     let username;
-    this.solicitudService.getSolicitudDeUser().subscribe(
+    this.usuarioService.getSolicitudDeUser(id).subscribe(
       result => {
         username = result.username;
       },
       error => { console.log("Ha ocurrido un error") }
     )
+  }
+
+  volver() {
+    this.router.navigateByUrl(`/misEventos`);
   }
 }

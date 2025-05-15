@@ -28,13 +28,15 @@
               <td>
                 <span class="badge bg-secondary">{{ solicitud.estado }}</span>
               </td>
-              <!-- <td>
+              <td>
                 <span class="badge bg-secondary">{{ usernameBySolicitud(solicitud.id) }}</span>
-              </td> -->
+              </td>
               <td *ngIf="rol === 'USER'">
-                <button type="button" class="btn btn-sm btn-outline-danger"
-                  *ngIf="solicitud.estado.toString() === 'PENDIENTE'">
-                  Eliminar
+                <button type="button" class="btn btn-success me-1" *ngIf="solicitud.estado.toString() === 'PENDIENTE'">
+                  Aceptar
+                </button>
+                <button type="button" class="btn btn-danger" *ngIf="solicitud.estado.toString() === 'PENDIENTE'">
+                  Rechazar
                 </button>
               </td>
             </tr>
@@ -45,3 +47,7 @@
     </div>
   </div>
 </div>
+
+<button type="button" class="btn btn-secondary volver ms-5 mb-2" (click)="volver()"><i class="bi bi-arrow-left"></i>
+  Volver
+</button>

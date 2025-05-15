@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mrgg.entity.Solicitud;
+import com.mrgg.entity.Usuario;
 import com.mrgg.service.SolicitudService;
 
 import io.swagger.v3.oas.annotations.Operation;

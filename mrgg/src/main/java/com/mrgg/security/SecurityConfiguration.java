@@ -54,6 +54,7 @@ public class SecurityConfiguration {
 				// USUARIO
 				.requestMatchers(HttpMethod.GET, "/usuario").hasAuthority("ADMIN")
 				.requestMatchers(HttpMethod.GET, "/usuario").hasAuthority("USER")
+				.requestMatchers(HttpMethod.GET, "/usuario/solicitud/recibida/:id").hasAuthority("USER")
 				.requestMatchers(HttpMethod.POST, "/usuario").permitAll()
 				.requestMatchers(HttpMethod.PUT, "/usuario").hasAuthority("USER")
 				.requestMatchers(HttpMethod.PUT, "/usuario/actualizarContrasena").hasAuthority("USER")
@@ -72,8 +73,7 @@ public class SecurityConfiguration {
 				.requestMatchers(HttpMethod.PUT, "/evento/{id}").hasAuthority("USER")
 
 				// SOLICITUD
-				.requestMatchers(HttpMethod.GET, "/solicitud/deUsuario").hasAuthority("USER")
-				.requestMatchers(HttpMethod.GET, "/solicitud/deEvento").hasAuthority("USER")
+				.requestMatchers(HttpMethod.GET, "/solicitud/delEvento/{id}").hasAuthority("USER")
 				.requestMatchers(HttpMethod.GET, "/solicitud/{id}").hasAuthority("USER")
 				.requestMatchers(HttpMethod.GET, "/solicitud/create/{idUser}").hasAuthority("USER")
 				.requestMatchers(HttpMethod.GET, "/solicitud/accept/{id}").hasAuthority("USER")

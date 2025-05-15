@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { Actor } from '../interfaces/actor';
 import { HttpClient } from '@angular/common/http';
+import { Usuario } from '../interfaces/usuario';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,11 @@ export class UsuarioService {
 
   getUsuarioId(): number {
     return this.idUsuario;
+  }
+
+  getSolicitudDeUser(id: number): Observable<Usuario> {
+    const url = `${this.urlApi}/solicitud/recibida/${id}`;
+    return this.http.get<Usuario>(url);
   }
 
   saveUsuario(usuario: Actor): Observable<Actor> {

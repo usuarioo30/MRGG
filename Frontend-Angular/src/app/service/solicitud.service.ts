@@ -23,10 +23,10 @@ export class SolicitudService {
     return this.http.get<Set<Solicitud>>(url);
   }
 
-  getSolicitudDeUser(): Observable<Usuario> {
-    const url = `${this.urlApi}/deUsuarioRecibe`;
-    return this.http.get<Usuario>(url);
-  }
+  // getSolicitudDeUser(): Observable<Usuario> {
+  //   const url = `${this.urlApi}/deUsuarioRecibe`;
+  //   return this.http.get<Usuario>(url);
+  // }
 
   getOneSolicitud(id: number): Observable<Solicitud> {
     const url = `${this.urlApi}/${id}`;
