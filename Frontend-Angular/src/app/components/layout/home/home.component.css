@@ -91,7 +91,8 @@
 .flip-card-back .btn-eliminar {
     position: relative;
     z-index: 1;
-    background-color: #dc3545; /* rojo Bootstrap */
+    background-color: #dc3545;
+    /* rojo Bootstrap */
     color: white;
     border: none;
     padding: 0.4rem 0.8rem;
@@ -125,6 +126,44 @@
 
 /* =================================================== */
 
+/* Estilo modernizado para el título h2 */
 .categoria {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-left: 1rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    border-left: 4px solid #581845;
+    transition: all 0.3s ease;
+}
+
+.categoria:hover {
     color: #581845;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    transform: translateX(5px);
+}
+
+.categoria::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #581845;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.categoria:hover::after {
+    opacity: 1;
+}
+
+.categoria {
+    background: linear-gradient(135deg, rgba(88, 24, 69, 0.2), rgba(88, 24, 69, 0.1));
+    padding: 1rem;
+    border-radius: 0.5rem;
 }

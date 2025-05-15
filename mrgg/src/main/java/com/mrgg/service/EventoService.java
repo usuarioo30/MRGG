@@ -40,6 +40,13 @@ public class EventoService {
     }
 
     @Transactional
+    public Evento saveEventoBySolicitud(Evento evento) {
+        Evento eventoGuardado = eventoRepository.save(evento);
+
+        return eventoGuardado;
+    }
+
+    @Transactional
     public Evento saveEventoPorJuego(Evento evento, Integer juegoId) {
         Optional<Juego> juegoOpt = juegoRepository.findById(juegoId);
 
@@ -65,12 +72,24 @@ public class EventoService {
         Optional<Evento> eventoO = eventoRepository.findById(id);
         if (eventoO.isPresent()) {
             Usuario usuario = jwtUtils.userLogin();
-            if (usuario != null && eventoO.get().getUsuario().equals(usuario)) {
-                eventoO.get().setNum_jugadores(evento.getNum_jugadores());
-                eventoO.get().setEstado(evento.getEstado());
-                eventoO.get().setDescripcion(evento.getDescripcion());
 
-                return eventoRepository.save(eventoO.get());
+            if (usuario != null && eventoO.get().getUsuario().equals(usuario)) {
+                Evento eventoActual = eventoO.get();
+
+                if (evento.getNum_jugadores() != null) {
+                    eventoActual.setNum_jugadores(evento.getNum_jugadores());
+                }
+                if (evento.getEstado() != null) {
+                    eventoActual.setEstado(evento.getEstado());
+                }
+                if (evento.getDescripcion() != null) {
+                    eventoActual.setDescripcion(evento.getDescripcion());
+                }
+                if (evento.getFecha_inicio() != null) {
+                    eventoActual.setFecha_inicio(evento.getFecha_inicio());
+                }
+
+                return eventoRepository.save(eventoActual);
             }
         }
         return null;

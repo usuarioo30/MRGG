@@ -25,6 +25,9 @@ public class SolicitudService {
     private UsuarioService usuarioService;
 
     @Autowired
+    private EventoService eventoService;
+
+    @Autowired
     private JWTUtils jwtUtils;
 
     @Transactional
@@ -32,23 +35,22 @@ public class SolicitudService {
         return solicitudRepository.save(solicitud);
     }
 
-    public Solicitud createSolicitud(int idUsuario) {
-        Solicitud res;
-        Optional<Usuario> usuarioO = usuarioService.getUsuarioById(idUsuario);
-        if (usuarioO.isEmpty()) {
-            res = new Solicitud();
-            res.setEstado(EstadoSolicitud.PENDIENTE);
-            Usuario usuarioSolicitante = jwtUtils.userLogin();
+    public boolean createSolicitud(int idEvento) {
+        boolean res = false;
+        Optional<Evento> eventoO = eventoService.getEventoById(idEvento);
+        if (!eventoO.isEmpty()) {
+            Solicitud s = new Solicitud();
+            s.setEstado(EstadoSolicitud.PENDIENTE);
+            solicitudRepository.save(s);
 
-            solicitudRepository.save(res);
-            usuarioSolicitante.getSolicitudes().add(res);
+            Usuario usuarioSolicitante = jwtUtils.userLogin();
+            usuarioSolicitante.getSolicitudes().add(s);
             usuarioService.saveUsuario(usuarioSolicitante);
 
-            Usuario usuarioRecibe = usuarioO.get();
-            usuarioRecibe.getSolicitudes().add(res);
-            usuarioService.saveUsuario(usuarioRecibe);
-        } else {
-            res = null;
+            Evento evento = eventoO.get();
+            evento.getSolicitudes().add(s);
+            eventoService.saveEventoBySolicitud(evento);
+            res = true;
         }
 
         return res;
@@ -124,13 +126,15 @@ public class SolicitudService {
         return solicitudRepository.findAll();
     }
 
-    public Set<Solicitud> getAllSolicitudesByUsuarioSolicitante() {
+    public Set<Solicitud> getAllSolicitudesByEvento(int id) {
+        Set<Solicitud> res = null;
         Usuario usuario = jwtUtils.userLogin();
-        return usuario.getSolicitudes();
-    }
-
-    public Set<Solicitud> getAllSolicitudesByUsuarioRecibe() {
-        Usuario usuario = jwtUtils.userLogin();
-        return usuario.getSolicitudes();
+        Optional<Evento> eventoO = eventoService.getEventoById(id);
+        if (!eventoO.isEmpty()) {
+            if (eventoO.get().getUsuario().equals(usuario)) {
+                res = eventoO.get().getSolicitudes();
+            }
+        }
+        return res;
     }
 }

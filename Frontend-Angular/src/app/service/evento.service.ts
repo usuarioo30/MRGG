@@ -33,9 +33,9 @@ export class EventoService {
   }
 
   editEvento(id: number, evento: Evento): Observable<void> {
-    const url = `${this.urlApi}/${id}`;
-    return this.http.put<void>(url, evento);
+    return this.http.put<void>(`${this.urlApi}/${id}`, evento);
   }
+
 
   deleteEvento(id: number): Observable<void> {
     const url = `${this.urlApi}/${id}`

@@ -121,18 +121,18 @@ public class EventoController {
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Actualizar un producto existente")
+    @Operation(summary = "Actualizar un evento existente")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Evento actualizado exitosamente"),
             @ApiResponse(responseCode = "404", description = "Evento no encontrado"),
-            @ApiResponse(responseCode = "400", description = "Solicitud inválida, e\"Producto no encontrado o no es propietario el usuario loguead")
+            @ApiResponse(responseCode = "400", description = "Solicitud inválida, e\"Evento no encontrado o no es propietario el usuario logueado")
     })
-    public ResponseEntity<String> actualizarEvento(@PathVariable int id, @RequestBody Evento eventoActualizado) {
+    public ResponseEntity<Void> actualizarEvento(@PathVariable int id, @RequestBody Evento eventoActualizado) {
         Evento response = eventoService.updateEvento(id, eventoActualizado);
         if (response != null) {
-            return ResponseEntity.status(HttpStatus.OK).body("Evento actualizado exitosamente");
+            return ResponseEntity.status(HttpStatus.OK).build();
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Evento no encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
@@ -142,12 +142,12 @@ public class EventoController {
             @ApiResponse(responseCode = "200", description = "Evento eliminado exitosamente"),
             @ApiResponse(responseCode = "404", description = "Evento no encontrado o no es propietario el usuario logueado")
     })
-    public ResponseEntity<String> eliminarEvento(@PathVariable int id) {
+    public ResponseEntity<Void> eliminarEvento(@PathVariable int id) {
         if (eventoService.deleteEvento(id)) {
-            return ResponseEntity.status(HttpStatus.OK).body("Evento eliminado exitosamente");
+            return ResponseEntity.status(HttpStatus.OK).build();
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Evento no encontrado o no es propietario el usuario logueado");
+                    .build();
         }
     }
 

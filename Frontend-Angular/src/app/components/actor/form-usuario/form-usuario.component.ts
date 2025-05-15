@@ -110,7 +110,7 @@ export class FormUsuarioComponent implements OnInit {
 
 
   eliminarUsuario() {
-    var confirmacion = window.confirm("¿Estas seguro de eliminar el admin?");
+    var confirmacion = window.confirm("¿Estas seguro de eliminar el usuario?");
     if (confirmacion) {
       this.usuarioService.deleteUsuario().subscribe(
         result => { this.logout() },

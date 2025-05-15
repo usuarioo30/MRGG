@@ -26,25 +26,14 @@ public class SolicitudController {
     @Autowired
     private SolicitudService solicitudService;
 
-    @GetMapping("/deUsuarioSolicitante")
-    @Operation(summary = "Obtener todas las solicitudes de usuario")
+    @GetMapping("/delEvento/{id}")
+    @Operation(summary = "Obtener todas las solicitudes de evento")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de solicitudes de usuario obtenida exitosamente"),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
-    public ResponseEntity<Set<Solicitud>> getAllSolicitudesByUsuarioSolicitante() {
-        Set<Solicitud> listSolicitud = solicitudService.getAllSolicitudesByUsuarioSolicitante();
-        return ResponseEntity.ok(listSolicitud);
-    }
-
-    @GetMapping("/deUsuarioRecibe")
-    @Operation(summary = "Obtener todas las solicitudes de usuario")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de solicitudes de usuario obtenida exitosamente"),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
-    public ResponseEntity<Set<Solicitud>> getAllSolicitudesByUsuarioRecibe() {
-        Set<Solicitud> listSolicitud = solicitudService.getAllSolicitudesByUsuarioRecibe();
+    public ResponseEntity<Set<Solicitud>> getAllSolicitudesByUsuarioRecibe(@PathVariable int id) {
+        Set<Solicitud> listSolicitud = solicitudService.getAllSolicitudesByEvento(id);
         return ResponseEntity.ok(listSolicitud);
     }
 
@@ -100,8 +89,8 @@ public class SolicitudController {
             @ApiResponse(responseCode = "400", description = "Error al crear la solicitud")
     })
     public ResponseEntity<Void> save(@PathVariable int idEvento) {
-        Solicitud solicitudSave = solicitudService.createSolicitud(idEvento);
-        if (solicitudSave == null) {
+        Boolean solicitudSave = solicitudService.createSolicitud(idEvento);
+        if (solicitudSave == false) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } else {
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();

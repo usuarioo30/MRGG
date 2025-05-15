@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Solicitud } from '../interfaces/solicitud';
+import { Usuario } from '../interfaces/usuario';
 
 @Injectable({
   providedIn: 'root'
@@ -12,14 +13,19 @@ export class SolicitudService {
 
   private urlApi = 'http://localhost:8080/solicitud';
 
-  getAllSolicitudByEvento(): Observable<Solicitud[]> {
-    const url = `${this.urlApi}/deEvento`;
+  getAllSolicitudByEvento(id: number): Observable<Solicitud[]> {
+    const url = `${this.urlApi}/delEvento/${id}`;
     return this.http.get<Solicitud[]>(url);
   }
 
   getAllSolicitudByUsuario(): Observable<Set<Solicitud>> {
     const url = `${this.urlApi}/deUsuario`;
     return this.http.get<Set<Solicitud>>(url);
+  }
+
+  getSolicitudDeUser(): Observable<Usuario> {
+    const url = `${this.urlApi}/deUsuarioRecibe`;
+    return this.http.get<Usuario>(url);
   }
 
   getOneSolicitud(id: number): Observable<Solicitud> {

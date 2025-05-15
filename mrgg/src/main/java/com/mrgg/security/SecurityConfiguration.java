@@ -57,6 +57,7 @@ public class SecurityConfiguration {
 				.requestMatchers(HttpMethod.POST, "/usuario").permitAll()
 				.requestMatchers(HttpMethod.PUT, "/usuario").hasAuthority("USER")
 				.requestMatchers(HttpMethod.PUT, "/usuario/actualizarContrasena").hasAuthority("USER")
+				.requestMatchers(HttpMethod.PUT, "/{id}/banear").hasAuthority("ADMIN")
 				.requestMatchers(HttpMethod.DELETE, "/usuario").hasAuthority("USER")
 
 				// EVENTO
@@ -67,9 +68,8 @@ public class SecurityConfiguration {
 				.requestMatchers(HttpMethod.GET, "/evento/{id}").hasAuthority("USER")
 				.requestMatchers(HttpMethod.GET, "/evento/usuario/{id}").permitAll()
 				.requestMatchers(HttpMethod.POST, "/evento/crear/{juegoId}").hasAuthority("USER")
-				.requestMatchers(HttpMethod.POST, "/evento").hasAuthority("USER")
-				.requestMatchers(HttpMethod.DELETE, "/evento/{id}").permitAll()
-				.requestMatchers(HttpMethod.PUT, "/evento").hasAuthority("USER")
+				.requestMatchers(HttpMethod.DELETE, "/evento/{id}").hasAnyAuthority("USER")
+				.requestMatchers(HttpMethod.PUT, "/evento/{id}").hasAuthority("USER")
 
 				// SOLICITUD
 				.requestMatchers(HttpMethod.GET, "/solicitud/deUsuario").hasAuthority("USER")

@@ -1,18 +1,32 @@
 <div class="container mt-4 mb-4">
     <div class="card shadow-sm">
         <div class="card-header text-white">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <h5 class="mb-0">Lista de Usuarios</h5>
-                <div class="d-flex align-items-center">
-                    <span class="me-2">Filtrar baneado:</span>
-                    <select class="form-select form-select-sm w-auto" [(ngModel)]="filtroBaneado">
-                        <option value="todos">Todos</option>
-                        <option value="true">Baneados</option>
-                        <option value="false">No baneados</option>
-                    </select>
+
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <!-- Campo de búsqueda con ícono -->
+                    <div class="input-group input-group-sm" style="width: 220px;">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" class="form-control border-start-0" [(ngModel)]="filtroNombre"
+                            placeholder="Buscar usuario...">
+                    </div>
+
+                    <!-- Selector de baneado -->
+                    <div class="d-flex align-items-center">
+                        <span class="me-2">Filtrar baneado:</span>
+                        <select class="form-select form-select-sm w-auto" [(ngModel)]="filtroBaneado">
+                            <option value="todos">Todos</option>
+                            <option value="true">Baneados</option>
+                            <option value="false">No baneados</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
+
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
@@ -23,6 +37,7 @@
                             <th scope="col">Email</th>
                             <th scope="col">Teléfono</th>
                             <th scope="col">Baneado</th>
+                            <th scope="col">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,9 +52,27 @@
                                     {{usuario.baneado ? 'Sí' : 'No'}}
                                 </span>
                             </td>
+                            <td>
+                                <button class="btn btn-sm" [ngClass]="usuario.baneado ? 'btn-danger' : 'btn-success'"
+                                    (click)="cambiarEstadoBaneo(usuario)">
+                                    {{ usuario.baneado ? 'Desbanear' : 'Banear' }}
+                                </button>
+                            </td>
+
+                        </tr>
+                        }
+
+                        @if (usuariosFiltrados().length === 0) {
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                <div class="alert alert-warning mb-0" role="alert">
+                                    No se encontraron usuarios con ese nombre.
+                                </div>
+                            </td>
                         </tr>
                         }
                     </tbody>
+
                 </table>
             </div>
         </div>

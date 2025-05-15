@@ -50,5 +50,9 @@ export class UsuarioService {
     return this.http.put<void>(url, contrasena);
   }
 
+  cambiarEstadoBaneo(id: number, baneado: boolean): Observable<any> {
+    const url = `${this.urlApi}/${id}/banear`;
+    return this.http.put(url, { baneado: baneado });
+  }
 
 }

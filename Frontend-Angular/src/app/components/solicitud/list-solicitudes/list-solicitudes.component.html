@@ -1,59 +1,46 @@
-<h2>Solicitudes</h2>
-<div class="container my-5 d-flex justify-content-center">
-
-  <table class="table align-middle mb-0 bg-white table-striped">
-    <thead>
-      <tr class="table-dark">
-        <th scope="col">ID</th>
-        <th scope="col">Estado</th>
-        <th *ngIf="rol == 'CASETA'" scope="col">Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for(solicitud of solicitudes; track solicitud.id) {
-      <tr>
-        <td>
-          <div class="d-flex align-items-center">
-            {{solicitud.id}}
-          </div>
-        </td>
-        <td>
-          {{solicitud.estado}}
-          <!-- <span *ngIf="solicitud.tipo_estado == 0">PENDIENTE</span> -->
-        </td>     
-        <td *ngIf="rol == 'USER'">
-          <button type="button" class="btn btn-danger" *ngIf="solicitud.estado.toString() === 'PENDIENTE'">Eliminar</button>
-        </td>
-      </tr>
-      }
-    </tbody>
-  </table>
-</div>
-
-<button type="button" class="btn btn-primary crear" *ngIf="rol == 'USER'" data-bs-toggle="modal"
-  data-bs-target="#exampleModal">
-  Crear solicitud
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Evento al que solicitar licencia</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="container mt-4 mb-4">
+  <div class="card shadow-sm">
+    <div class="card-header text-white">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h5 class="mb-0">Lista de Solicitudes</h5>
       </div>
-      <div class="modal-body">
-        <select class="form-select" id="ayuntamiento" [(ngModel)]="selectedEventoId">
-          @for(evento of eventos; track evento.id) {
-          <option *ngIf="!eventosConSolicitud.includes(evento)" [value]="evento.id">
-            {{evento.codigo_sala }}</option>
-          }
-        </select>
+    </div>
+
+    <div class="card-body">
+      <div *ngIf="solicitudes.length === 0" class="alert alert-warning text-center mb-0" role="alert">
+        <b>No hay solicitudes disponibles.</b>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" (click)="crearSolicitud()">Solicitar</button>
+
+      <div class="table-responsive" *ngIf="solicitudes.length > 0">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Usuario</th>
+              <th *ngIf="rol === 'USER'" scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (solicitud of solicitudes; track solicitud.id) {
+            <tr>
+              <td>{{ solicitud.id }}</td>
+              <td>
+                <span class="badge bg-secondary">{{ solicitud.estado }}</span>
+              </td>
+              <!-- <td>
+                <span class="badge bg-secondary">{{ usernameBySolicitud(solicitud.id) }}</span>
+              </td> -->
+              <td *ngIf="rol === 'USER'">
+                <button type="button" class="btn btn-sm btn-outline-danger"
+                  *ngIf="solicitud.estado.toString() === 'PENDIENTE'">
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

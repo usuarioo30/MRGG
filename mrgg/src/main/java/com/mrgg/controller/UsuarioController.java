@@ -54,6 +54,21 @@ public class UsuarioController {
         }
     }
 
+    @GetMapping("/solicitud/recibida/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de usuarios obtenida exitosamente"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    public ResponseEntity<Usuario> findUserBySolicitud(@PathVariable Integer id) {
+        Optional<Usuario> usuario = usuarioService.findUserBySolicitud(id);
+
+        if (usuario.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(usuario.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
     @PostMapping
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Usuario creado exitosamente"),
@@ -101,6 +116,19 @@ public class UsuarioController {
         if (respuesta != null) {
             return ResponseEntity.status(HttpStatus.OK).build();
         } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PutMapping("/{id}/banear")
+    public ResponseEntity<Usuario> cambiarEstadoBaneo(
+            @PathVariable int id,
+            @RequestBody Usuario usuarioRequest) {
+
+        try {
+            Usuario actualizado = usuarioService.cambiarEstadoBaneo(id, usuarioRequest.getBaneado());
+            return ResponseEntity.ok(actualizado);
+        } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }

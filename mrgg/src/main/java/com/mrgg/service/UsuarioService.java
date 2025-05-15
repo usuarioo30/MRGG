@@ -76,6 +76,18 @@ public class UsuarioService {
         return false;
     }
 
+    @Transactional
+    public Usuario cambiarEstadoBaneo(int id, boolean nuevoEstado) {
+        Optional<Usuario> usuarioO = usuarioRepository.findById(id);
+        if (usuarioO.isPresent()) {
+            Usuario usuario = usuarioO.get();
+            usuario.setBaneado(nuevoEstado);
+            return usuarioRepository.save(usuario);
+        } else {
+            throw new RuntimeException("Usuario no encontrado");
+        }
+    }
+
     public Optional<Usuario> getUsuarioById(int id) {
         return usuarioRepository.findById(id);
     }
@@ -86,6 +98,10 @@ public class UsuarioService {
 
     public Optional<Usuario> getUsuarioByUsername(String username) {
         return usuarioRepository.findByUsername(username);
+    }
+
+    public Optional<Usuario> findUserBySolicitud(int id) {
+        return usuarioRepository.findUserBySolicitud(id);
     }
 
     public List<Usuario> getAllUsuarios() {
