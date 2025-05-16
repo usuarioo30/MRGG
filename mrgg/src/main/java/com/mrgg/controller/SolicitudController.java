@@ -38,6 +38,17 @@ public class SolicitudController {
         return ResponseEntity.ok(listSolicitud);
     }
 
+    @GetMapping("/misSolicitudes")
+    @Operation(summary = "Obtener todas las solicitudes creadas por el usuario logueado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Solicitudes obtenidas correctamente"),
+            @ApiResponse(responseCode = "401", description = "Usuario no autenticado")
+    })
+    public ResponseEntity<Set<Solicitud>> getSolicitudesCreadasPorUsuario() {
+        Set<Solicitud> solicitudes = solicitudService.getAllSolicitudesByUsuario();
+        return ResponseEntity.ok(solicitudes);
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Buscar una solicitud por ID filtrado por emisor y receptor propietario")
     @ApiResponses(value = {
@@ -57,14 +68,16 @@ public class SolicitudController {
     @Operation(summary = "Aceptar una solicitud por ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Solicitud aceptada exitosamente"),
-            @ApiResponse(responseCode = "400", description = "Error al aceptar la solicitud")
+            @ApiResponse(responseCode = "400", description = "Error al aceptar la solicitud"),
+            @ApiResponse(responseCode = "403", description = "No tiene permiso para aceptar esta solicitud")
     })
-    public ResponseEntity<String> acceptSolicitud(@PathVariable int id) {
+    public ResponseEntity<Void> acceptSolicitud(@PathVariable int id) {
         Boolean verEstado = solicitudService.acceptSolicitud(id);
-        if (verEstado == false) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al aceptar la solicitud");
+        if (!verEstado) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .build();
         } else {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Solicitud aceptada correctamente");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }
     }
 
@@ -72,14 +85,16 @@ public class SolicitudController {
     @Operation(summary = "Rechazar una solicitud por ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Solicitud rechazada exitosamente"),
-            @ApiResponse(responseCode = "400", description = "Error al rechazar la solicitud")
+            @ApiResponse(responseCode = "400", description = "Error al rechazar la solicitud"),
+            @ApiResponse(responseCode = "403", description = "Permiso denegado, no es el propietario del evento")
     })
-    public ResponseEntity<String> refuseSolicitud(@PathVariable int id) {
+    public ResponseEntity<Void> refuseSolicitud(@PathVariable int id) {
         Boolean verEstado = solicitudService.refuseSolicitud(id);
         if (verEstado == false) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al rechazar la solicitud");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .build();
         } else {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Solicitud rechazada correctamente");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }
     }
 
@@ -112,4 +127,5 @@ public class SolicitudController {
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }
     }
+
 }

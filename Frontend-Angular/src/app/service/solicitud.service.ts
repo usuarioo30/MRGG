@@ -23,18 +23,18 @@ export class SolicitudService {
     return this.http.get<Set<Solicitud>>(url);
   }
 
-  // getSolicitudDeUser(): Observable<Usuario> {
-  //   const url = `${this.urlApi}/deUsuarioRecibe`;
-  //   return this.http.get<Usuario>(url);
-  // }
-
   getOneSolicitud(id: number): Observable<Solicitud> {
     const url = `${this.urlApi}/${id}`;
     return this.http.get<Solicitud>(url);
   }
 
-  saveSolicitud(idAyto: number): Observable<void> {
-    const url = `${this.urlApi}/create/${idAyto}`;
+  getAllSolicitudesByUsuario(): Observable<Solicitud[]> {
+    const url = `${this.urlApi}/misSolicitudes`;
+    return this.http.get<Solicitud[]>(url);
+  }
+
+  saveSolicitud(idEvento: number): Observable<void> {
+    const url = `${this.urlApi}/create/${idEvento}`;
     return this.http.get<void>(url);
   }
 

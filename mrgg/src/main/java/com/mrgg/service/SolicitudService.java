@@ -45,7 +45,7 @@ public class SolicitudService {
 
             Usuario usuarioSolicitante = jwtUtils.userLogin();
             usuarioSolicitante.getSolicitudes().add(s);
-            usuarioService.saveUsuario(usuarioSolicitante);
+            usuarioService.saveUsuarioByEventos(usuarioSolicitante);
 
             Evento evento = eventoO.get();
             evento.getSolicitudes().add(s);
@@ -59,52 +59,80 @@ public class SolicitudService {
     public boolean acceptSolicitud(int id) {
         boolean res = false;
         Optional<Solicitud> solicitudO = solicitudRepository.findById(id);
+
         if (solicitudO.isPresent()) {
-            Usuario usuario = jwtUtils.userLogin();
-            if (usuario.getSolicitudes().contains(solicitudO.get())) {
-                solicitudO.get().setEstado(EstadoSolicitud.ACEPTADA);
-                this.saveSolicitud(solicitudO.get());
-                res = true;
+            Solicitud solicitud = solicitudO.get();
+
+            Optional<Evento> eventoO = eventoService.getEventoByIdFromSolicitud(solicitud);
+
+            if (eventoO.isPresent()) {
+                Evento evento = eventoO.get();
+                Usuario usuario = jwtUtils.userLogin();
+
+                if (evento.getUsuario().equals(usuario)) {
+                    solicitud.setEstado(EstadoSolicitud.ACEPTADA);
+                    solicitudRepository.save(solicitud);
+                    res = true;
+                } else {
+                    res = false;
+                }
             }
         }
         return res;
     }
 
     public boolean refuseSolicitud(int id) {
-        boolean res = false;
         Optional<Solicitud> solicitudO = solicitudRepository.findById(id);
-        if (solicitudO.isPresent()) {
-            Usuario usuario = jwtUtils.userLogin();
-            if (usuario.getSolicitudes().contains(solicitudO.get())) {
-                solicitudO.get().setEstado(EstadoSolicitud.RECHAZADA);
-                this.saveSolicitud(solicitudO.get());
-                res = true;
-            }
+        if (solicitudO.isEmpty()) {
+            return false;
         }
-        return res;
+
+        Solicitud solicitud = solicitudO.get();
+
+        Optional<Evento> eventoO = eventoService.getEventoByIdFromSolicitud(solicitud);
+        if (eventoO.isEmpty()) {
+            return false;
+        }
+
+        Evento evento = eventoO.get();
+        Usuario usuarioLogueado = jwtUtils.userLogin();
+
+        if (evento.getUsuario().equals(usuarioLogueado)) {
+            solicitud.setEstado(EstadoSolicitud.RECHAZADA);
+            solicitudRepository.save(solicitud);
+            return true;
+        } else {
+            return false;
+        }
     }
 
+    @Transactional
     public boolean deleteSolicitud(int id) {
-        boolean res = false;
         Optional<Solicitud> solicitudO = solicitudRepository.findById(id);
-        if (solicitudO.isPresent() && solicitudO.get().getEstado().equals(EstadoSolicitud.PENDIENTE)) {
-            Usuario usuario = jwtUtils.userLogin();
-            if (usuario.getSolicitudes().contains(solicitudO.get())) {
-                usuario.getSolicitudes().remove(solicitudO.get());
-                usuarioService.saveUsuario(usuario);
-
-                for (Usuario usuarioRecibe : usuarioService.getAllUsuarios()) {
-                    if (usuarioRecibe.getSolicitudes().contains(solicitudO.get())) {
-                        usuarioRecibe.getSolicitudes().remove(solicitudO.get());
-                        usuarioService.saveUsuario(usuarioRecibe);
-                    }
-                }
-
-                solicitudRepository.deleteById(id);
-                res = true;
-            }
+        if (solicitudO.isEmpty()) {
+            return false;
         }
-        return res;
+
+        Solicitud solicitud = solicitudO.get();
+
+        Usuario usuarioLogueado = jwtUtils.userLogin();
+
+        if (!usuarioLogueado.getSolicitudes().contains(solicitud)) {
+            return false;
+        }
+
+        usuarioLogueado.getSolicitudes().remove(solicitud);
+        usuarioService.saveUsuarioByEventos(usuarioLogueado);
+
+        Optional<Evento> eventoO = eventoService.getEventoByIdFromSolicitud(solicitud);
+        if (eventoO.isPresent()) {
+            Evento evento = eventoO.get();
+            evento.getSolicitudes().remove(solicitud);
+            eventoService.saveEventoBySolicitud(evento);
+        }
+
+        solicitudRepository.deleteById(id);
+        return true;
     }
 
     public Solicitud getSolicitudById(int id) {
@@ -137,4 +165,10 @@ public class SolicitudService {
         }
         return res;
     }
+
+    public Set<Solicitud> getAllSolicitudesByUsuario() {
+        Usuario usuario = jwtUtils.userLogin();
+        return usuario.getSolicitudes();
+    }
+
 }

@@ -25,7 +25,9 @@ export class ListSolicitudesComponent implements OnInit {
   token: string | null = sessionStorage.getItem("token");
   rol!: string;
   nombreUsuario !: any;
-  idCaseta!: number;
+
+  nombreUsuarios: string[] = [];
+
 
   constructor(
     private usuarioService: UsuarioService,
@@ -43,26 +45,59 @@ export class ListSolicitudesComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    console.log(id);
     if (this.token !== null && this.token && id != null) {
       this.solicitudService.getAllSolicitudByEvento(Number(id)).subscribe(
         result => {
           this.solicitudes = result;
+          this.solicitudes.forEach(solicitud => {
+            this.usuarioService.getSolicitudDeUser(solicitud.id).subscribe(
+              res => this.nombreUsuarios[solicitud.id] = res.username,
+              err => this.nombreUsuarios[solicitud.id] = 'Error'
+            );
+          });
         },
         error => { console.log("Ha ocurrido un error") }
       )
     }
   }
 
-  usernameBySolicitud(id: number): void {
-    let username;
-    this.usuarioService.getSolicitudDeUser(id).subscribe(
-      result => {
-        username = result.username;
+  aceptarSolicitud(id: number): void {
+    this.solicitudService.acceptSolicitud(id).subscribe({
+      next: (solicitudActualizada) => {
+        const index = this.solicitudes.findIndex(s => s.id === id);
+        if (index !== -1) {
+          this.solicitudes[index] = solicitudActualizada;
+        }
+
+        alert('Solicitud rechazada correctamente.');
+        window.location.reload();
       },
-      error => { console.log("Ha ocurrido un error") }
-    )
+      error: (err) => {
+        console.error('Error al rechazar la solicitud:', err);
+        alert('No se pudo rechazar la solicitud.');
+      }
+    });
   }
+
+  rechazarSolicitud(id: number): void {
+    this.solicitudService.refuseSolicitud(id).subscribe({
+      next: (solicitudActualizada) => {
+        const index = this.solicitudes.findIndex(s => s.id === id);
+        if (index !== -1) {
+          this.solicitudes[index] = solicitudActualizada;
+        }
+
+        alert('Solicitud rechazada correctamente.');
+
+        window.location.reload();
+      },
+      error: (err) => {
+        console.error('Error al rechazar la solicitud:', err);
+        alert('No se pudo rechazar la solicitud.');
+      }
+    });
+  }
+
 
   volver() {
     this.router.navigateByUrl(`/misEventos`);

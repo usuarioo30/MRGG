@@ -22,6 +22,11 @@
                 <a class="nav-link" *ngIf="rol == 'USER'" [routerLink]="['/misEventos']">
                     <i class="bi bi-calendar2-event"></i> Mis eventos</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" *ngIf="rol == 'USER'" [routerLink]="['misSolicitudes']">
+                    <i class="bi bi-hourglass"></i>
+                    Mis solicitudes</a>
+            </li>
         </ul>
     </div>
 

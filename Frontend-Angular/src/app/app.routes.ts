@@ -9,6 +9,7 @@ import { ListEventosComponent } from './components/evento/list-eventos/list-even
 import { FormJuegoComponent } from './components/juego/form-juego/form-juego.component';
 import { ListSolicitudesComponent } from './components/solicitud/list-solicitudes/list-solicitudes.component';
 import { MisEventosComponent } from './components/evento/mis-eventos/mis-eventos.component';
+import { MisSolicitudesComponent } from './components/solicitud/mis-solicitudes/mis-solicitudes.component';
 
 export const routes: Routes = [
 
@@ -36,4 +37,5 @@ export const routes: Routes = [
     // SOLICITUD
     { path: "solicitudes", component: ListSolicitudesComponent },
     { path: "solicitudes/delEvento/:id", component: ListSolicitudesComponent },
+    { path: "misSolicitudes", component: MisSolicitudesComponent },
 ];

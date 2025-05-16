@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { EstadoEvento } from '../../../interfaces/estado-evento';
 import { JuegoService } from '../../../service/juego.service';
 import { UsuarioService } from '../../../service/usuario.service';
+import { SolicitudService } from '../../../service/solicitud.service';
 
 @Component({
   selector: 'app-list-eventos',
@@ -40,6 +41,7 @@ export class ListEventosComponent implements OnInit {
     private eventoService: EventoService,
     private usuarioService: UsuarioService,
     private juegoService: JuegoService,
+    private solicitudService: SolicitudService,
     private fb: FormBuilder,
     private router: Router,
     private activatedRoute: ActivatedRoute
@@ -87,9 +89,6 @@ export class ListEventosComponent implements OnInit {
       this.findEventosByJuego(this.juegoId);
     }
   }
-
-
-
 
   getMinFechaInicio(): string {
     const now = new Date();
@@ -159,6 +158,20 @@ export class ListEventosComponent implements OnInit {
     }
   }
 
+  solicitarUnirse(eventoId: number): void {
+    this.solicitudService.saveSolicitud(eventoId).subscribe({
+      next: () => {
+        alert('Solicitud enviada correctamente.');
+        this.findEventosByJuego(this.juegoId);
+      },
+      error: (error) => {
+        console.error('Error al enviar la solicitud:', error);
+        alert('No se pudo enviar la solicitud.');
+      }
+    });
+  }
+
+
   abrirModalCrear() {
     this.eventoSeleccionado = undefined!;
     this.eventoForm.reset({
@@ -223,5 +236,13 @@ export class ListEventosComponent implements OnInit {
     setTimeout(() => {
       this.mostrarToastFlag = false
     }, 2000);
+  }
+
+  contarJugadores(evento: Evento): number {
+    return 1 + Array.from(evento.solicitudes || []).filter(s => s.estado.toString() === 'ACEPTADA').length;
+  }
+
+  estaLleno(evento: Evento): boolean {
+    return this.contarJugadores(evento) >= evento.num_jugadores;
   }
 }

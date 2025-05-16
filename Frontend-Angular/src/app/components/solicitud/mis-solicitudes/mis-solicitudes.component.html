@@ -1,0 +1,60 @@
+<div class="container mt-4 mb-4">
+    <div class="card shadow-sm">
+        <div class="card-header text-white">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <h5 class="mb-0">Mis Solicitudes</h5>
+                <div>
+                    <!-- Filtro por estado de solicitud -->
+                    <select class="form-select" [(ngModel)]="filtroEstado" (change)="filtrarSolicitudes()">
+                        <option value="">Filtrar por estado</option>
+                        <option value="PENDIENTE">Pendiente</option>
+                        <option value="ACEPTADA">Aceptada</option>
+                        <option value="RECHAZADA">Rechazada</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <!-- Alerta si no hay solicitudes disponibles después del filtro -->
+            <div *ngIf="solicitudesFiltradas.length === 0" class="alert alert-warning text-center mb-0" role="alert">
+                <b>No hay solicitudes con el estado seleccionado.</b>
+            </div>
+
+            <div *ngIf="solicitudesFiltradas.length > 0" class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">Juego</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let solicitud of solicitudesFiltradas">
+                            <td>
+                                <!-- Aquí puedes poner el nombre del juego o evento, asumiendo que `solicitud.juego` es una propiedad -->
+                                <!-- {{ solicitud.juego }} -->
+                            </td>
+                            <td>
+                                <span class="badge" [ngClass]="{
+                  'bg-secondary': solicitud.estado.toString() === 'PENDIENTE',
+                  'bg-success': solicitud.estado.toString() === 'ACEPTADA',
+                  'bg-danger': solicitud.estado.toString() === 'RECHAZADA'
+                }">
+                                    {{ solicitud.estado }}
+                                </span>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger ms-3"
+                                    (click)="eliminarSolicitud(solicitud.id)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

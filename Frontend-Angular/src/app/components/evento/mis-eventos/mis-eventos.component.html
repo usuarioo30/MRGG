@@ -32,11 +32,25 @@
                     <tbody>
                         @for (evento of misEventos; track evento.id) {
                         <tr class="text-center">
-                            <td>{{evento.juego?.nombre}}</td>
+                            <td>{{evento.juego.nombre}}</td>
                             <td>
                                 {{ evento.descripcion }}
                             </td>
-                            <td>{{evento.num_jugadores}}</td>
+                            <td>
+                                <span class="fw-semibold" [ngStyle]="{
+      color: estaLleno(evento) ? '#198754' : '#fd7e14'
+    }">
+                                    {{ contarJugadores(evento) }}/{{ evento.num_jugadores }}
+                                </span>
+                                <small class="ms-1" [ngClass]="{
+      'text-success': estaLleno(evento),
+      'text-muted': !estaLleno(evento)
+    }">
+                                    {{ estaLleno(evento) ? 'Completo' : 'Disponible' }}
+                                </small>
+                            </td>
+
+
                             <td *ngIf="rol === 'USER'">
                                 <button type="button" class="btn btn-sm btn-outline-primary"
                                     [routerLink]="['/solicitudes/delEvento/', evento.id]">

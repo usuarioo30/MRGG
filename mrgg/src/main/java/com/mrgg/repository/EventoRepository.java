@@ -1,6 +1,7 @@
 package com.mrgg.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,4 +21,7 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
 
     @Query("SELECT e FROM Evento e WHERE e.usuario.id = ?1")
     Set<Evento> getAllEventosByUsuario(Usuario u);
+
+    @Query("SELECT e FROM Evento e JOIN e.solicitudes s WHERE s.id = :solicitudId")
+    Optional<Evento> findBySolicitudesId(@Param("solicitudId") int solicitudId);
 }

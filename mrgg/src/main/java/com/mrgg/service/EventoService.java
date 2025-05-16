@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.mrgg.entity.EstadoEvento;
 import com.mrgg.entity.Evento;
 import com.mrgg.entity.Juego;
+import com.mrgg.entity.Solicitud;
 import com.mrgg.entity.Usuario;
 import com.mrgg.repository.EventoRepository;
 import com.mrgg.repository.JuegoRepository;
@@ -105,6 +106,12 @@ public class EventoService {
             return true;
         }
         return false;
+    }
+
+    public Optional<Evento> getEventoByIdFromSolicitud(Solicitud solicitud) {
+        return eventoRepository.findAll().stream()
+                .filter(e -> e.getSolicitudes().contains(solicitud))
+                .findFirst();
     }
 
     public Optional<Evento> getEventoById(int id) {

@@ -70,4 +70,14 @@ export class MisEventosComponent implements OnInit {
       this.misEventos = [...this.eventos];
     }
   }
+
+  contarJugadores(evento: Evento): number {
+    const solicitudesAceptadas = Array.from(evento.solicitudes || []).filter(s => s.estado.toString() === 'ACEPTADA');
+    return 1 + solicitudesAceptadas.length; // 1 por el creador
+  }
+
+  estaLleno(evento: Evento): boolean {
+    return this.contarJugadores(evento) >= evento.num_jugadores;
+  }
+
 }
