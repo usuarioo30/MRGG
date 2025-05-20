@@ -63,10 +63,9 @@ public class SolicitudService {
         if (solicitudO.isPresent()) {
             Solicitud solicitud = solicitudO.get();
 
-            Optional<Evento> eventoO = eventoService.getEventoByIdFromSolicitud(solicitud);
+            Evento evento = eventoService.findBySolicitudId(solicitud.getId());
 
-            if (eventoO.isPresent()) {
-                Evento evento = eventoO.get();
+            if (evento != null) {
                 Usuario usuario = jwtUtils.userLogin();
 
                 if (evento.getUsuario().equals(usuario)) {
@@ -82,28 +81,27 @@ public class SolicitudService {
     }
 
     public boolean refuseSolicitud(int id) {
+        boolean res = false;
         Optional<Solicitud> solicitudO = solicitudRepository.findById(id);
-        if (solicitudO.isEmpty()) {
-            return false;
+
+        if (solicitudO.isPresent()) {
+            Solicitud solicitud = solicitudO.get();
+
+            Evento evento = eventoService.findBySolicitudId(solicitud.getId());
+
+            if (evento != null) {
+                Usuario usuario = jwtUtils.userLogin();
+
+                if (evento.getUsuario().equals(usuario)) {
+                    solicitud.setEstado(EstadoSolicitud.RECHAZADA);
+                    solicitudRepository.save(solicitud);
+                    res = true;
+                } else {
+                    res = false;
+                }
+            }
         }
-
-        Solicitud solicitud = solicitudO.get();
-
-        Optional<Evento> eventoO = eventoService.getEventoByIdFromSolicitud(solicitud);
-        if (eventoO.isEmpty()) {
-            return false;
-        }
-
-        Evento evento = eventoO.get();
-        Usuario usuarioLogueado = jwtUtils.userLogin();
-
-        if (evento.getUsuario().equals(usuarioLogueado)) {
-            solicitud.setEstado(EstadoSolicitud.RECHAZADA);
-            solicitudRepository.save(solicitud);
-            return true;
-        } else {
-            return false;
-        }
+        return res;
     }
 
     @Transactional
@@ -124,9 +122,8 @@ public class SolicitudService {
         usuarioLogueado.getSolicitudes().remove(solicitud);
         usuarioService.saveUsuarioByEventos(usuarioLogueado);
 
-        Optional<Evento> eventoO = eventoService.getEventoByIdFromSolicitud(solicitud);
-        if (eventoO.isPresent()) {
-            Evento evento = eventoO.get();
+        Evento evento = eventoService.findBySolicitudId(solicitud.getId());
+        if (evento != null) {
             evento.getSolicitudes().remove(solicitud);
             eventoService.saveEventoBySolicitud(evento);
         }

@@ -82,6 +82,22 @@ public class EventoController {
         }
     }
 
+    @GetMapping("/porSolicitud/{id}")
+    @Operation(summary = "Obtener todos los eventos de un juego específico")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de eventos obtenida exitosamente"),
+            @ApiResponse(responseCode = "404", description = "Juego no encontrado"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    public ResponseEntity<Evento> getEventosBySolicitud(@PathVariable int id) {
+        Evento evento = eventoService.findBySolicitudId(id);
+        if (evento != null) {
+            return ResponseEntity.ok(evento);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
     @GetMapping("/cantidad/{juegoId}")
     public ResponseEntity<Integer> obtenerCantidadEventosPorJuego(@PathVariable Long juegoId) {
         int cantidad = eventoService.obtenerCantidadEventosPorJuego(juegoId);

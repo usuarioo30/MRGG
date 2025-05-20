@@ -58,6 +58,7 @@ export class ListSolicitudesComponent implements OnInit {
         },
         error => { console.log("Ha ocurrido un error") }
       )
+      
     }
   }
 

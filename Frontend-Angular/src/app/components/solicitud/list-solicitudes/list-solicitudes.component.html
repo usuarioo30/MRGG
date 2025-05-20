@@ -35,16 +35,13 @@
                 {{ nombreUsuarios[solicitud.id] }}
               </td>
               <td *ngIf="rol === 'USER'">
-                <button type="button" class="btn btn-success me-2" *ngIf="solicitud.estado.toString() === 'PENDIENTE'"
-                  (click)="aceptarSolicitud(solicitud.id)">
+                <button type="button" class="btn btn-success me-2" *ngIf="solicitud.estado.toString() !== 'PENDIENTE'"
+                  (click)="aceptarSolicitud(solicitud.id)" disabled>
                   Aceptar
                 </button>
-                <button type="button" class="btn btn-danger" *ngIf="solicitud.estado.toString() === 'PENDIENTE'"
-                  (click)="rechazarSolicitud(solicitud.id)">
+                <button type="button" class="btn btn-danger" *ngIf="solicitud.estado.toString() !== 'PENDIENTE'"
+                  (click)="rechazarSolicitud(solicitud.id)" disabled>
                   Rechazar
-                </button>
-                <button class="btn btn-outline-danger btn-sm ms-3" *ngIf="solicitud.estado.toString() != 'PENDIENTE'">
-                  <i class="bi bi-trash"></i>
                 </button>
               </td>
             </tr>

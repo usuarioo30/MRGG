@@ -26,6 +26,7 @@
                     <thead class="table-light">
                         <tr>
                             <th scope="col">Juego</th>
+                            <th scope="col">Código sala</th>
                             <th scope="col">Estado</th>
                             <th scope="col">Acciones</th>
                         </tr>
@@ -33,8 +34,11 @@
                     <tbody>
                         <tr *ngFor="let solicitud of solicitudesFiltradas">
                             <td>
-                                <!-- Aquí puedes poner el nombre del juego o evento, asumiendo que `solicitud.juego` es una propiedad -->
-                                <!-- {{ solicitud.juego }} -->
+                                {{ eventos[solicitud.id]?.juego?.nombre }}<br>
+                                <small>Creado por: {{ eventos[solicitud.id]?.usuario?.username }}</small>
+                            </td>
+                            <td>
+                                {{ eventos[solicitud.id]?.codigo_sala }}
                             </td>
                             <td>
                                 <span class="badge" [ngClass]="{

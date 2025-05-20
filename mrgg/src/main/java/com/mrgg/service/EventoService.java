@@ -32,15 +32,6 @@ public class EventoService {
     private JWTUtils jwtUtils;
 
     @Transactional
-    public Evento saveEvento(Evento evento) {
-        Usuario usuario = jwtUtils.userLogin();
-        evento.setUsuario(usuario);
-        Evento eventoSave = eventoRepository.save(evento);
-
-        return eventoSave;
-    }
-
-    @Transactional
     public Evento saveEventoBySolicitud(Evento evento) {
         Evento eventoGuardado = eventoRepository.save(evento);
 
@@ -108,10 +99,13 @@ public class EventoService {
         return false;
     }
 
-    public Optional<Evento> getEventoByIdFromSolicitud(Solicitud solicitud) {
-        return eventoRepository.findAll().stream()
-                .filter(e -> e.getSolicitudes().contains(solicitud))
-                .findFirst();
+    public Evento findBySolicitudId(int idSolicitud) {
+        Evento res = null;
+        Optional<Evento> eventoO = eventoRepository.findBySolicitudId(idSolicitud);
+        if (eventoO.isPresent()) {
+            res = eventoO.get();
+        }
+        return res;
     }
 
     public Optional<Evento> getEventoById(int id) {

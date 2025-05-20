@@ -23,6 +23,7 @@
                 <table class="table table-hover align-middle">
                     <thead class="table-light">
                         <tr class="text-center">
+                            <th scope="col">Código sala</th>
                             <th scope="col">Nombre juego</th>
                             <th scope="col">Descripción</th>
                             <th scope="col">Nº jugadores</th>
@@ -32,6 +33,7 @@
                     <tbody>
                         @for (evento of misEventos; track evento.id) {
                         <tr class="text-center">
+                            <td>{{ evento.codigo_sala }}</td>
                             <td>{{evento.juego.nombre}}</td>
                             <td>
                                 {{ evento.descripcion }}

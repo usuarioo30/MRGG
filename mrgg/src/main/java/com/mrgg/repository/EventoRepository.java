@@ -23,5 +23,5 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
     Set<Evento> getAllEventosByUsuario(Usuario u);
 
     @Query("SELECT e FROM Evento e JOIN e.solicitudes s WHERE s.id = :solicitudId")
-    Optional<Evento> findBySolicitudesId(@Param("solicitudId") int solicitudId);
+    Optional<Evento> findBySolicitudId(@Param("solicitudId") int solicitudId);
 }

@@ -4,6 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud } from '../../../interfaces/solicitud';
 import { SolicitudService } from '../../../service/solicitud.service';
 import { Router } from '@angular/router';
+import { EventoService } from '../../../service/evento.service';
+import { Evento } from '../../../interfaces/evento';
 
 @Component({
   selector: 'app-mis-solicitudes',
@@ -16,13 +18,17 @@ export class MisSolicitudesComponent implements OnInit {
   solicitudesFiltradas: Solicitud[] = [];
   filtroEstado: string = '';
 
+  eventos: { [key: number]: Evento | undefined } = {};
+
   constructor(
     private solicitudService: SolicitudService,
+    private eventoService: EventoService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
     this.cargarSolicitudes();
+    console.log(this.eventos);
   }
 
   cargarSolicitudes() {
@@ -30,6 +36,12 @@ export class MisSolicitudesComponent implements OnInit {
       next: (data) => {
         this.solicitudes = data;
         this.solicitudesFiltradas = data;
+        this.solicitudes.forEach(solicitud => {
+          this.eventoService.getEventosBySolicitud(solicitud.id).subscribe(
+            res => this.eventos[solicitud.id] = res,
+            err => console.log("Error evento no encontrado")
+          );
+        });
       },
       error: (err) => {
         console.error('Error al obtener solicitudes del usuario', err);

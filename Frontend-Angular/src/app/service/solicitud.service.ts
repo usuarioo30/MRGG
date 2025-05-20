@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Solicitud } from '../interfaces/solicitud';
 import { Usuario } from '../interfaces/usuario';
+import { Evento } from '../interfaces/evento';
 
 @Injectable({
   providedIn: 'root'
