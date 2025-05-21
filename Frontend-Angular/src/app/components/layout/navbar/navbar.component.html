@@ -6,26 +6,35 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-            <li class="nav-item active">
-                <a class="nav-link" [routerLink]="['/']"><i class="bi bi-house"></i> Inicio</a>
+            <li class="nav-item me-1" *ngIf="token == null || token != null">
+                <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                    [routerLink]="['/']">
+                    <i class="bi bi-house"></i> Inicio
+                </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" *ngIf="rol == 'ADMIN'" [routerLink]="['/usuarios']"><i class="bi bi-people"></i>
-                    Usuarios</a>
+            <li class="nav-item me-1 ms-1" *ngIf="rol == 'ADMIN'">
+                <a class="nav-link" routerLinkActive="active"
+                    [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/usuarios']">
+                    <i class="bi bi-people"></i> Usuarios
+                </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" *ngIf="rol == 'ADMIN'" [routerLink]="['/juego/crear']"><i
-                        class="bi bi-controller"></i>
-                    Crear juego</a>
+            <li class="nav-item me-1 ms-1" *ngIf="rol == 'ADMIN'">
+                <a class="nav-link" routerLinkActive="active"
+                    [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/juego/crear']">
+                    <i class="bi bi-controller"></i> Crear juego
+                </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" *ngIf="rol == 'USER'" [routerLink]="['/misEventos']">
-                    <i class="bi bi-calendar2-event"></i> Mis eventos</a>
+            <li class="nav-item me-1 ms-1" *ngIf="rol == 'USER'">
+                <a class="nav-link" routerLinkActive="active"
+                    [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/misEventos']">
+                    <i class="bi bi-calendar2-event"></i> Mis eventos
+                </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" *ngIf="rol == 'USER'" [routerLink]="['misSolicitudes']">
-                    <i class="bi bi-hourglass"></i>
-                    Mis solicitudes</a>
+            <li class="nav-item me-1 ms-1" *ngIf="rol == 'USER'">
+                <a class="nav-link" routerLinkActive="active"
+                    [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/misSolicitudes']">
+                    <i class="bi bi-hourglass"></i> Mis solicitudes
+                </a>
             </li>
         </ul>
     </div>
@@ -51,7 +60,9 @@
             </ul>
         </div>
 
-        <button class="btn btn-light me-0" *ngIf="token == null && obtenerRuta() != '/login'" (click)="login()">Iniciar
+        <button class="btn btn-light me-0"
+            *ngIf="token == null && obtenerRuta() != '/login' && obtenerRuta() != '/usuario/nuevo'"
+            (click)="login()">Iniciar
             sesión
         </button>
     </div>

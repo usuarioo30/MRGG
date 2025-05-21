@@ -1,5 +1,8 @@
 <section class="section mt-5 mb-5">
     <div class="container-xl">
+        <div *ngIf="todosLosJuegosVacios()" class="alert alert-warning text-center mt-5" role="alert">
+            <b>No hay juegos disponibles.</b>
+        </div>
 
         <!-- Sección por categoría -->
         <div *ngIf="juegosDeportivos.length > 0" class="mb-5 border-bottom pb-4">
@@ -21,9 +24,7 @@
                                     (click)="deleteJuego(juego.id, $event)">
                                     Eliminar
                                 </button>
-
                             </div>
-
                         </div>
                     </div>
                 </div>

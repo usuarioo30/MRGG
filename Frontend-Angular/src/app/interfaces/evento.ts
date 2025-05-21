@@ -12,6 +12,6 @@ export interface Evento {
     descripcion: string;
     num_jugadores: number;
     usuario: Usuario;
-    solicitudes: Set<Solicitud>;
+    solicitudes: Solicitud[];
     juego: Juego;
 }

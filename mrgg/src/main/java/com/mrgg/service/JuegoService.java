@@ -13,6 +13,7 @@ import com.mrgg.entity.Admin;
 import com.mrgg.entity.Evento;
 import com.mrgg.entity.Juego;
 import com.mrgg.entity.TipoCategoria;
+import com.mrgg.repository.EventoRepository;
 import com.mrgg.repository.JuegoRepository;
 import com.mrgg.security.JWTUtils;
 
@@ -26,6 +27,9 @@ public class JuegoService {
 
     @Autowired
     private JuegoRepository juegoRepository;
+
+    @Autowired
+    private EventoRepository eventoRepository;
 
     @Autowired
     private JWTUtils jwtUtils;
@@ -71,7 +75,11 @@ public class JuegoService {
         if (juego != null) {
             Admin admin = jwtUtils.userLogin();
             if (admin != null) {
-                juegoRepository.deleteById(id);
+                List<Evento> eventos = eventoRepository.findByJuegosId(juego.getId());
+
+                eventoRepository.deleteAll(eventos);
+
+                juegoRepository.delete(juego);
                 return true;
             }
         }

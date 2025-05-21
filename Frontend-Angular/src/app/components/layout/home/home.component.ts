@@ -6,6 +6,7 @@ import { Juego } from '../../../interfaces/juego';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EventoService } from '../../../service/evento.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-home',
@@ -43,6 +44,15 @@ export class HomeComponent implements OnInit {
     this.loadJuegosByCategoria('LUCHA');
     this.loadJuegosByCategoria('SURVIVAL');
     this.loadJuegosByCategoria('SANDBOX');
+  }
+
+  todosLosJuegosVacios(): boolean {
+    return this.juegosDeportivos.length === 0 &&
+      this.juegosShooter.length === 0 &&
+      this.juegosCarreras.length === 0 &&
+      this.juegosLucha.length === 0 &&
+      this.juegosSurvival.length === 0 &&
+      this.juegosSandbox.length === 0;
   }
 
   loadJuegosByCategoria(categoria: string): void {
@@ -83,20 +93,39 @@ export class HomeComponent implements OnInit {
   deleteJuego(id: number, event: MouseEvent): void {
     event.stopPropagation();
 
-    this.juegoService.deleteJuego(id).subscribe(
-      () => {
-        window.location.reload();
-        this.loadJuegosByCategoria('DEPORTES');
-        this.loadJuegosByCategoria('SHOOTER');
-        this.loadJuegosByCategoria('CARRERAS');
-        this.loadJuegosByCategoria('LUCHA');
-        this.loadJuegosByCategoria('SURVIVAL');
-        this.loadJuegosByCategoria('SANDBOX');
-      },
-      (error) => {
-        console.error('Error al eliminar el juego', error);
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción eliminará el juego permanentemente',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.juegoService.deleteJuego(id).subscribe(
+          () => {
+            Swal.fire({
+              title: 'Eliminado',
+              text: 'El juego ha sido eliminado correctamente',
+              icon: 'success',
+              confirmButtonColor: '#3085d6'
+            }).then(() => {
+              window.location.reload();
+            });
+          },
+          (error) => {
+            console.error('Error al eliminar el juego', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo eliminar el juego'
+            });
+          }
+        );
       }
-    );
+    });
   }
 
 }

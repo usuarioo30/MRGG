@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Route, Router, RouterLink } from '@angular/router';
+import { Route, Router, RouterLink, RouterModule } from '@angular/router';
 import { UsuarioService } from '../../../service/usuario.service';
 import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-navbar',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, RouterModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })

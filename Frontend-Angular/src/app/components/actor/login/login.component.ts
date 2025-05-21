@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ActorService } from '../../../service/actor.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form-categoria',
@@ -41,7 +42,15 @@ export class LoginComponent implements OnInit {
         sessionStorage.setItem("token", tokenLogin.token)
         this.router.navigate(['/']).then(() => window.location.reload());
       },
-      error => { window.alert("Usuario y/o constraseña incorrecto"); }
+      error => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de autenticación',
+          text: 'Usuario y/o contraseña incorrecto',
+          confirmButtonColor: '#d33'
+        });
+      }
     );
   }
+
 }

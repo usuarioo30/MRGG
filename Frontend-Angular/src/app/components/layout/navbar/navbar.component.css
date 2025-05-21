@@ -18,6 +18,13 @@ button.btn {
     border-radius: 5px;
 }
 
+/* Enlace activo */
+.navbar-nav .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    color: #ffc107 !important;
+}
+
 .dropdown-menu a.dropdown-item:hover {
     background-color: #f8f9fa;
     color: #212529;

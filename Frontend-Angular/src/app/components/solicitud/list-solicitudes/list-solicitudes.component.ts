@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EventoService } from '../../../service/evento.service';
 import { jwtDecode } from 'jwt-decode';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-list-solicitudes',
@@ -16,7 +17,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './list-solicitudes.component.css'
 })
 export class ListSolicitudesComponent implements OnInit {
-  public solicitudes: Solicitud[] = [];
+  solicitudes: Solicitud[] = [];
   public eventos: Evento[] = [];
   id!: number;
   selectedEventoId!: number;
@@ -58,47 +59,93 @@ export class ListSolicitudesComponent implements OnInit {
         },
         error => { console.log("Ha ocurrido un error") }
       )
-      
+
     }
   }
 
   aceptarSolicitud(id: number): void {
-    this.solicitudService.acceptSolicitud(id).subscribe({
-      next: (solicitudActualizada) => {
-        const index = this.solicitudes.findIndex(s => s.id === id);
-        if (index !== -1) {
-          this.solicitudes[index] = solicitudActualizada;
-        }
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: '¿Seguro que quieres aceptar la solicitud?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, aceptar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.solicitudService.acceptSolicitud(id).subscribe({
+          next: (solicitudActualizada) => {
+            const index = this.solicitudes.findIndex(s => s.id === id);
+            if (index !== -1) {
+              this.solicitudes[index] = solicitudActualizada;
+            }
 
-        alert('Solicitud rechazada correctamente.');
-        window.location.reload();
-      },
-      error: (err) => {
-        console.error('Error al rechazar la solicitud:', err);
-        alert('No se pudo rechazar la solicitud.');
+            Swal.fire({
+              icon: 'success',
+              title: 'Solicitud aceptada',
+              text: 'La solicitud fue aceptada correctamente',
+              confirmButtonColor: '#3085d6'
+            }).then(() => {
+              window.location.reload();
+            });
+          },
+          error: (err) => {
+            console.error('Error al aceptar la solicitud:', err);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo aceptar la solicitud',
+              confirmButtonColor: '#d33'
+            });
+          }
+        });
       }
     });
   }
 
   rechazarSolicitud(id: number): void {
-    this.solicitudService.refuseSolicitud(id).subscribe({
-      next: (solicitudActualizada) => {
-        const index = this.solicitudes.findIndex(s => s.id === id);
-        if (index !== -1) {
-          this.solicitudes[index] = solicitudActualizada;
-        }
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: '¿Seguro que quieres rechazar la solicitud?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, rechazar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.solicitudService.refuseSolicitud(id).subscribe({
+          next: (solicitudActualizada) => {
+            const index = this.solicitudes.findIndex(s => s.id === id);
+            if (index !== -1) {
+              this.solicitudes[index] = solicitudActualizada;
+            }
 
-        alert('Solicitud rechazada correctamente.');
-
-        window.location.reload();
-      },
-      error: (err) => {
-        console.error('Error al rechazar la solicitud:', err);
-        alert('No se pudo rechazar la solicitud.');
+            Swal.fire({
+              icon: 'success',
+              title: 'Solicitud rechazada',
+              text: 'La solicitud fue rechazada correctamente',
+              confirmButtonColor: '#3085d6'
+            }).then(() => {
+              window.location.reload();
+            });
+          },
+          error: (err) => {
+            console.error('Error al rechazar la solicitud:', err);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo rechazar la solicitud',
+              confirmButtonColor: '#d33'
+            });
+          }
+        });
       }
     });
   }
-
 
   volver() {
     this.router.navigateByUrl(`/misEventos`);

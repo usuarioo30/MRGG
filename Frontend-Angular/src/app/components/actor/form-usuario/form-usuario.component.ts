@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../../../service/usuario.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ActorService } from '../../../service/actor.service';
 
 @Component({
   selector: 'app-form-usuario',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink],
   templateUrl: './form-usuario.component.html',
   styleUrl: './form-usuario.component.css'
 })

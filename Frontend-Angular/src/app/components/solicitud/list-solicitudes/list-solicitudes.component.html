@@ -2,7 +2,7 @@
   <div class="card shadow-sm">
     <div class="card-header text-white">
       <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-        <h5 class="mb-0">Lista de Solicitudes para </h5>
+        <h5 class="mb-0">Lista de solicitudes para</h5>
       </div>
     </div>
 
@@ -24,10 +24,10 @@
             <tr *ngFor="let solicitud of solicitudes;">
               <td>
                 <span class="badge" [ngClass]="{
-                  'bg-secondary': solicitud.estado.toString() === 'PENDIENTE',
-                  'bg-success': solicitud.estado.toString() === 'ACEPTADA',
-                  'bg-danger': solicitud.estado.toString() === 'RECHAZADA'
-                }">
+      'bg-secondary': solicitud.estado.toString() === 'PENDIENTE',
+      'bg-success': solicitud.estado.toString() === 'ACEPTADA',
+      'bg-danger': solicitud.estado.toString() === 'RECHAZADA'
+    }">
                   {{ solicitud.estado }}
                 </span>
               </td>
@@ -35,16 +35,17 @@
                 {{ nombreUsuarios[solicitud.id] }}
               </td>
               <td *ngIf="rol === 'USER'">
-                <button type="button" class="btn btn-success me-2" *ngIf="solicitud.estado.toString() !== 'PENDIENTE'"
-                  (click)="aceptarSolicitud(solicitud.id)" disabled>
-                  Aceptar
+                <button type="button" class="btn btn-success me-2" (click)="aceptarSolicitud(solicitud.id)"
+                  [disabled]="solicitud.estado.toString() !== 'PENDIENTE'">
+                  <i class="bi bi-check"></i>
                 </button>
-                <button type="button" class="btn btn-danger" *ngIf="solicitud.estado.toString() !== 'PENDIENTE'"
-                  (click)="rechazarSolicitud(solicitud.id)" disabled>
-                  Rechazar
+                <button type="button" class="btn btn-danger" (click)="rechazarSolicitud(solicitud.id)"
+                  [disabled]="solicitud.estado.toString() !== 'PENDIENTE'">
+                  <i class="bi bi-x"></i>
                 </button>
               </td>
             </tr>
+
           </tbody>
         </table>
       </div>
