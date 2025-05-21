@@ -79,6 +79,7 @@ public class SecurityConfiguration {
 				.requestMatchers(HttpMethod.GET, "/solicitud/create/{idUser}").hasAuthority("USER")
 				.requestMatchers(HttpMethod.GET, "/solicitud/accept/{id}").hasAuthority("USER")
 				.requestMatchers(HttpMethod.GET, "/solicitud/refuse/{id}").hasAuthority("USER")
+				.requestMatchers(HttpMethod.GET, "/solicitud/usuarioTieneSolicitudEvento/{id}").hasAuthority("USER")
 				.requestMatchers(HttpMethod.GET, "/solicitud/misSolicitudes").hasAuthority("USER")
 				.requestMatchers(HttpMethod.DELETE, "/solicitud/{id}").hasAuthority("USER")
 

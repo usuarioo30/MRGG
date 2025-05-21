@@ -222,8 +222,8 @@
                             </div>
 
                             <!-- Botón para unirse -->
-                            <div *ngIf="token != null && rol == 'USER' && !estaLleno(evento) && evento.estado.toString() != 'CERRADO'"
-                                class="mt-3 me-5 mb-3">
+                            <div *ngIf="token != null && rol == 'USER' && !estaLleno(evento) && evento.estado.toString() != 'CERRADO' && tieneSolicitud[evento.id] == false"
+                               >
                                 <button class="btn btn-primary d-flex align-items-center justify-content-center"
                                     (click)="solicitarUnirse(evento.id)">
                                     <i class="bi bi-person-plus me-2"></i>Solicitar Unirse

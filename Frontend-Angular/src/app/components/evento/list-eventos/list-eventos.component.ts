@@ -38,6 +38,8 @@ export class ListEventosComponent implements OnInit {
   eventosFiltrados: Evento[] = [];
   estadoFiltro: string = '';
 
+  tieneSolicitud: boolean[] = [];
+
   mostrarToastFlag: boolean = false;
 
   constructor(
@@ -95,22 +97,27 @@ export class ListEventosComponent implements OnInit {
         error: (err) => {
           console.error('Error al cargar el usuario:', err);
           this.findEventosByJuego(this.juegoId);
-
-          this.cargarEventos();
         }
       });
     } else {
       this.findEventosByJuego(this.juegoId);
-      this.cargarEventos();
     }
   }
 
-  cargarEventos() {
-    this.eventoService.getAllEvento().subscribe(data => {
-      this.eventos = data;
-      this.aplicarFiltros();
-    });
-  }
+  // cargarEventos() {
+  //   console.log("sdsadad");
+  //   this.eventoService.getAllEvento().subscribe(data => {
+  //     this.eventos = data;
+  //     data.forEach(d => {
+  //       this.solicitudService.isEventoTieneSoliciutdByUser().subscribe(
+  //         result => this.tieneSolicitud[d.id] = result,
+  //         error => console.error('Error al cargar las solicitudes:', error)
+  //       )
+  //     });
+  //     this.aplicarFiltros();
+  //     console.log(this.tieneSolicitud);
+  //   });
+  // }
 
   aplicarFiltros() {
     this.eventosFiltrados = this.eventos.filter(evento => {
@@ -170,7 +177,14 @@ export class ListEventosComponent implements OnInit {
     this.eventoService.getEventosPorJuego(juegoId).subscribe(
       result => {
         this.eventos = result;
-
+        result.forEach(r => {
+          this.tieneSolicitud[r.id] = false;
+          this.solicitudService.isEventoTieneSoliciutdByUser(r.id).subscribe(
+            result => this.tieneSolicitud[r.id] = result,
+            error => console.error('Error al cargar las solicitudes:', error)
+          )
+        });
+        console.log(this.tieneSolicitud);
         this.aplicarFiltroCodigoSala();
       },
       error => {

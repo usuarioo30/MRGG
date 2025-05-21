@@ -54,4 +54,10 @@ export class SolicitudService {
     return this.http.get<Solicitud>(url);
   }
 
+  isEventoTieneSoliciutdByUser(id: number): Observable<boolean> {
+    const url = `${this.urlApi}/usuarioTieneSolicitudEvento/${id}`;
+    return this.http.get<boolean>(url);
+
+  }
+
 }

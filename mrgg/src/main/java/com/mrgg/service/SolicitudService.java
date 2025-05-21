@@ -132,6 +132,22 @@ public class SolicitudService {
         return true;
     }
 
+    public boolean isEventoTieneSoliciutdByUser(int id) {
+        Optional<Evento> eventoO = eventoService.getEventoById(id);
+        boolean res = false;
+
+        if (eventoO.isPresent()) {
+            eventoO.get().getSolicitudes();
+            Usuario usuario = jwtUtils.userLogin();
+            usuario.getSolicitudes().retainAll(eventoO.get().getSolicitudes());
+
+            if (usuario.getSolicitudes().size() != 0) {
+                res = true;
+            }
+        }
+        return res;
+    }
+
     public Solicitud getSolicitudById(int id) {
         Optional<Solicitud> solicitudO = solicitudRepository.findById(id);
 
