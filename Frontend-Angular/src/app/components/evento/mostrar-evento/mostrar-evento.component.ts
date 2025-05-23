@@ -72,11 +72,6 @@ export class MostrarEventoComponent {
 
           const isBaneado = usuario.baneado;
 
-          if (!isBaneado) {
-            this.findEventosByJuego(this.juegoId);
-          }
-
-          // Esperamos a tener el usuario logueado antes de cargar el evento
           this.activatedRoute.params.subscribe(params => {
             const idParam = params['id'];
             const eventoId = Number(idParam);
@@ -102,11 +97,8 @@ export class MostrarEventoComponent {
         },
         error: (err) => {
           console.error('Error al cargar el usuario:', err);
-          this.findEventosByJuego(this.juegoId);
         }
       });
-    } else {
-      this.findEventosByJuego(this.juegoId);
     }
   }
 
@@ -159,6 +151,7 @@ export class MostrarEventoComponent {
   }
 
   findEventosByJuego(juegoId: number) {
+    console.log(juegoId)
     this.eventoService.getEventosPorJuego(juegoId).subscribe(
       result => {
         this.eventos = result;

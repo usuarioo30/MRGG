@@ -169,12 +169,9 @@ public class SolicitudService {
 
     public Set<Solicitud> getAllSolicitudesByEvento(int id) {
         Set<Solicitud> res = null;
-        Usuario usuario = jwtUtils.userLogin();
         Optional<Evento> eventoO = eventoService.getEventoById(id);
         if (!eventoO.isEmpty()) {
-            if (eventoO.get().getUsuario().equals(usuario)) {
-                res = eventoO.get().getSolicitudes();
-            }
+            res = eventoO.get().getSolicitudes();
         }
         return res;
     }

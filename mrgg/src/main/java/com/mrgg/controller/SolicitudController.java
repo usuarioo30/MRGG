@@ -17,9 +17,7 @@ import com.mrgg.service.SolicitudService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import okhttp3.Response;
 
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/solicitud")

@@ -81,6 +81,8 @@ export class ListEventosComponent implements OnInit {
     });
 
 
+    this.findEventosByJuego(this.juegoId);
+
     if (this.token) {
       this.usuarioService.getOneUsuarioLogin().subscribe({
         next: (usuario) => {
@@ -88,18 +90,11 @@ export class ListEventosComponent implements OnInit {
           this.nombreUsuario = usuario.username;
 
           const isBaneado = usuario.baneado;
-
-          if (!isBaneado) {
-            this.findEventosByJuego(this.juegoId);
-          }
         },
         error: (err) => {
           console.error('Error al cargar el usuario:', err);
-          this.findEventosByJuego(this.juegoId);
         }
       });
-    } else {
-      this.findEventosByJuego(this.juegoId);
     }
   }
 
