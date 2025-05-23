@@ -38,46 +38,31 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let solicitud of solicitudesFiltradas">
-                            <ng-container *ngIf="eventos[solicitud.id]; else eventoNoExiste">
-                                <td>
-                                    {{ eventos[solicitud.id]?.juego?.nombre }}<br>
-                                    <small>Evento creado por: {{ eventos[solicitud.id]?.usuario?.username }}</small>
-                                </td>
-                                <td>
-                                    {{ eventos[solicitud.id]?.codigo_sala }}
-                                </td>
-                                <td>
-                                    <span class="badge" [ngClass]="{
+                            <td>
+                                {{ eventos[solicitud.id]?.juego?.nombre }}<br>
+                                <small>Evento creado por: {{ eventos[solicitud.id]?.usuario?.username }}</small>
+                            </td>
+                            <td>
+                                {{ eventos[solicitud.id]?.codigo_sala }}
+                            </td>
+                            <td>
+                                <span class="badge" [ngClass]="{
                 'bg-secondary': solicitud.estado.toString() === 'PENDIENTE',
                 'bg-success': solicitud.estado.toString() === 'ACEPTADA',
-                'bg-danger': solicitud.estado.toString() === 'RECHAZADA'
+                'bg-danger': solicitud.estado.toString() === 'RECHAZADA' || solicitud.estado.toString() === 'CANCELADA',
             }">
-                                        {{ solicitud.estado }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-info"
-                                        [routerLink]="['/eventos/', eventos[solicitud.id]?.juego?.id]">
-                                        <i class="bi bi-eye"></i>
-                                    </button>&nbsp;
-                                    <button type="button" class="btn btn-danger"
-                                        (click)="eliminarSolicitud(solicitud.id)">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </td>
-                            </ng-container>
-
-                            <ng-template #eventoNoExiste>
-                                <td colspan="3" class="text-danger fw-bold text-center">
-                                    Evento no disponible o no existe.
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-danger"
-                                        (click)="eliminarSolicitud(solicitud.id)">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </td>
-                            </ng-template>
+                                    {{ solicitud.estado }}
+                                </span>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary"
+                                    [routerLink]="['/evento/', eventos[solicitud.id]?.id]">
+                                    <i class="bi bi-eye"></i>
+                                </button>&nbsp;
+                                <button type="button" class="btn btn-danger" (click)="eliminarSolicitud(solicitud.id)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

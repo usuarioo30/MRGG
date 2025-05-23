@@ -16,6 +16,11 @@ export class EventoService {
     return this.http.get<number>(`${this.urlApi}/cantidad/${juegoId}`);
   }
 
+  getEventoPorId(id: number): Observable<Evento> {
+    const url = `${this.urlApi}/${id}`;
+    return this.http.get<Evento>(url);
+  }
+
   getEventosPorJuego(juegoId: number): Observable<Evento[]> {
     return this.http.get<Evento[]>(`${this.urlApi}/porJuego/${juegoId}`);
   }
@@ -40,6 +45,12 @@ export class EventoService {
   editEvento(id: number, evento: Evento): Observable<void> {
     return this.http.put<void>(`${this.urlApi}/${id}`, evento);
   }
+
+  cancelarEvento(id: number): Observable<void> {
+    const url = `${this.urlApi}/cancelar/${id}`;
+    return this.http.put<void>(url, null);
+  }
+
 
   deleteEvento(id: number): Observable<void> {
     const url = `${this.urlApi}/${id}`

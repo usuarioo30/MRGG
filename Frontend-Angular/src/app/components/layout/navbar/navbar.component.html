@@ -13,27 +13,27 @@
                 </a>
             </li>
             <li class="nav-item me-1 ms-1" *ngIf="rol == 'ADMIN'">
-                <a class="nav-link" routerLinkActive="active"
-                    [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/usuarios']">
+                <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                    [routerLink]="['/usuarios']">
                     <i class="bi bi-people"></i> Usuarios
                 </a>
             </li>
             <li class="nav-item me-1 ms-1" *ngIf="rol == 'ADMIN'">
-                <a class="nav-link" routerLinkActive="active"
-                    [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/juego/crear']">
+                <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                    [routerLink]="['/juego/crear']">
                     <i class="bi bi-controller"></i> Crear juego
                 </a>
             </li>
             <li class="nav-item me-1 ms-1" *ngIf="rol == 'USER'">
-                <a class="nav-link" routerLinkActive="active"
-                    [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/misEventos']">
-                    <i class="bi bi-calendar2-event"></i> Mis eventos
+                <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                    [routerLink]="['/misEventos']">
+                    <i class="bi bi-calendar2-event"></i> Eventos creados
                 </a>
             </li>
             <li class="nav-item me-1 ms-1" *ngIf="rol == 'USER'">
-                <a class="nav-link" routerLinkActive="active"
-                    [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/misSolicitudes']">
-                    <i class="bi bi-hourglass"></i> Mis solicitudes
+                <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                    [routerLink]="['/solicitudes/enviadas']">
+                    <i class="bi bi-hourglass"></i> Solicitudes enviadas
                 </a>
             </li>
         </ul>

@@ -28,7 +28,8 @@ export class ListSolicitudesComponent implements OnInit {
   nombreUsuario !: any;
 
   nombreUsuarios: string[] = [];
-
+  filterNombreUsuario: string = '';
+  solicitudesFiltradas: Solicitud[] = [];
 
   constructor(
     private usuarioService: UsuarioService,
@@ -52,16 +53,37 @@ export class ListSolicitudesComponent implements OnInit {
           this.solicitudes = result;
           this.solicitudes.forEach(solicitud => {
             this.usuarioService.getSolicitudDeUser(solicitud.id).subscribe(
-              res => this.nombreUsuarios[solicitud.id] = res.username,
-              err => this.nombreUsuarios[solicitud.id] = 'Error'
+              res => {
+                this.nombreUsuarios[solicitud.id] = res.username;
+                this.filtrarSolicitudes();
+              },
+              err => {
+                this.nombreUsuarios[solicitud.id] = 'Error';
+                this.filtrarSolicitudes();
+              }
             );
           });
+          this.solicitudesFiltradas = this.solicitudes;
         },
         error => { console.log("Ha ocurrido un error") }
-      )
-
+      );
     }
   }
+
+  filtrarSolicitudes() {
+    const filter = this.filterNombreUsuario.toLowerCase().trim();
+
+    if (!filter) {
+      this.solicitudesFiltradas = this.solicitudes;
+      return;
+    }
+
+    this.solicitudesFiltradas = this.solicitudes.filter(solicitud => {
+      const nombre = this.nombreUsuarios[solicitud.id]?.toLowerCase() || '';
+      return nombre.includes(filter);
+    });
+  }
+
 
   aceptarSolicitud(id: number): void {
     Swal.fire({

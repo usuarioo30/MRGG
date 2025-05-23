@@ -10,6 +10,7 @@ import { FormJuegoComponent } from './components/juego/form-juego/form-juego.com
 import { ListSolicitudesComponent } from './components/solicitud/list-solicitudes/list-solicitudes.component';
 import { MisEventosComponent } from './components/evento/mis-eventos/mis-eventos.component';
 import { MisSolicitudesComponent } from './components/solicitud/mis-solicitudes/mis-solicitudes.component';
+import { MostrarEventoComponent } from './components/evento/mostrar-evento/mostrar-evento.component';
 
 export const routes: Routes = [
 
@@ -30,6 +31,7 @@ export const routes: Routes = [
     // EVENTO
     { path: "eventos/:id", component: ListEventosComponent },
     { path: "misEventos", component: MisEventosComponent },
+    { path: "evento/:id", component: MostrarEventoComponent },
 
     // JUEGO
     { path: "juego/crear", component: FormJuegoComponent },
@@ -37,5 +39,5 @@ export const routes: Routes = [
     // SOLICITUD
     { path: "solicitudes", component: ListSolicitudesComponent },
     { path: "solicitudes/delEvento/:id", component: ListSolicitudesComponent },
-    { path: "misSolicitudes", component: MisSolicitudesComponent },
+    { path: "solicitudes/enviadas", component: MisSolicitudesComponent },
 ];

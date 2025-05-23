@@ -16,7 +16,7 @@
 
         <div class="card-body">
             <div *ngIf="misEventos.length === 0 && !baneado" class="alert alert-warning text-center mb-0" role="alert">
-                <b>No hay eventos creados.</b>
+                <b>No tienes eventos creados.</b>
             </div>
 
             <div *ngIf="baneado" class="alert alert-danger text-center mt-4">
@@ -46,7 +46,7 @@
                             <td>
                                 {{ evento.descripcion }}
                             </td>
-                            <td>
+                            <td *ngIf="evento.estado.toString() !== 'CANCELADO'">
                                 <span class="fw-semibold" [ngStyle]="{
       color: estaLleno(evento) ? '#198754' : '#fd7e14'
     }">
@@ -59,6 +59,13 @@
                                     {{ estaLleno(evento) ? 'Completo' : 'Disponible' }}
                                 </small>
                             </td>
+                            <td *ngIf="evento.estado.toString() === 'CANCELADO'" class="text-center">
+                                <span class="badge" [ngClass]="{
+                    'bg-danger': evento.estado.toString() === 'CANCELADO',
+                  }">
+                                    {{ evento.estado }}
+                                </span>
+                            </td>
                             <td>
                                 {{ evento.fecha_inicio | date: 'dd/MM/yyyy' }}
                             </td>
@@ -68,8 +75,8 @@
                                     Solicitudes
                                     <span class="text-warning"><b>{{ contarSolicitudes(evento) }}</b></span>
                                 </button> &nbsp;
-                                <button type="button" class="btn btn-sm btn-outline-success"
-                                    [routerLink]="['/eventos/', evento.juego.id]">
+                                <button type="button" class="btn btn-sm btn-primary"
+                                    [routerLink]="['/evento/', evento.id]">
                                     <i class="bi bi-eye"></i>
                                 </button>
                             </td>

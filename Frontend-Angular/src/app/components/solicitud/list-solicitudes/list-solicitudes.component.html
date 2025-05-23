@@ -2,7 +2,15 @@
   <div class="card shadow-sm">
     <div class="card-header text-white">
       <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-        <h5 class="mb-0">Lista de solicitudes para</h5>
+        <h5 class="mb-0">Lista de solicitudes</h5>
+
+        <div class="input-group input-group-sm" style="width: 220px;">
+          <span class="input-group-text bg-white border-end-0">
+            <i class="bi bi-search"></i>
+          </span>
+          <input type="text" class="form-control border-start-0" placeholder="Buscar por nombre de usuario..."
+            [(ngModel)]="filterNombreUsuario" (input)="filtrarSolicitudes()" />
+        </div>
       </div>
     </div>
 
@@ -21,13 +29,13 @@
             </tr>
           </thead>
           <tbody class="text-center">
-            <tr *ngFor="let solicitud of solicitudes;">
+            <tr *ngFor="let solicitud of solicitudesFiltradas;">
               <td>
                 <span class="badge" [ngClass]="{
-      'bg-secondary': solicitud.estado.toString() === 'PENDIENTE',
-      'bg-success': solicitud.estado.toString() === 'ACEPTADA',
-      'bg-danger': solicitud.estado.toString() === 'RECHAZADA'
-    }">
+                    'bg-secondary': solicitud.estado.toString() === 'PENDIENTE',
+                    'bg-success': solicitud.estado.toString() === 'ACEPTADA',
+                    'bg-danger': solicitud.estado.toString() === 'RECHAZADA' || solicitud.estado.toString() === 'CANCELADA',
+                  }">
                   {{ solicitud.estado }}
                 </span>
               </td>
@@ -45,7 +53,6 @@
                 </button>
               </td>
             </tr>
-
           </tbody>
         </table>
       </div>
@@ -53,6 +60,6 @@
   </div>
 </div>
 
-<button type="button" class="btn btn-secondary volver ms-5 mb-2" (click)="volver()"><i class="bi bi-arrow-left"></i>
-  Volver
+<button type="button" class="btn btn-secondary volver ms-5 mb-2" (click)="volver()">
+  <i class="bi bi-arrow-left"></i> Volver
 </button>

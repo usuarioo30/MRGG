@@ -152,6 +152,21 @@ public class EventoController {
         }
     }
 
+    @PutMapping("/cancelar/{id}")
+    @Operation(summary = "Cancelar un evento (no eliminar), cambia estado de evento y solicitudes a CANCELADO")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Evento cancelado exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Evento no encontrado o no es propietario el usuario logueado")
+    })
+    public ResponseEntity<Void> cancelarEvento(@PathVariable int id) {
+        boolean cancelado = eventoService.cancelarEvento(id);
+        if (cancelado) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
     @DeleteMapping("/{id}")
     @Operation(summary = "Eliminar un evento por ID")
     @ApiResponses(value = {

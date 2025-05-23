@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mrgg.entity.EstadoEvento;
+import com.mrgg.entity.EstadoSolicitud;
 import com.mrgg.entity.Evento;
 import com.mrgg.entity.Juego;
 import com.mrgg.entity.Solicitud;
 import com.mrgg.entity.Usuario;
 import com.mrgg.repository.EventoRepository;
 import com.mrgg.repository.JuegoRepository;
+import com.mrgg.repository.SolicitudRepository;
 import com.mrgg.security.JWTUtils;
 
 import jakarta.transaction.Transactional;
@@ -27,6 +29,9 @@ public class EventoService {
 
     @Autowired
     private JuegoRepository juegoRepository;
+
+    @Autowired
+    private SolicitudRepository solicitudRepository;
 
     @Autowired
     private JWTUtils jwtUtils;
@@ -90,12 +95,47 @@ public class EventoService {
     @Transactional
     public boolean deleteEvento(Integer id) {
         Usuario usuario = jwtUtils.userLogin();
-        Optional<Evento> evento = eventoRepository.findById(id);
+        Optional<Evento> eventoOpt = eventoRepository.findById(id);
 
-        if (evento.isPresent() && evento.get().getUsuario().equals(usuario)) {
+        if (eventoOpt.isPresent() && eventoOpt.get().getUsuario().equals(usuario)) {
+            Evento evento = eventoOpt.get();
+
+            Set<Solicitud> solicitudes = evento.getSolicitudes();
+            if (solicitudes != null && !solicitudes.isEmpty()) {
+                solicitudes.forEach(solicitud -> {
+                    solicitud.setEstado(EstadoSolicitud.CANCELADA);
+                    solicitudRepository.save(solicitud);
+                });
+            }
+
             eventoRepository.deleteById(id);
             return true;
         }
+        return false;
+    }
+
+    @Transactional
+    public boolean cancelarEvento(Integer id) {
+        Usuario usuario = jwtUtils.userLogin();
+        Optional<Evento> eventoOpt = eventoRepository.findById(id);
+
+        if (eventoOpt.isPresent() && eventoOpt.get().getUsuario().equals(usuario)) {
+            Evento evento = eventoOpt.get();
+
+            Set<Solicitud> solicitudes = evento.getSolicitudes();
+            if (solicitudes != null && !solicitudes.isEmpty()) {
+                solicitudes.forEach(solicitud -> {
+                    solicitud.setEstado(EstadoSolicitud.CANCELADA);
+                    solicitudRepository.save(solicitud);
+                });
+            }
+
+            evento.setEstado(EstadoEvento.CANCELADO);
+            eventoRepository.save(evento);
+
+            return true;
+        }
+
         return false;
     }
 

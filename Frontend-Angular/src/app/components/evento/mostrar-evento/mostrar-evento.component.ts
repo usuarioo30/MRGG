@@ -1,23 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { EventoService } from '../../../service/evento.service';
+import { UsuarioService } from '../../../service/usuario.service';
+import { JuegoService } from '../../../service/juego.service';
+import { SolicitudService } from '../../../service/solicitud.service';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Evento } from '../../../interfaces/evento';
 import { Usuario } from '../../../interfaces/usuario';
-import { EventoService } from '../../../service/evento.service';
-import { ActivatedRoute, Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { JuegoService } from '../../../service/juego.service';
-import { UsuarioService } from '../../../service/usuario.service';
-import { SolicitudService } from '../../../service/solicitud.service';
-import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-list-eventos',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
-  templateUrl: './list-eventos.component.html',
-  styleUrl: './list-eventos.component.css'
+  selector: 'app-mostrar-evento',
+  imports: [ReactiveFormsModule, CommonModule, FormsModule],
+  templateUrl: './mostrar-evento.component.html',
+  styleUrl: './mostrar-evento.component.css'
 })
-export class ListEventosComponent implements OnInit {
+export class MostrarEventoComponent {
   token: string | null = sessionStorage.getItem("token");
 
   eventos: Evento[] = [];
@@ -31,11 +30,9 @@ export class ListEventosComponent implements OnInit {
   public juego: any;
   minFechaInicio: string = '';
   eventoSeleccionado!: Evento;
-
-  codigoSalaFiltro: string = '';
-  eventosFiltrados: Evento[] = [];
-  estadoFiltro: string = '';
-  nombreUsuarioFiltro: string = '';
+  eventoUnico!: Evento;
+  esMio: boolean = false;
+  jugadoresAceptados: Usuario[] = [];
 
   tieneSolicitud: boolean[] = [];
 
@@ -67,20 +64,6 @@ export class ListEventosComponent implements OnInit {
   ngOnInit(): void {
     this.minFechaInicio = this.getMinFechaInicio();
 
-    this.activatedRoute.params.subscribe(params => {
-      const idParam = params['id'];
-
-      const id = Number(idParam);
-
-      if (!id || isNaN(id) || id <= 0) {
-        this.router.navigate(['/']);
-      } else {
-        this.juegoId = id;
-        this.findJuegoById(this.juegoId);
-      }
-    });
-
-
     if (this.token) {
       this.usuarioService.getOneUsuarioLogin().subscribe({
         next: (usuario) => {
@@ -92,6 +75,30 @@ export class ListEventosComponent implements OnInit {
           if (!isBaneado) {
             this.findEventosByJuego(this.juegoId);
           }
+
+          // Esperamos a tener el usuario logueado antes de cargar el evento
+          this.activatedRoute.params.subscribe(params => {
+            const idParam = params['id'];
+            const eventoId = Number(idParam);
+
+            if (!eventoId || isNaN(eventoId) || eventoId <= 0) {
+              this.router.navigate(['/']);
+            } else {
+              this.eventoService.getEventoPorId(eventoId).subscribe({
+                next: (evento) => {
+                  this.eventoUnico = evento;
+                  this.esMio = evento.usuario?.id === this.userLogin.id;
+
+                  this.cargarJugadoresAceptados(evento.id);
+                },
+                error: (err) => {
+                  console.error('Error al obtener el evento:', err);
+                  this.router.navigate(['/']);
+                }
+              });
+
+            }
+          });
         },
         error: (err) => {
           console.error('Error al cargar el usuario:', err);
@@ -103,39 +110,28 @@ export class ListEventosComponent implements OnInit {
     }
   }
 
-  aplicarFiltros() {
-    this.eventosFiltrados = this.eventos.filter(evento => {
-      const codigo = this.codigoSalaFiltro
-        ? evento.codigo_sala.toLowerCase().includes(this.codigoSalaFiltro.toLowerCase())
-        : true;
+  cargarJugadoresAceptados(eventoId: number) {
+    this.solicitudService.getAllSolicitudByEvento(eventoId).subscribe({
+      next: solicitudes => {
+        const solicitudesAceptadas = solicitudes.filter(s => s.estado.toString() === 'ACEPTADA');
 
-      const estado = this.estadoFiltro
-        ? this.obtenerEstadoEvento(evento).toUpperCase() === this.estadoFiltro.toUpperCase()
-        : true;
+        this.jugadoresAceptados = [];
 
-      const usuario = this.nombreUsuarioFiltro
-        ? evento.usuario.username.toLowerCase().includes(this.nombreUsuarioFiltro.toLowerCase())
-        : true;
-
-      return codigo && estado && usuario;
+        solicitudesAceptadas.forEach(solicitud => {
+          this.usuarioService.getSolicitudDeUser(solicitud.id).subscribe({
+            next: usuario => {
+              this.jugadoresAceptados.push(usuario);
+            },
+            error: err => {
+              console.error('Error al obtener usuario de solicitud:', err);
+            }
+          });
+        });
+      },
+      error: err => {
+        console.error('Error al cargar solicitudes:', err);
+      }
     });
-
-    this.actualizarListasFiltradas();
-  }
-
-
-  actualizarListasFiltradas() {
-    if (this.userLogin) {
-      this.misEventos = this.eventosFiltrados.filter(ev => ev.usuario.id === this.userLogin.id);
-      this.otrosEventos = this.eventosFiltrados.filter(ev => ev.usuario.id !== this.userLogin.id);
-    } else {
-      this.misEventos = [];
-      this.otrosEventos = [...this.eventosFiltrados];
-    }
-  }
-
-  aplicarFiltroEstado() {
-    this.aplicarFiltros();
   }
 
   getMinFechaInicio(): string {
@@ -173,26 +169,11 @@ export class ListEventosComponent implements OnInit {
             error => console.error('Error al cargar las solicitudes:', error)
           )
         });
-        console.log(this.tieneSolicitud);
-        this.aplicarFiltroCodigoSala();
       },
       error => {
         console.error('No hay eventos para este juego:', error);
       }
     );
-  }
-
-  aplicarFiltroCodigoSala() {
-    if (this.codigoSalaFiltro.trim() !== '') {
-      this.eventosFiltrados = this.eventos.filter(evento =>
-        evento.codigo_sala.toLowerCase().includes(this.codigoSalaFiltro.toLowerCase())
-      );
-    } else {
-      this.eventosFiltrados = [...this.eventos];
-    }
-
-    this.misEventos = this.eventosFiltrados.filter(evento => evento.usuario.username === this.nombreUsuario);
-    this.otrosEventos = this.eventosFiltrados.filter(evento => evento.usuario.username !== this.nombreUsuario);
   }
 
   saveEvento() {
@@ -225,46 +206,15 @@ export class ListEventosComponent implements OnInit {
   }
 
   solicitarUnirse(eventoId: number): void {
-    Swal.fire({
-      title: '¿Quieres unirte a este evento?',
-      text: 'Se enviará una solicitud al organizador para unirte.',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, enviar solicitud',
-      cancelButtonText: 'Cancelar'
-    }).then(result => {
-      if (result.isConfirmed) {
-        this.solicitudService.saveSolicitud(eventoId).subscribe({
-          next: () => {
-            Swal.fire({
-              icon: 'success',
-              title: '¡Solicitud enviada!',
-              text: 'Tu solicitud fue enviada correctamente.',
-              confirmButtonText: 'OK'
-            });
-            this.findEventosByJuego(this.juegoId);
-          },
-          error: (error) => {
-            console.error('Error al enviar la solicitud:', error);
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'No se pudo enviar la solicitud.',
-            });
-          }
-        });
+    this.solicitudService.saveSolicitud(eventoId).subscribe({
+      next: () => {
+        alert('Solicitud enviada correctamente.');
+        this.findEventosByJuego(this.juegoId);
+      },
+      error: (error) => {
+        console.error('Error al enviar la solicitud:', error);
+        alert('No se pudo enviar la solicitud.');
       }
-    });
-  }
-
-  abrirModalCrear() {
-    this.eventoSeleccionado = undefined!;
-    this.eventoForm.reset({
-      codigo_sala: '0',
-      num_usuario: '0',
-      fecha_inicio: this.getMinFechaInicio(),
-      descripcion: '',
-      num_jugadores: 2
     });
   }
 
@@ -308,41 +258,6 @@ export class ListEventosComponent implements OnInit {
     }
   }
 
-  cancelarEvento(id: number) {
-    Swal.fire({
-      title: '¿Estás seguro de cancelar el evento?',
-      text: 'El evento cambiará a estado CANCELADO y no podrá unirse nadie más.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, cancelar',
-      cancelButtonText: 'No'
-    }).then(result => {
-      if (result.isConfirmed) {
-        this.eventoService.cancelarEvento(id).subscribe({
-          next: () => {
-            Swal.fire({
-              icon: 'success',
-              title: 'Evento cancelado',
-              showConfirmButton: false,
-              timer: 1500
-            });
-            // Recarga la lista de eventos para reflejar el cambio
-            this.findEventosByJuego(this.juegoId);
-          },
-          error: (err) => {
-            console.error('Error al cancelar el evento:', err);
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'No se pudo cancelar el evento.'
-            });
-          }
-        });
-      }
-    });
-  }
-
-
   copiarCodigo(codigo: string): void {
     navigator.clipboard.writeText(codigo).then(() => {
       this.mostrarToastFlag = true;
@@ -369,4 +284,5 @@ export class ListEventosComponent implements OnInit {
   obtenerEstadoEvento(evento: Evento): string {
     return this.estaLleno(evento) ? 'CERRADO' : evento.estado.toString();
   }
+
 }
