@@ -1,5 +1,7 @@
 package com.mrgg.security;
 
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Optional;
 
@@ -58,6 +60,13 @@ public class JWTUtils {
 
 	public static String getUsernameOfToken(String token) {
 		return Jwts.parser().setSigningKey(JWT_FIRMA).parseClaimsJws(token).getBody().getSubject();
+	}
+
+	public String generarClaveSegura() {
+		SecureRandom secureRandom = new SecureRandom();
+		byte[] claveBytes = new byte[24];
+		secureRandom.nextBytes(claveBytes);
+		return Base64.getUrlEncoder().withoutPadding().encodeToString(claveBytes);
 	}
 
 	public static String generateToken(Authentication authentication) {

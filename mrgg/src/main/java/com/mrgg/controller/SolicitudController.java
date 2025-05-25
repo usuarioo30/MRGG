@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RestController
 @RequestMapping("/solicitud")
 public class SolicitudController {
+    
     @Autowired
     private SolicitudService solicitudService;
 

@@ -1,10 +1,10 @@
-<div class="container vh-100 d-flex justify-content-center align-items-center" *ngIf="token != null">
+<div class="container vh-100 d-flex justify-content-center align-items-center">
     <div class="card shadow-lg border-0 rounded-4 p-4 w-100" style="max-width: 600px;">
         <h4 class="text-center mb-4">Cambiar contraseña</h4>
 
         <form [formGroup]="formContrasena" (ngSubmit)="save()">
             <!-- Password -->
-            <div class="form-floating mb-3" *ngIf="token != null">
+            <div class="form-floating mb-3">
                 <input type="password" formControlName="passnueva" class="form-control" id="passnueva"
                     placeholder="Contraseña">
                 <label for="passnueva">Contraseña nueva</label>

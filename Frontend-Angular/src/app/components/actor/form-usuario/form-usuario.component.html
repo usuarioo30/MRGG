@@ -1,4 +1,22 @@
-<div class="container vh-100 d-flex justify-content-center align-items-center mb-2">
+<div *ngIf="registroEnviado && !registroExitoso"
+    class="container vh-100 d-flex justify-content-center align-items-center">
+    <div class="card p-4 text-center shadow rounded" style="max-width: 500px;">
+        <h4>Registrando...</h4>
+        <p>Estamos enviando un correo de verificación. Por favor espera un momento.</p>
+    </div>
+</div>
+
+<div *ngIf="registroExitoso" class="container vh-100 d-flex justify-content-center align-items-center">
+    <div class="card p-4 text-center shadow rounded" style="max-width: 500px;">
+        <h4>¡Registro exitoso!</h4>
+        <p>Te hemos enviado un correo con un enlace de verificación.</p>
+        <p>Por favor, revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.</p>
+        <p>Si no lo ves, revisa la carpeta de spam o correo no deseado.</p>
+    </div>
+</div>
+
+<div *ngIf="!registroEnviado && !registroExitoso"
+    class="container vh-100 d-flex justify-content-center align-items-center mb-2">
     <div class="card shadow-lg border-0 rounded-4 p-4 w-100" style="max-width: 600px;">
         <h4 class="text-center mb-4">
             {{ token == null ? 'Registro de Usuario' : 'Editar perfil' }}

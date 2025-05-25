@@ -14,4 +14,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     @Query("SELECT u FROM Usuario u JOIN u.solicitudes s WHERE s.id = ?1")
     public Optional<Usuario> findUserBySolicitud(int id);
+
+    public Optional<Usuario> findByClaveSegura(String claveSegura);
+
+    public Optional<Usuario> findByEmail(String email);
 }

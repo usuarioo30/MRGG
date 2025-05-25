@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../../../service/usuario.service';
 import { ActorService } from '../../../service/actor.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ignoreElements } from 'rxjs';
 
@@ -15,15 +15,16 @@ import { ignoreElements } from 'rxjs';
 export class FormContrasenaComponent implements OnInit {
 
   formContrasena!: FormGroup;
-  id!: number;
   registro: boolean = true;
   token!: string | null;
+  claveUsuario!: string | null;
 
   constructor(
     private usuarioService: UsuarioService,
     private actorService: ActorService,
     private fb: FormBuilder,
     private router: Router,
+    private route: ActivatedRoute
   ) {
     this.formContrasena = this.fb.group({
       passnueva: ['', [Validators.required, Validators.min(3)]],
@@ -33,16 +34,10 @@ export class FormContrasenaComponent implements OnInit {
 
   ngOnInit(): void {
     this.token = sessionStorage.getItem("token");
+    this.claveUsuario = this.route.snapshot.paramMap.get('clave');
 
-    if (this.token) {
-      this.actorService.actorLogueado().subscribe(
-        result => {
-          this.formContrasena;
-        },
-        error => {
-          this.router.navigateByUrl("/");
-        },
-      );
+    if (!this.token && !this.claveUsuario) {
+      this.router.navigateByUrl("/");
     }
   }
 
@@ -57,6 +52,19 @@ export class FormContrasenaComponent implements OnInit {
           },
           error => { console.log(error); }
         );
+      }
+    } else {
+      if (this.claveUsuario) {
+        const contrasena = this.formContrasena.get("passnueva")?.value;
+        if (contrasena) {
+          this.usuarioService.recuperarContrasena(contrasena, this.claveUsuario).subscribe(
+            result => {
+              window.alert("Contraseña actualizada correctamente");
+              this.router.navigateByUrl("/");
+            },
+            error => { console.log(error); }
+          );
+        }
       }
     }
   }

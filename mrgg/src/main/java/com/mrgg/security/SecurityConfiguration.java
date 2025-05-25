@@ -47,6 +47,8 @@ public class SecurityConfiguration {
 
 				// ADMIN
 				.requestMatchers(HttpMethod.GET, "/admin").hasAuthority("ADMIN")
+				.requestMatchers(HttpMethod.PUT, "/admin/recuperarContrasena/{claveSegura}").permitAll()
+				.requestMatchers(HttpMethod.PUT, "/admin/enviarEmailParaRecuperarContrasena").permitAll()
 				.requestMatchers(HttpMethod.PUT, "/admin").hasAuthority("ADMIN")
 				.requestMatchers(HttpMethod.POST, "/admin").hasAuthority("ADMIN")
 				.requestMatchers(HttpMethod.DELETE, "/admin").hasAuthority("ADMIN")
@@ -58,7 +60,10 @@ public class SecurityConfiguration {
 				.requestMatchers(HttpMethod.POST, "/usuario").permitAll()
 				.requestMatchers(HttpMethod.PUT, "/usuario").hasAuthority("USER")
 				.requestMatchers(HttpMethod.PUT, "/usuario/actualizarContrasena").hasAuthority("USER")
+				.requestMatchers(HttpMethod.PUT, "/usuario/recuperarContrasena/{claveSegura}").permitAll()
+				.requestMatchers(HttpMethod.PUT, "/usuario/enviarEmailParaRecuperarContrasena").permitAll()
 				.requestMatchers(HttpMethod.PUT, "/{id}/banear").hasAuthority("ADMIN")
+				.requestMatchers(HttpMethod.PUT, "/usuario/verificarUsuario/{clave}").permitAll()
 				.requestMatchers(HttpMethod.DELETE, "/usuario").hasAuthority("USER")
 
 				// EVENTO
@@ -91,6 +96,9 @@ public class SecurityConfiguration {
 				.requestMatchers(HttpMethod.POST, "/juego").hasAuthority("ADMIN")
 				.requestMatchers(HttpMethod.PUT, "/juego").hasAuthority("ADMIN")
 				.requestMatchers(HttpMethod.DELETE, "/juego/{id}").hasAuthority("ADMIN")
+
+				// EMAIL
+				.requestMatchers(HttpMethod.GET, "/email/enviar").permitAll()
 
 				// SWAGGER
 				.requestMatchers("/swagger-ui/**").permitAll()

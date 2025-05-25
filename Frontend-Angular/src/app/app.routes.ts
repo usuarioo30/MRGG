@@ -11,6 +11,8 @@ import { ListSolicitudesComponent } from './components/solicitud/list-solicitude
 import { MisEventosComponent } from './components/evento/mis-eventos/mis-eventos.component';
 import { MisSolicitudesComponent } from './components/solicitud/mis-solicitudes/mis-solicitudes.component';
 import { MostrarEventoComponent } from './components/evento/mostrar-evento/mostrar-evento.component';
+import { ActivarUsuarioComponent } from './components/usuario/activar-usuario/activar-usuario.component';
+import { NotFound404Component } from './components/layout/not-found404/not-found404.component';
 
 export const routes: Routes = [
 
@@ -27,6 +29,7 @@ export const routes: Routes = [
     { path: "usuario/nuevo", component: FormUsuarioComponent },
     { path: "usuario/editar", component: FormUsuarioComponent },
     { path: "usuario/actualizarContrasena", component: FormContrasenaComponent },
+    { path: "usuario/actualizarContrasena/:clave", component: FormContrasenaComponent },
 
     // EVENTO
     { path: "eventos/:id", component: ListEventosComponent },
@@ -40,4 +43,10 @@ export const routes: Routes = [
     { path: "solicitudes", component: ListSolicitudesComponent },
     { path: "solicitudes/delEvento/:id", component: ListSolicitudesComponent },
     { path: "solicitudes/enviadas", component: MisSolicitudesComponent },
+
+    // ACTIVAR USUARIO
+    { path: "usuario/verificarUsuario/:clave", component: ActivarUsuarioComponent },
+
+    // ERROR
+    { path: "error", component: NotFound404Component }
 ];

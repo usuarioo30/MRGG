@@ -1,5 +1,7 @@
 package com.mrgg.service;
 
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.mrgg.entity.Admin;
 import com.mrgg.entity.Roles;
+import com.mrgg.entity.Usuario;
 import com.mrgg.repository.AdminRepository;
 import com.mrgg.security.JWTUtils;
 
@@ -24,13 +27,28 @@ public class AdminService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
+    private JWTUtils jwtUtils;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private JWTUtils JWTUtils;
 
     @Transactional
     public Admin saveAdmin(Admin admin) {
         admin.setRol(Roles.ADMIN);
+        admin.setFoto("https://www.gravatar.com/avatar/" + Math.random() * 9000 + "?d=retro&f=y&s=128)");
         admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+        admin.setClave_segura(jwtUtils.generarClaveSegura());
         return adminRepository.save(admin);
+    }
+
+    public String generarClaveSegura() {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] claveBytes = new byte[24];
+        secureRandom.nextBytes(claveBytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(claveBytes);
     }
 
     @Transactional
@@ -38,8 +56,6 @@ public class AdminService {
         Admin admin = JWTUtils.userLogin();
         if (admin != null) {
             admin.setNombre(adminU.getNombre());
-            admin.setFoto(adminU.getFoto());
-            admin.setEmail(adminU.getEmail());
             return adminRepository.save(admin);
         }
         return null;

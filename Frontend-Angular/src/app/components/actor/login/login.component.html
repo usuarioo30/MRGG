@@ -39,10 +39,45 @@
         </form>
 
         <div class="text-center">
+            <p class="mb-2">¿Has olvidado tu <a routerLinkActive="router-link-active" class="text-decoration-none
+                        fw-semibold" data-bs-toggle="modal" data-bs-target="#recuperarModal">contraseña</a>?
+            </p>
             <p class="mb-0">¿No tienes una cuenta?
                 <a routerLink="/usuario/nuevo" routerLinkActive="router-link-active" class="text-decoration-none
                         fw-semibold">Regístrate</a>
             </p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="recuperarModal" tabindex="-1" aria-labelledby="recuperarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content rounded-4 shadow">
+            <div class="modal-header">
+                <h5 class="modal-title" id="recuperarModalLabel">Recuperar contraseña</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <form (ngSubmit)="recuperarContrasena()" [formGroup]="formRecuperar">
+                <div class="modal-body">
+                    <div class="form-floating">
+                        <input type="email" class="form-control" id="correoRecuperacion"
+                            placeholder="correo@ejemplo.com" formControlName="email">
+                        <label for="correoRecuperacion">Correo electrónico</label>
+                        <div *ngIf="formRecuperar.get('email')?.touched && formRecuperar.get('email')?.invalid"
+                            class="mt-1">
+                            <small class="text-danger" *ngIf="formRecuperar.get('email')?.errors?.['required']">Este
+                                campo es obligatorio.</small>
+                            <small class="text-danger" *ngIf="formRecuperar.get('email')?.errors?.['email']">Debe ser
+                                un correo válido.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="formRecuperar.invalid">Enviar</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

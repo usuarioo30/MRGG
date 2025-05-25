@@ -27,17 +27,14 @@ export class FormAdminComponent implements OnInit {
     this.formAdmin = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      foto: ['', [Validators.required, Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]],
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
       passconfirm: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(3)]],
       telefono: ['', [Validators.required, Validators.pattern('[6-9]{1}[0-9]{8}')]],
-      chat_id: [''],
-      clave_segura: [''],
-      baneado: [false]
     });
     if (this.router.url.includes("editar")) {
       this.formAdmin.get("username")?.disable();
+      this.formAdmin.get("email")?.disable();
       this.formAdmin.get("password")?.setValidators(null);
       this.formAdmin.get("passconfirm")?.setValidators(null);
     }

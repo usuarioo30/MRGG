@@ -17,6 +17,8 @@ export class FormUsuarioComponent implements OnInit {
   id!: number;
   registro: boolean = true;
   token!: string | null;
+  registroExitoso: boolean = false;
+  registroEnviado: boolean = false;
 
   constructor(
     private usuarioService: UsuarioService,
@@ -33,12 +35,10 @@ export class FormUsuarioComponent implements OnInit {
       passconfirm: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(3)]],
       telefono: ['', [Validators.required, Validators.pattern('[6-9]{1}[0-9]{8}')]],
-      chat_id: [''],
-      clave_segura: [''],
-      baneado: [false]
     }, { validator: this.comprobarContrasena });
     if (this.router.url.includes("editar")) {
       this.formUsuario.get("username")?.disable();
+      this.formUsuario.get("email")?.disable();
       this.formUsuario.get("password")?.setValidators(null);
       this.formUsuario.get("passconfirm")?.setValidators(null);
     }
@@ -67,8 +67,9 @@ export class FormUsuarioComponent implements OnInit {
         if (exists) {
           window.alert("El nombre de usuario ya está en uso. Por favor, elige otro.");
         } else {
+          this.registroEnviado = true;
+
           if (this.token) {
-            // Edición de usuario
             this.usuarioService.editUsuario(usuario).subscribe(
               result => {
                 window.alert("Perfil actualizado correctamente");
@@ -79,24 +80,12 @@ export class FormUsuarioComponent implements OnInit {
           } else {
             this.usuarioService.saveUsuario(usuario).subscribe(
               result => {
-                const actorLogin = {
-                  username: usuario.username,
-                  password: usuario.password
-                };
-                this.actorService.login(actorLogin).subscribe(
-                  loginResult => {
-                    sessionStorage.setItem("token", loginResult.token);
-                    sessionStorage.setItem("username", usuario.username);
-                    this.router.navigateByUrl("/").then(() => window.location.reload());;
-                  },
-                  loginError => {
-                    console.log("Error al iniciar sesión automáticamente", loginError);
-                    window.alert("Usuario registrado, pero no se pudo iniciar sesión automáticamente.");
-                  }
-                );
+                this.registroExitoso = true;
               },
               error => {
+                this.registroEnviado = false;
                 console.log(error);
+                window.alert("Error al registrar el usuario.");
               }
             );
           }
@@ -107,6 +96,7 @@ export class FormUsuarioComponent implements OnInit {
       }
     );
   }
+
 
 
   eliminarUsuario() {
