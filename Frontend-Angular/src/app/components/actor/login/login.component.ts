@@ -61,18 +61,38 @@ export class LoginComponent implements OnInit {
   }
 
   recuperarContrasena() {
+    // Validar formulario primero
+    if (this.formRecuperar.invalid) {
+      this.formRecuperar.markAllAsTouched();
+      return;
+    }
+
     const email = this.formRecuperar.value.email;
-    console.log(email)
-    this.usuarioService.mandarCorreoParaRecuperarContrasena(email).subscribe({
+    console.log('Enviando a:', email);
+
+    Swal.fire({
+      title: 'Enviando correo...',
+      text: 'Por favor espera un momento.',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    this.actorService.mandarCorreoParaRecuperarContrasena(email).subscribe({
       next: () => {
+        Swal.close();
         Swal.fire({
           icon: 'success',
           title: 'Correo enviado',
           text: 'Se ha enviado un enlace para recuperar tu contraseña.',
           confirmButtonColor: '#3085d6'
+        }).then(() => {
         });
       },
       error: () => {
+        Swal.close();
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -82,5 +102,6 @@ export class LoginComponent implements OnInit {
       }
     });
   }
+
 
 }

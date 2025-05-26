@@ -98,7 +98,6 @@ export class FormUsuarioComponent implements OnInit {
   }
 
 
-
   eliminarUsuario() {
     var confirmacion = window.confirm("¿Estas seguro de eliminar el usuario?");
     if (confirmacion) {

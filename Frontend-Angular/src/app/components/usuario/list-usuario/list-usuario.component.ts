@@ -3,8 +3,12 @@ import { Usuario } from '../../../interfaces/usuario';
 import { UsuarioService } from '../../../service/usuario.service';
 import { Router } from '@angular/router';
 import { AdminService } from '../../../service/admin.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Roles } from '../../../interfaces/roles';
+import { Admin } from '../../../interfaces/admin';
+import { jwtDecode } from 'jwt-decode';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-list-usuario',
@@ -14,45 +18,100 @@ import { CommonModule } from '@angular/common';
 })
 export class ListUsuarioComponent implements OnInit {
   public usuarios: Usuario[] = [];
+  public admins: Admin[] = [];
+  public todos: (Usuario | Admin)[] = [];
+
   id!: number;
   token: string | null = sessionStorage.getItem("token");
-  rol!: string;
+  rol!: string | null;
   baneado!: boolean;
+  formCrearAdmin!: FormGroup;
 
   filtroBaneado: string = 'todos';
   filtroNombre: string = '';
-
+  filtroRol: string = Roles.USER;
+  Roles = Roles;
 
   constructor(
     private adminService: AdminService,
     private usuarioService: UsuarioService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private fb: FormBuilder
+  ) {
+    this.formCrearAdmin = this.fb.group({
+      nombre: ['', [Validators.required, Validators.minLength(3)]],
+      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(3)]],
+      passconfirm: ['', [Validators.required, Validators.minLength(3)]],
+      telefono: ['', [Validators.required, Validators.pattern('^[6-9]\\d{8}$')]],
+    }, { validators: this.comprobarContrasena });
+  }
 
   ngOnInit(): void {
     if (this.token) {
-      this.adminService.getOneAdminLogin().subscribe(
-        result => {
-          this.id = result.id;
-        },
-        error => {
-          console.log("Ha ocurrido un error");
-        }
-      );
-    }
+      this.rol = jwtDecode<{ rol: string }>(this.token).rol;
 
-    this.usuarioService.getAllUsuarios().subscribe(
-      result => {
-        this.usuarios = result;
-      },
-      error => {
-        console.log(error);
-      }
-    );
+      this.adminService.getOneAdminLogin().subscribe({
+        next: result => this.id = result.id,
+        error: () => console.log("Ha ocurrido un error"),
+      });
+
+      this.usuarioService.getAllUsuarios().subscribe({
+        next: usuarios => {
+          this.usuarios = usuarios;
+          this.unificarUsuariosYAdmins();
+        },
+        error: err => console.log(err)
+      });
+
+      this.adminService.getAllAdmins().subscribe({
+        next: admins => {
+          this.admins = admins.filter(admin => admin.id !== this.id);
+          this.unificarUsuariosYAdmins();
+        },
+        error: err => console.error("Error al obtener administradores", err)
+      });
+    }
   }
 
-  usuariosFiltrados(): Usuario[] {
-    let filtrados = this.usuarios;
+  unificarUsuariosYAdmins(): void {
+    this.todos = [...this.usuarios, ...this.admins];
+  }
+
+  crearAdmin(): void {
+    if (this.formCrearAdmin.invalid) {
+      this.formCrearAdmin.markAllAsTouched();
+      return;
+    }
+
+    const nuevoAdmin = this.formCrearAdmin.value;
+
+    this.adminService.saveAdmin(nuevoAdmin).subscribe({
+      next: () => {
+        Swal.fire('Éxito', 'Administrador creado correctamente.', 'success');
+
+        this.usuarioService.getAllUsuarios().subscribe(usuarios => {
+          this.usuarios = usuarios;
+          this.unificarUsuariosYAdmins();
+        });
+
+        this.adminService.getAllAdmins().subscribe(admins => {
+          this.admins = admins.filter(admin => admin.id !== this.id);
+          this.unificarUsuariosYAdmins();
+        });
+
+        this.formCrearAdmin.reset();
+      },
+      error: (error) => {
+        console.error('Error al crear admin', error);
+        Swal.fire('Error', 'No se pudo crear el administrador.', 'error');
+      }
+    });
+  }
+
+  usuariosFiltrados(): (Usuario | Admin)[] {
+    let filtrados = this.todos;
 
     if (this.filtroBaneado !== 'todos') {
       const esBaneado = this.filtroBaneado === 'true';
@@ -65,6 +124,8 @@ export class ListUsuarioComponent implements OnInit {
         usuario.username.toLowerCase().includes(nombreBuscado)
       );
     }
+
+    filtrados = filtrados.filter(usuario => usuario.rol === this.filtroRol);
 
     return filtrados;
   }
@@ -83,4 +144,13 @@ export class ListUsuarioComponent implements OnInit {
     });
   }
 
+  private comprobarContrasena(group: FormGroup) {
+    const password = group.get('password')?.value;
+    const confirmPassword = group.get('passconfirm')?.value;
+
+    if (password && confirmPassword && password !== confirmPassword) {
+      return { passNoCoinciden: true };
+    }
+    return null;
+  }
 }

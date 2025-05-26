@@ -13,6 +13,8 @@ export class ActorService {
   // URL API Backend
   private urlAPI = "http://localhost:8080"
 
+  private urlApi = "http://localhost:8080/actor"
+
   login(actorLogin: ActorLogin): Observable<any> {
     return this.http.post<any>(`${this.urlAPI}/login`, actorLogin);
   }
@@ -23,5 +25,20 @@ export class ActorService {
 
   actorExist(username: string): Observable<any> {
     return this.http.get<any>(`${this.urlAPI}/actorExiste/${username}`);
+  }
+
+  mandarCorreoParaRecuperarContrasena(email: string) {
+    const url = `${this.urlApi}/enviarEmailParaRecuperarContrasena`;
+    return this.http.put<void>(url, email);
+  }
+
+  recuperarContrasena(contrasena: string, claveSegura: string) {
+    const url = `${this.urlApi}/recuperarContrasena/${claveSegura}`;
+    return this.http.put<void>(url, contrasena);
+  }
+
+  updateContrasena(contrasena: string) {
+    const url = `${this.urlApi}/updateContrasena`;
+    return this.http.put<void>(url, contrasena);
   }
 }

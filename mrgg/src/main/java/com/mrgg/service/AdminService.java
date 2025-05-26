@@ -30,9 +30,6 @@ public class AdminService {
     private JWTUtils jwtUtils;
 
     @Autowired
-    private EmailService emailService;
-
-    @Autowired
     private JWTUtils JWTUtils;
 
     @Transactional
@@ -41,6 +38,8 @@ public class AdminService {
         admin.setFoto("https://www.gravatar.com/avatar/" + Math.random() * 9000 + "?d=retro&f=y&s=128)");
         admin.setPassword(passwordEncoder.encode(admin.getPassword()));
         admin.setClave_segura(jwtUtils.generarClaveSegura());
+        admin.setBaneado(false);
+
         return adminRepository.save(admin);
     }
 
@@ -56,6 +55,16 @@ public class AdminService {
         Admin admin = JWTUtils.userLogin();
         if (admin != null) {
             admin.setNombre(adminU.getNombre());
+            return adminRepository.save(admin);
+        }
+        return null;
+    }
+
+    @Transactional
+    public Admin updatePassword(String contrasena) {
+        Admin admin = jwtUtils.userLogin();
+        if (admin != null) {
+            admin.setPassword(passwordEncoder.encode(contrasena));
             return adminRepository.save(admin);
         }
         return null;

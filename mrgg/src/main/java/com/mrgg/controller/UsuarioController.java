@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mrgg.entity.Usuario;
@@ -115,38 +114,6 @@ public class UsuarioController {
         Usuario respuesta = usuarioService.updatePassword(contrasena);
 
         if (respuesta != null) {
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    }
-
-    @PutMapping("/recuperarContrasena/{claveSegura}")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Contraseña actualziado correctamente"),
-            @ApiResponse(responseCode = "404", description = "Contraseña no encontrada"),
-            @ApiResponse(responseCode = "400", description = "Solicitud inválida")
-    })
-    public ResponseEntity<Void> recuperarContrasena(@RequestBody String contrasena, @PathVariable String claveSegura) {
-        boolean respuesta = usuarioService.recuperarContrasena(claveSegura, contrasena);
-
-        if (respuesta == true) {
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    }
-
-    @PutMapping("/enviarEmailParaRecuperarContrasena")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Contraseña actualziado correctamente"),
-            @ApiResponse(responseCode = "404", description = "Contraseña no encontrada"),
-            @ApiResponse(responseCode = "400", description = "Solicitud inválida")
-    })
-    public ResponseEntity<Void> enviarEmailParaRecuperarContrasena(@RequestBody String email) {
-        boolean respuesta = usuarioService.enviarEmailParaRecuperarContrasena(email);
-
-        if (respuesta == true) {
             return ResponseEntity.status(HttpStatus.OK).build();
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

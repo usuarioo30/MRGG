@@ -16,6 +16,4 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     public Optional<Usuario> findUserBySolicitud(int id);
 
     public Optional<Usuario> findByClaveSegura(String claveSegura);
-
-    public Optional<Usuario> findByEmail(String email);
 }

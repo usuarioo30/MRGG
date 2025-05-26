@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -22,6 +23,7 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 public class SecurityConfiguration {
 	@Autowired
+	@Lazy
 	private JWTAuthenticationFilter JWTAuthenticationFilter;
 
 	@Bean
@@ -45,11 +47,15 @@ public class SecurityConfiguration {
 				.requestMatchers("/actorLogueado").permitAll()
 				.requestMatchers("/actorExiste/**").permitAll()
 
+				// ACTOR
+				.requestMatchers(HttpMethod.PUT, "/actor/recuperarContrasena/{claveSegura}").permitAll()
+				.requestMatchers(HttpMethod.PUT, "/actor/enviarEmailParaRecuperarContrasena").permitAll()
+				.requestMatchers(HttpMethod.PUT, "/actor/actualizarContrasena").permitAll()
+
 				// ADMIN
 				.requestMatchers(HttpMethod.GET, "/admin").hasAuthority("ADMIN")
-				.requestMatchers(HttpMethod.PUT, "/admin/recuperarContrasena/{claveSegura}").permitAll()
-				.requestMatchers(HttpMethod.PUT, "/admin/enviarEmailParaRecuperarContrasena").permitAll()
 				.requestMatchers(HttpMethod.PUT, "/admin").hasAuthority("ADMIN")
+				.requestMatchers(HttpMethod.PUT, "/admin/actualizarContrasena").hasAuthority("ADMIN")
 				.requestMatchers(HttpMethod.POST, "/admin").hasAuthority("ADMIN")
 				.requestMatchers(HttpMethod.DELETE, "/admin").hasAuthority("ADMIN")
 
@@ -60,8 +66,6 @@ public class SecurityConfiguration {
 				.requestMatchers(HttpMethod.POST, "/usuario").permitAll()
 				.requestMatchers(HttpMethod.PUT, "/usuario").hasAuthority("USER")
 				.requestMatchers(HttpMethod.PUT, "/usuario/actualizarContrasena").hasAuthority("USER")
-				.requestMatchers(HttpMethod.PUT, "/usuario/recuperarContrasena/{claveSegura}").permitAll()
-				.requestMatchers(HttpMethod.PUT, "/usuario/enviarEmailParaRecuperarContrasena").permitAll()
 				.requestMatchers(HttpMethod.PUT, "/{id}/banear").hasAuthority("ADMIN")
 				.requestMatchers(HttpMethod.PUT, "/usuario/verificarUsuario/{clave}").permitAll()
 				.requestMatchers(HttpMethod.DELETE, "/usuario").hasAuthority("USER")

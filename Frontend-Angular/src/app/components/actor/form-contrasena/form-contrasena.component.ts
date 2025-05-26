@@ -5,6 +5,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ignoreElements } from 'rxjs';
+import { AdminService } from '../../../service/admin.service';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-form-contrasena',
@@ -14,14 +16,18 @@ import { ignoreElements } from 'rxjs';
 })
 export class FormContrasenaComponent implements OnInit {
 
+  token2: string | null = sessionStorage.getItem("token");
+
   formContrasena!: FormGroup;
   registro: boolean = true;
   token!: string | null;
   claveUsuario!: string | null;
+  rol!: string | null;
 
   constructor(
     private usuarioService: UsuarioService,
     private actorService: ActorService,
+    private adminService: AdminService,
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute
@@ -42,32 +48,56 @@ export class FormContrasenaComponent implements OnInit {
   }
 
   save() {
-    if (this.token) {
-      const contrasena = this.formContrasena.get("passnueva")?.value;
-      if (contrasena) {
+    const contrasena = this.formContrasena.get("passnueva")?.value;
+    if (!contrasena) return;
+
+    if (this.claveUsuario) {
+      // Caso: recuperación de contraseña desde correo
+      this.actorService.recuperarContrasena(contrasena, this.claveUsuario).subscribe(
+        result => {
+          window.alert("Contraseña actualizada correctamente");
+          this.router.navigateByUrl("/login");
+        },
+        error => {
+          console.error("Error en recuperación de contraseña:", error);
+          window.alert("No se pudo actualizar la contraseña.");
+        }
+      );
+    } else if (this.token) {
+      // Caso: usuario autenticado
+      if (this.token !== null && this.token) {
+        this.rol = jwtDecode<{ rol: string }>(this.token).rol;
+      }
+
+      if (this.rol === "ADMIN") {
+        this.adminService.updateContrasena(contrasena).subscribe(
+          result => {
+            window.alert("Contraseña actualizada correctamente");
+            this.router.navigateByUrl("/");
+          },
+          error => {
+            console.error("Error actualizando contraseña como admin:", error);
+            window.alert("No se pudo actualizar la contraseña.");
+          }
+        );
+      } else {
         this.usuarioService.updateContrasena(contrasena).subscribe(
           result => {
             window.alert("Contraseña actualizada correctamente");
             this.router.navigateByUrl("/");
           },
-          error => { console.log(error); }
+          error => {
+            console.error("Error actualizando contraseña como usuario:", error);
+            window.alert("No se pudo actualizar la contraseña.");
+          }
         );
       }
     } else {
-      if (this.claveUsuario) {
-        const contrasena = this.formContrasena.get("passnueva")?.value;
-        if (contrasena) {
-          this.usuarioService.recuperarContrasena(contrasena, this.claveUsuario).subscribe(
-            result => {
-              window.alert("Contraseña actualizada correctamente");
-              this.router.navigateByUrl("/");
-            },
-            error => { console.log(error); }
-          );
-        }
-      }
+      this.router.navigateByUrl("/");
     }
   }
+
+
 
   private comprobarContrasena(group: FormGroup) {
     const password = group.get('passnueva')?.value;

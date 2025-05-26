@@ -10,8 +10,4 @@ import com.mrgg.entity.Admin;
 @Repository
 public interface AdminRepository extends JpaRepository<Admin, Integer> {
     public Optional<Admin> findByUsername(String username);
-
-    public Optional<Admin> findByClaveSegura(String claveSegura);
-
-    public Optional<Admin> findByEmail(String email);
 }

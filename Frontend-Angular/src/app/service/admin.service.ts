@@ -13,6 +13,10 @@ export class AdminService {
 
   private urlApi = "http://localhost:8080/admin"
 
+  getAllAdmins(): Observable<Actor[]> {
+    return this.http.get<Actor[]>(this.urlApi);
+  }
+
   getOneAdminLogin(): Observable<Actor> {
     const url = "http://localhost:8080/actorLogueado";
     return this.http.get<Actor>(url);
@@ -20,6 +24,11 @@ export class AdminService {
 
   saveAdmin(admin: Admin): Observable<void> {
     return this.http.post<void>(this.urlApi, admin)
+  }
+
+  updateContrasena(contrasena: string) {
+    const url = `${this.urlApi}/updateContrasena`;
+    return this.http.put<void>(url, contrasena);
   }
 
   editAdmin(admin: Admin): Observable<void> {

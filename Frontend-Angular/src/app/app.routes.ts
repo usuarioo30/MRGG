@@ -21,6 +21,10 @@ export const routes: Routes = [
     // LOGIN
     { path: "login", component: LoginComponent },
 
+    // ACTOR
+    { path: "actor/actualizarContrasena", component: FormContrasenaComponent },
+    { path: "actor/actualizarContrasena/:clave", component: FormContrasenaComponent },
+
     // ADMIN
     { path: "admin/editar", component: FormAdminComponent },
 
@@ -28,8 +32,6 @@ export const routes: Routes = [
     { path: "usuarios", component: ListUsuarioComponent },
     { path: "usuario/nuevo", component: FormUsuarioComponent },
     { path: "usuario/editar", component: FormUsuarioComponent },
-    { path: "usuario/actualizarContrasena", component: FormContrasenaComponent },
-    { path: "usuario/actualizarContrasena/:clave", component: FormContrasenaComponent },
 
     // EVENTO
     { path: "eventos/:id", component: ListEventosComponent },

@@ -66,14 +66,4 @@ export class UsuarioService {
     return this.http.put<void>(url, clavePrivada);
   }
 
-  mandarCorreoParaRecuperarContrasena(email: string) {
-    const url = `${this.urlApi}/enviarEmailParaRecuperarContrasena`;
-    return this.http.put<void>(url, email);
-  }
-
-  recuperarContrasena(contrasena: string, claveSegura: string) {
-    const url = `${this.urlApi}/recuperarContrasena/${claveSegura}`;
-    return this.http.put<void>(url, contrasena);
-  }
-
 }
