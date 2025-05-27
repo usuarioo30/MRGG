@@ -1,5 +1,6 @@
 package com.mrgg.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,11 @@ public class MensajeController {
         return mensajeService.mandarMensaje(mensaje, username);
     }
 
+    @PostMapping("/enviar")
+    public boolean mandarMensajeUsuario(@RequestBody Mensaje mensaje) {
+        return mensajeService.mandarMensaje(mensaje, null);
+    }
+
     @GetMapping("/{id}")
     public Mensaje getMensaje(@PathVariable int id) {
         return mensajeService.getMensaje(id);
@@ -32,7 +38,9 @@ public class MensajeController {
 
     @GetMapping("/usuario")
     public List<Mensaje> getMensajesUsuario() {
-        return mensajeService.getMensajesUsuario();
+        System.out.println("AAAAAAAAAAA");
+        List<Mensaje> mensajes = new ArrayList<Mensaje>();
+        return mensajes;
     }
 
     @GetMapping("/admin")

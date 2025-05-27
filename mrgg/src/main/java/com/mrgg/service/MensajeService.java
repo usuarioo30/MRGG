@@ -13,8 +13,9 @@ import com.mrgg.entity.Mensaje;
 import com.mrgg.entity.Roles;
 import com.mrgg.entity.Usuario;
 import com.mrgg.repository.MensajeRepository;
-import com.mrgg.repository.UsuarioRepository;
 import com.mrgg.security.JWTUtils;
+
+import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,11 +31,14 @@ public class MensajeService {
     @Autowired
     private JWTUtils jwtUtils;
 
+    @Transactional
     public boolean mandarMensaje(Mensaje mensaje, String username) {
         Actor actor = jwtUtils.userLogin();
         boolean res = false;
 
         if (actor != null) {
+            mensaje.setFechaEnvio(new Date(System.currentTimeMillis()));
+
             if (actor.getRol() == Roles.ADMIN) {
                 mensaje.setEsAdmin(true);
 
@@ -58,6 +62,8 @@ public class MensajeService {
 
                 usuarioU.getMensajes().add(m);
 
+                usuarioService.saveUsuarioGeneral(usuarioU);
+
                 res = true;
             }
         }
@@ -72,22 +78,26 @@ public class MensajeService {
             Actor actor = jwtUtils.userLogin();
 
             if (actor != null) {
+                if (m.getUsuarioQueLee() == null) {
+                    m.setUsuarioQueLee(new ArrayList<>());
+                }
+
+                String username = actor.getUsername();
+
                 if (actor.getRol() == Roles.ADMIN) {
-
-                    m.getUsuarioQueLee().add(actor.getUsername());
-
-                    mensajeRepository.save(m);
+                    if (!m.getUsuarioQueLee().contains(username)) {
+                        m.getUsuarioQueLee().add(username);
+                        mensajeRepository.save(m);
+                    }
 
                 } else if (actor.getRol() == Roles.USER) {
-
                     Usuario usuarioU = (Usuario) actor;
 
                     if (usuarioU.getMensajes().contains(m)) {
-
-                        m.getUsuarioQueLee().add(usuarioU.getUsername());
-
-                        mensajeRepository.save(m);
-
+                        if (!m.getUsuarioQueLee().contains(username)) {
+                            m.getUsuarioQueLee().add(username);
+                            mensajeRepository.save(m);
+                        }
                     } else {
                         m = null;
                     }

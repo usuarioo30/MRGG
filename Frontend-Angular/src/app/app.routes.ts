@@ -13,6 +13,7 @@ import { MisSolicitudesComponent } from './components/solicitud/mis-solicitudes/
 import { MostrarEventoComponent } from './components/evento/mostrar-evento/mostrar-evento.component';
 import { ActivarUsuarioComponent } from './components/usuario/activar-usuario/activar-usuario.component';
 import { NotFound404Component } from './components/layout/not-found404/not-found404.component';
+import { ListMensajeComponent } from './components/mensaje/list-mensaje/list-mensaje.component';
 
 export const routes: Routes = [
 
@@ -45,6 +46,9 @@ export const routes: Routes = [
     { path: "solicitudes", component: ListSolicitudesComponent },
     { path: "solicitudes/delEvento/:id", component: ListSolicitudesComponent },
     { path: "solicitudes/enviadas", component: MisSolicitudesComponent },
+
+    // MENSAJE
+    { path: "mensajes", component: ListMensajeComponent },
 
     // ACTIVAR USUARIO
     { path: "usuario/verificarUsuario/:clave", component: ActivarUsuarioComponent },
