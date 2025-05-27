@@ -65,7 +65,8 @@ export class FormUsuarioComponent implements OnInit {
     this.actorService.actorExist(usuario.username).subscribe(
       exists => {
         if (exists) {
-          window.alert("El nombre de usuario ya está en uso. Por favor, elige otro.");
+          this.formUsuario.get('username')?.setErrors({ usernameEnUso: true });
+
         } else {
           this.registroEnviado = true;
 
@@ -96,7 +97,6 @@ export class FormUsuarioComponent implements OnInit {
       }
     );
   }
-
 
   eliminarUsuario() {
     var confirmacion = window.confirm("¿Estas seguro de eliminar el usuario?");

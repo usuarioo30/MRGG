@@ -45,7 +45,7 @@ public class SolicitudService {
 
             Usuario usuarioSolicitante = jwtUtils.userLogin();
             usuarioSolicitante.getSolicitudes().add(s);
-            usuarioService.saveUsuarioByEventos(usuarioSolicitante);
+            usuarioService.saveUsuarioGeneral(usuarioSolicitante);
 
             Evento evento = eventoO.get();
             evento.getSolicitudes().add(s);
@@ -120,7 +120,7 @@ public class SolicitudService {
         }
 
         usuarioLogueado.getSolicitudes().remove(solicitud);
-        usuarioService.saveUsuarioByEventos(usuarioLogueado);
+        usuarioService.saveUsuarioGeneral(usuarioLogueado);
 
         Evento evento = eventoService.findBySolicitudId(solicitud.getId());
         if (evento != null) {

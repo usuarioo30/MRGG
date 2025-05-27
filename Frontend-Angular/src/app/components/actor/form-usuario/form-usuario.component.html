@@ -60,6 +60,9 @@
                         caracteres.</small>
                     <small class="text-danger" *ngIf="formUsuario.get('username')?.errors?.['maxLength']">Máximo 20
                         caracteres.</small>
+                    <small class="text-danger" *ngIf="formUsuario.get('username')?.errors?.['usernameEnUso']">
+                        El nombre de usuario ya está en uso. Por favor, elige otro.
+                    </small>
                 </div>
             </div>
 

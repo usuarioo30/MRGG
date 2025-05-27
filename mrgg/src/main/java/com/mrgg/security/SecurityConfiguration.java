@@ -101,6 +101,13 @@ public class SecurityConfiguration {
 				.requestMatchers(HttpMethod.PUT, "/juego").hasAuthority("ADMIN")
 				.requestMatchers(HttpMethod.DELETE, "/juego/{id}").hasAuthority("ADMIN")
 
+				// MENSAJE
+				.requestMatchers(HttpMethod.POST, "/mensaje/enviar/{username}").hasAuthority("USER")
+				.requestMatchers(HttpMethod.POST, "/mensaje/enviar/{username}").hasAuthority("ADMIN")
+				.requestMatchers(HttpMethod.GET, "/mensaje/{id}").hasAuthority("USER")
+				.requestMatchers(HttpMethod.GET, "/mensaje/usuario").hasAuthority("USER")
+				.requestMatchers(HttpMethod.GET, "/mensaje/admin").hasAuthority("ADMIN")
+
 				// EMAIL
 				.requestMatchers(HttpMethod.GET, "/email/enviar").permitAll()
 

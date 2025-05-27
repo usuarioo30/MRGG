@@ -75,7 +75,7 @@ public class UsuarioService {
     }
 
     @Transactional
-    public Usuario saveUsuarioByEventos(Usuario usuario) {
+    public Usuario saveUsuarioGeneral(Usuario usuario) {
         return usuarioRepository.save(usuario);
     }
 
