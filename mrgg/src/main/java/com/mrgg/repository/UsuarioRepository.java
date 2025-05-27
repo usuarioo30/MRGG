@@ -16,4 +16,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     public Optional<Usuario> findUserBySolicitud(int id);
 
     public Optional<Usuario> findByClaveSegura(String claveSegura);
+
+    @Query("SELECT u FROM Usuario u JOIN u.mensajes m WHERE m.id = ?1")
+    public Optional<Usuario> findUserByMensaje(int id);
 }

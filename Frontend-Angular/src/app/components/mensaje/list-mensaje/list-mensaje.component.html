@@ -21,24 +21,29 @@
                 <table class="table table-hover align-middle">
                     <thead class="table-light">
                         <tr class="text-center">
+                            <th scope="col">Usuario</th>
                             <th scope="col">Asunto</th>
-                            <th scope="col">Cuerpo</th>
                             <th scope="col">Fecha</th>
                             <th scope="col">Tipo</th>
-                            <!-- <th scope="col">Usuario</th> -->
+                            <th scope="col">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let mensaje of mensajes;" class="text-center">
+                            <td>{{ mensaje.esAdmin ? 'Administración' : nombreUsuario }}</td>
                             <td><strong>{{ mensaje.asunto || '(Sin asunto)' }}</strong></td>
-                            <td>{{ mensaje.cuerpo }}</td>
                             <td>{{ mensaje.fechaEnvio | date: 'dd/MM/yyyy' }}</td>
                             <td>
                                 <span class="badge" [ngClass]="mensaje.esAdmin ? 'bg-primary' : 'bg-secondary'">
                                     {{ mensaje.esAdmin ? 'Admin' : 'Usuario' }}
                                 </span>
                             </td>
-                            <!-- <td>{{ mensaje.usuario?.nombre || 'N/A' }}</td> -->
+                            <td>
+                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#modalDetalleMensaje" (click)="abrirModalDetalle(mensaje)">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -81,6 +86,29 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de detalle de mensaje -->
+<div class="modal fade" id="modalDetalleMensaje" tabindex="-1" aria-labelledby="detalleMensajeLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header text-white">
+                <h5 class="modal-title" id="detalleMensajeLabel">
+                    <i class="bi bi-envelope-open me-2"></i> Detalle del mensaje
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body" *ngIf="mensajeSeleccionado">
+                <p><strong>Asunto:</strong> {{ mensajeSeleccionado.asunto || '(Sin asunto)' }}</p>
+                <p><strong>Fecha de envío:</strong> {{ mensajeSeleccionado.fechaEnvio | date: 'dd/MM/yyyy' }}</p>
+                <p><strong>Tipo:</strong> {{ mensajeSeleccionado.esAdmin ? 'Admin' : 'Usuario' }}</p>
+                <hr>
+                <p><strong>Mensaje:</strong></p>
+                <p class="text-break">{{ mensajeSeleccionado.cuerpo }}</p>
+            </div>
         </div>
     </div>
 </div>

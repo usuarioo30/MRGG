@@ -24,7 +24,7 @@ export class UsuarioService {
   }
 
   getOneUsuarioLogin(): Observable<Actor> {
-    const url = "http://localhost:8080/actorLogueado";
+    const url = "http://localhost:8080/actorLogueado"
     return this.http.get<Actor>(url);
   }
 
@@ -34,6 +34,11 @@ export class UsuarioService {
 
   getSolicitudDeUser(id: number): Observable<Usuario> {
     const url = `${this.urlApi}/solicitud/recibida/${id}`;
+    return this.http.get<Usuario>(url);
+  }
+
+  getUserMensaje(id: number): Observable<Usuario> {
+    const url = `${this.urlApi}/mensaje/${id}`;
     return this.http.get<Usuario>(url);
   }
 

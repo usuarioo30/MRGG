@@ -69,6 +69,23 @@ public class UsuarioController {
         }
     }
 
+    @GetMapping("/mensaje/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de usuarios obtenida exitosamente"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    public ResponseEntity<Usuario> findUserByMensaje(@PathVariable Integer id) {
+        Optional<Usuario> usuario = usuarioService.findUserByMensaje(id);
+
+        System.out.println("AAAAAAAAAAAAAAAAAAAAA");
+
+        if (usuario.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(usuario.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
     @PostMapping
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Usuario creado exitosamente"),

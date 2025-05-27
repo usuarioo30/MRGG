@@ -63,6 +63,7 @@ public class SecurityConfiguration {
 				.requestMatchers(HttpMethod.GET, "/usuario").hasAuthority("ADMIN")
 				.requestMatchers(HttpMethod.GET, "/usuario").hasAuthority("USER")
 				.requestMatchers(HttpMethod.GET, "/usuario/solicitud/recibida/:id").hasAuthority("USER")
+				.requestMatchers(HttpMethod.GET, "/usuario/mensaje/:id").hasAuthority("ADMIN")
 				.requestMatchers(HttpMethod.POST, "/usuario").permitAll()
 				.requestMatchers(HttpMethod.PUT, "/usuario").hasAuthority("USER")
 				.requestMatchers(HttpMethod.PUT, "/usuario/actualizarContrasena").hasAuthority("USER")
@@ -104,9 +105,8 @@ public class SecurityConfiguration {
 				// MENSAJE
 				.requestMatchers(HttpMethod.POST, "/mensaje/enviar").hasAuthority("USER")
 				.requestMatchers(HttpMethod.POST, "/mensaje/enviar/{username}").hasAuthority("ADMIN")
-				.requestMatchers(HttpMethod.GET, "/mensaje/{id}").hasAuthority("ADMIN")
-				.requestMatchers(HttpMethod.GET, "/mensaje/{id}").hasAuthority("USER")
-				.requestMatchers(HttpMethod.GET, "/mensaje/aaaa").permitAll()
+				.requestMatchers(HttpMethod.GET, "/mensaje/{id}").hasAnyAuthority("ADMIN", "USER")
+				.requestMatchers(HttpMethod.GET, "/mensaje/usuario").permitAll()
 				.requestMatchers(HttpMethod.GET, "/mensaje/admin").hasAuthority("ADMIN")
 
 				// EMAIL

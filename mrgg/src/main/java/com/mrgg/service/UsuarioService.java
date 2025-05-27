@@ -140,6 +140,10 @@ public class UsuarioService {
         return usuarioRepository.findUserBySolicitud(id);
     }
 
+    public Optional<Usuario> findUserByMensaje(int id) {
+        return usuarioRepository.findUserByMensaje(id);
+    }
+
     public List<Usuario> getAllUsuarios() {
         return usuarioRepository.findAll();
     }
