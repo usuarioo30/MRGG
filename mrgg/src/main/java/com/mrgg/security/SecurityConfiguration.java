@@ -127,7 +127,7 @@ public class SecurityConfiguration {
 	public CorsFilter corsFilter() {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(List.of("http://localhost:4200"));
+		config.setAllowedOrigins(List.of("https://mrgg-phi.vercel.app/"));
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 		config.setAllowCredentials(true);

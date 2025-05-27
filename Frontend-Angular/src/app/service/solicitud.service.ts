@@ -12,7 +12,7 @@ export class SolicitudService {
 
   constructor(private http: HttpClient) { }
 
-  private urlApi = 'http://localhost:8080/solicitud';
+  private urlApi = 'https://mrgg.onrender.com/solicitud';
 
   getAllSolicitudByEvento(id: number): Observable<Solicitud[]> {
     const url = `${this.urlApi}/delEvento/${id}`;
