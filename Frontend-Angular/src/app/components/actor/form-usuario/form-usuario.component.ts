@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ActorService } from '../../../service/actor.service';
+import Swal from 'sweetalert2';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-form-usuario',
@@ -14,9 +16,9 @@ import { ActorService } from '../../../service/actor.service';
 export class FormUsuarioComponent implements OnInit {
 
   formUsuario!: FormGroup;
-  id!: number;
   registro: boolean = true;
   token!: string | null;
+  rol!: string;
   registroExitoso: boolean = false;
   registroEnviado: boolean = false;
 
@@ -27,7 +29,11 @@ export class FormUsuarioComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    // Creamos el formulario sin validaciones aún
+
+    if (this.token !== null && this.token) {
+      this.rol = jwtDecode<{ rol: string }>(this.token).rol;
+    }
+
     this.formUsuario = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
@@ -36,6 +42,7 @@ export class FormUsuarioComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(3)]],
       telefono: ['', [Validators.required, Validators.pattern('[6-9]{1}[0-9]{8}')]],
     }, { validator: this.comprobarContrasena });
+
     if (this.router.url.includes("editar")) {
       this.formUsuario.get("username")?.disable();
       this.formUsuario.get("email")?.disable();
@@ -66,6 +73,7 @@ export class FormUsuarioComponent implements OnInit {
       exists => {
         if (exists) {
           this.formUsuario.get('username')?.setErrors({ usernameEnUso: true });
+          this.formUsuario.get('email')?.setErrors({ emailEnUso: true });
 
         } else {
           this.registroEnviado = true;
@@ -73,20 +81,39 @@ export class FormUsuarioComponent implements OnInit {
           if (this.token) {
             this.usuarioService.editUsuario(usuario).subscribe(
               result => {
-                window.alert("Perfil actualizado correctamente");
-                this.router.navigateByUrl("/");
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Perfil actualizado',
+                  text: 'Tu perfil ha sido actualizado correctamente.',
+                  confirmButtonColor: '#3085d6'
+                }).then(() => {
+                  this.router.navigateByUrl("/");
+                });
               },
-              error => { console.log(error); }
+              error => {
+                console.log(error);
+              }
             );
           } else {
             this.usuarioService.saveUsuario(usuario).subscribe(
               result => {
                 this.registroExitoso = true;
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Registro exitoso',
+                  text: 'Tu cuenta se ha creado correctamente. Verifica tu correo electrónico.',
+                  confirmButtonColor: '#3085d6'
+                });
               },
               error => {
                 this.registroEnviado = false;
                 console.log(error);
-                window.alert("Error al registrar el usuario.");
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Registro fallido',
+                  text: 'Hubo un error al registrar el usuario. Inténtalo nuevamente.',
+                  confirmButtonColor: '#d33'
+                });
               }
             );
           }
@@ -99,14 +126,42 @@ export class FormUsuarioComponent implements OnInit {
   }
 
   eliminarUsuario() {
-    var confirmacion = window.confirm("¿Estas seguro de eliminar el usuario?");
-    if (confirmacion) {
-      this.usuarioService.deleteUsuario().subscribe(
-        result => { this.logout() },
-        error => { console.log(error.status) }
-      );
-    }
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción eliminará tu cuenta permanentemente.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.usuarioService.deleteUsuario().subscribe(
+          () => this.logout(),
+          error => {
+            if (error.status === 403 || error.status === 400) {
+              Swal.fire({
+                icon: 'error',
+                title: 'No se puede eliminar el usuario',
+                text: 'Debes eliminar primero tus solicitudes enviadas antes de borrar tu cuenta.',
+                confirmButtonColor: '#d33'
+              });
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error al eliminar',
+                text: 'Ocurrió un error inesperado al intentar eliminar tu cuenta.',
+                confirmButtonColor: '#d33'
+              });
+              console.log(error);
+            }
+          }
+        );
+      }
+    });
   }
+
 
   logout() {
     sessionStorage.removeItem("token");

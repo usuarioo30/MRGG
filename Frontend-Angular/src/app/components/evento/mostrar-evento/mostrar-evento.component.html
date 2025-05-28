@@ -83,7 +83,7 @@
                                 <p class="truncar-descripcion" [attr.title]="eventoUnico.descripcion">
                                     <strong>Descripción:</strong> {{ eventoUnico.descripcion }}
                                 </p>
-                                <p>
+                                <p *ngIf="eventoUnico.estado.toString() != 'CANCELADO'">
                                     <strong>Jugadores:</strong>
                                     <span class="fw-semibold" [ngStyle]="{
       color: estaLleno(eventoUnico) ? '#198754' : '#fd7e14'
@@ -114,7 +114,7 @@
                                 data-bs-target="#editEventModal" (click)="abrirModalEditar(eventoUnico)">
                                 <i class="bi bi-pencil"></i>
                             </button>
-                            <button class="btn btn-outline-danger btn-sm" (click)="eliminarEvento(eventoUnico.id)"
+                            <button class="btn btn-outline-danger btn-sm" (click)="cancelarEvento(eventoUnico.id)"
                                 title="Eliminar evento">
                                 <i class="bi bi-trash"></i>
                             </button>

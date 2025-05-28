@@ -84,7 +84,7 @@
             </div>
 
             <!-- Mis Eventos -->
-            <div *ngIf="misEventos.length > 0" class="col-12 mb-5">
+            <div *ngIf="misEventos.length > 0 && !userLogin?.baneado" class="col-12 mb-5">
                 <div class="custom-header-glass bg-gradient-success mb-4">
                     <i class="bi bi-person-circle fs-4 me-2"></i>
                     <div>
@@ -169,13 +169,8 @@
                 </div>
             </div>
 
-            <div *ngIf="!token && otrosEventos.length > 0" class="alert alert-info text-center mb-4">
-                <i class="bi bi-exclamation-circle me-2"></i>
-                ¡Tienes que <b>iniciar sesión</b> para poder unirte a estos eventos!
-            </div>
-
             <!-- Eventos de Otros Jugadores -->
-            <div *ngIf="otrosEventos.length > 0" class="col-12">
+            <div *ngIf="otrosEventos.length > 0 && !userLogin?.baneado" class="col-12">
                 <div class="custom-header-glass bg-gradient-primary mb-4">
                     <i class="bi bi-people-fill fs-4 me-2"></i>
                     <div>
@@ -244,7 +239,7 @@
 
                             <!-- Botón para unirse -->
                             <div
-                                *ngIf="token != null && rol == 'USER' && !estaLleno(evento) && evento.estado.toString() != 'CERRADO' && tieneSolicitud[evento.id] == false">
+                                *ngIf="token != null && rol == 'USER' && !estaLleno(evento) && evento.estado.toString() != 'CERRADO' && tieneSolicitud[evento.id] == false && evento.estado.toString() != 'CANCELADO'">
                                 <button class="btn btn-primary d-flex align-items-center justify-content-center"
                                     (click)="solicitarUnirse(evento.id)">
                                     <i class="bi bi-person-plus me-2"></i>Solicitar Unirse

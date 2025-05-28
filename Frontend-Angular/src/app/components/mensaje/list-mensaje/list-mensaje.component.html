@@ -3,8 +3,19 @@
         <div class="card-header text-white">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <h5 class="mb-0">
-                    <i class="bi bi-inbox me-2"></i> Bandeja de entrada
+                    <i class="bi bi-inbox me-2"></i> Bandeja de entrada y salida
                 </h5>
+                <div class="d-flex align-items-center">
+                    <span class="me-2">Tipo:</span>
+                    <select class="form-select form-select-sm w-auto" [(ngModel)]="filtroTipo">
+                        <option value="USUARIO">Usuario</option>
+                        <option value="ADMIN">Administrador</option>
+                    </select>
+                </div>
+
+
+
+
                 <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modalNuevoMensaje">
                     <i class="bi bi-plus-circle me-1"></i> Nuevo mensaje
                 </button>
@@ -12,103 +23,115 @@
         </div>
 
         <div class="card-body">
-            <div *ngIf="mensajes.length === 0" class="alert alert-info text-center mb-0">
-                <i class="bi bi-envelope-slash me-2"></i>
-                <b>No tienes mensajes.</b>
-            </div>
-
-            <div class="table-responsive" *ngIf="mensajes.length > 0">
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
-                        <tr class="text-center">
-                            <th scope="col">Usuario</th>
-                            <th scope="col">Asunto</th>
-                            <th scope="col">Fecha</th>
-                            <th scope="col">Tipo</th>
-                            <th scope="col">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let mensaje of mensajes;" class="text-center">
-                            <td>{{ mensaje.esAdmin ? 'Administración' : nombreUsuario }}</td>
-                            <td><strong>{{ mensaje.asunto || '(Sin asunto)' }}</strong></td>
-                            <td>{{ mensaje.fechaEnvio | date: 'dd/MM/yyyy' }}</td>
-                            <td>
-                                <span class="badge" [ngClass]="mensaje.esAdmin ? 'bg-primary' : 'bg-secondary'">
-                                    {{ mensaje.esAdmin ? 'Admin' : 'Usuario' }}
-                                </span>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#modalDetalleMensaje" (click)="abrirModalDetalle(mensaje)">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal de nuevo mensaje -->
-<div class="modal fade" id="modalNuevoMensaje" tabindex="-1" aria-labelledby="nuevoMensajeLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title" id="nuevoMensajeLabel">
-                    <i class="bi bi-envelope-plus me-2"></i> Crear nuevo mensaje
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                    aria-label="Cerrar"></button>
-            </div>
-            <form [formGroup]="formMensaje" (ngSubmit)="enviarMensaje()">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="asunto" class="form-label">Asunto</label>
-                        <input type="text" id="asunto" class="form-control" formControlName="asunto" maxlength="100"
-                            required />
-                    </div>
-                    <div class="mb-3">
-                        <label for="cuerpo" class="form-label">Cuerpo</label>
-                        <textarea id="cuerpo" class="form-control" rows="4" formControlName="cuerpo"
-                            required></textarea>
-                    </div>
-                    <div *ngIf="rol == 'ADMIN'" class="mb-3">
-                        <label for="destinatario" class="form-label">Destinatario (username)</label>
-                        <input id="destinatario" class="form-control" formControlName="destinatario" />
-                    </div>
+            <div class="card-body">
+                <div *ngIf="mensajes.length === 0" class="alert alert-info text-center mb-0">
+                    <i class="bi bi-envelope-slash me-2"></i>
+                    <b>No tienes mensajes.</b>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" [disabled]="formMensaje.invalid" class="btn btn-success">
-                        <i class="bi bi-send"></i> Enviar
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
-<!-- Modal de detalle de mensaje -->
-<div class="modal fade" id="modalDetalleMensaje" tabindex="-1" aria-labelledby="detalleMensajeLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header text-white">
-                <h5 class="modal-title" id="detalleMensajeLabel">
-                    <i class="bi bi-envelope-open me-2"></i> Detalle del mensaje
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                    aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body" *ngIf="mensajeSeleccionado">
-                <p><strong>Asunto:</strong> {{ mensajeSeleccionado.asunto || '(Sin asunto)' }}</p>
-                <p><strong>Fecha de envío:</strong> {{ mensajeSeleccionado.fechaEnvio | date: 'dd/MM/yyyy' }}</p>
-                <p><strong>Tipo:</strong> {{ mensajeSeleccionado.esAdmin ? 'Admin' : 'Usuario' }}</p>
-                <hr>
-                <p><strong>Mensaje:</strong></p>
-                <p class="text-break">{{ mensajeSeleccionado.cuerpo }}</p>
+                <div *ngIf="mensajes.length > 0 && mensajesFiltrados.length === 0"
+                    class="alert alert-warning text-center mb-0">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <b>No hay {{ filtroTipo === 'ADMIN' ? 'administradores' : filtroTipo === 'USUARIO' ? 'usuarios' :
+                        'mensajes' }} para mostrar.</b>
+                </div>
+
+
+                <div class="table-responsive" *ngIf="mensajesFiltrados.length > 0">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr class="text-center">
+                                <th scope="col">Usuario</th>
+                                <th scope="col">Asunto</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let mensaje of mensajesFiltrados;" class="text-center"
+                                [ngClass]="mensajeLeido(mensaje) ? 'mensaje-leido' : 'mensaje-no-leido'">
+                                <td>{{ usuarios[mensaje.id] || (mensaje.esAdmin ? 'Administración' : nombreUsuario) }}
+                                </td>
+                                <td>{{ mensaje.asunto || '(Sin asunto)' }}</td>
+                                <td>{{ mensaje.fechaEnvio | date: 'dd/MM/yyyy' }}</td>
+                                <td>
+                                    <span class="badge" [ngClass]="mensaje.esAdmin ? 'bg-primary' : 'bg-secondary'">
+                                        {{ mensaje.esAdmin ? 'Admin' : 'Usuario' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#modalDetalleMensaje" (click)="abrirModalDetalle(mensaje)">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <!-- Modal de nuevo mensaje -->
+    <div class="modal fade" id="modalNuevoMensaje" tabindex="-1" aria-labelledby="nuevoMensajeLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title" id="nuevoMensajeLabel">
+                        <i class="bi bi-envelope-plus me-2"></i> Crear nuevo mensaje
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Cerrar"></button>
+                </div>
+                <form [formGroup]="formMensaje" (ngSubmit)="enviarMensaje()">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="asunto" class="form-label">Asunto</label>
+                            <input type="text" id="asunto" class="form-control" formControlName="asunto" maxlength="100"
+                                required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="cuerpo" class="form-label">Cuerpo</label>
+                            <textarea id="cuerpo" class="form-control" rows="4" formControlName="cuerpo"
+                                required></textarea>
+                        </div>
+                        <div *ngIf="rol == 'ADMIN'" class="mb-3">
+                            <label for="destinatario" class="form-label">Destinatario (username)</label>
+                            <input id="destinatario" class="form-control" formControlName="destinatario" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" [disabled]="formMensaje.invalid" class="btn btn-success">
+                            <i class="bi bi-send"></i> Enviar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de detalle de mensaje -->
+    <div class="modal fade" id="modalDetalleMensaje" tabindex="-1" aria-labelledby="detalleMensajeLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-white">
+                    <h5 class="modal-title" id="detalleMensajeLabel">
+                        <i class="bi bi-envelope-open me-2"></i> Detalle del mensaje
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body" *ngIf="mensajeSeleccionado">
+                    <p><strong>Asunto:</strong> {{ mensajeSeleccionado.asunto || '(Sin asunto)' }}</p>
+                    <p><strong>Fecha de envío:</strong> {{ mensajeSeleccionado.fechaEnvio | date: 'dd/MM/yyyy' }}</p>
+                    <p><strong>Tipo:</strong> {{ mensajeSeleccionado.esAdmin ? 'Admin' : 'Usuario' }}</p>
+                    <hr>
+                    <p><strong>Mensaje:</strong></p>
+                    <p class="text-break">{{ mensajeSeleccionado.cuerpo }}</p>
+                </div>
+            </div>
+        </div>
+    </div>

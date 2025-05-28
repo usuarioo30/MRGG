@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -65,6 +66,15 @@ public class MensajeController {
     public ResponseEntity<List<Mensaje>> getMensajesAdmin() {
         List<Mensaje> mensajes = mensajeService.getMensajesAdmin();
         return ResponseEntity.ok(mensajes);
+    }
+
+    @PutMapping("/{id}/leido")
+    public ResponseEntity<Mensaje> marcarMensajeComoLeido(@PathVariable int id) {
+        Mensaje m = mensajeService.marcarComoLeido(id);
+        if (m != null) {
+            return ResponseEntity.ok(m);
+        }
+        return ResponseEntity.notFound().build();
     }
 
 }

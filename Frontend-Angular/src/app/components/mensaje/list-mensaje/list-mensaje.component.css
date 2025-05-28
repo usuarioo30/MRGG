@@ -5,3 +5,13 @@
 .modal-header {
     background-color: #581845;
 }
+
+.mensaje-no-leido {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.mensaje-leido {
+    background-color: #ffffff;
+    color: #6c757d;
+}

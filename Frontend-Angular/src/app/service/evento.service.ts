@@ -10,7 +10,7 @@ export class EventoService {
 
   constructor(private http: HttpClient) { }
 
-  private urlApi = "https://mrgg.onrender.com/evento"
+  private urlApi = "http://localhost:8080/evento"
 
   getCantidadEventosPorJuego(juegoId: number): Observable<number> {
     return this.http.get<number>(`${this.urlApi}/cantidad/${juegoId}`);

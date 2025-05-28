@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { ignoreElements } from 'rxjs';
 import { AdminService } from '../../../service/admin.service';
 import { jwtDecode } from 'jwt-decode';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form-contrasena',
@@ -33,8 +34,8 @@ export class FormContrasenaComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.formContrasena = this.fb.group({
-      passnueva: ['', [Validators.required, Validators.min(3)]],
-      passconfirm: ['', [Validators.required, Validators.min(3)]]
+      passnueva: ['', [Validators.required, Validators.minLength(3)]],
+      passconfirm: ['', [Validators.required, Validators.minLength(3)]]
     }, { validator: this.comprobarContrasena });
   }
 
@@ -52,58 +53,63 @@ export class FormContrasenaComponent implements OnInit {
     if (!contrasena) return;
 
     if (this.claveUsuario) {
-      // Caso: recuperación de contraseña desde correo
       this.actorService.recuperarContrasena(contrasena, this.claveUsuario).subscribe(
         result => {
-          window.alert("Contraseña actualizada correctamente");
-          this.router.navigateByUrl("/login");
+          Swal.fire({
+            icon: 'success',
+            title: 'Contraseña actualizada',
+            text: 'La contraseña ha sido actualizada correctamente.'
+          }).then(() => {
+            this.router.navigateByUrl("/login");
+          });
         },
         error => {
           console.error("Error en recuperación de contraseña:", error);
-          window.alert("No se pudo actualizar la contraseña.");
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo actualizar la contraseña.'
+          });
         }
       );
     } else if (this.token) {
-      // Caso: usuario autenticado
       if (this.token !== null && this.token) {
         this.rol = jwtDecode<{ rol: string }>(this.token).rol;
       }
 
-      if (this.rol === "ADMIN") {
-        this.adminService.updateContrasena(contrasena).subscribe(
-          result => {
-            window.alert("Contraseña actualizada correctamente");
+      const servicio = this.rol === "ADMIN" ? this.adminService : this.usuarioService;
+
+      servicio.updateContrasena(contrasena).subscribe(
+        result => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Contraseña actualizada',
+            text: 'La contraseña ha sido actualizada correctamente.'
+          }).then(() => {
             this.router.navigateByUrl("/");
-          },
-          error => {
-            console.error("Error actualizando contraseña como admin:", error);
-            window.alert("No se pudo actualizar la contraseña.");
-          }
-        );
-      } else {
-        this.usuarioService.updateContrasena(contrasena).subscribe(
-          result => {
-            window.alert("Contraseña actualizada correctamente");
-            this.router.navigateByUrl("/");
-          },
-          error => {
-            console.error("Error actualizando contraseña como usuario:", error);
-            window.alert("No se pudo actualizar la contraseña.");
-          }
-        );
-      }
+          });
+        },
+        error => {
+          console.error("Error actualizando contraseña:", error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo actualizar la contraseña.'
+          });
+        }
+      );
     } else {
       this.router.navigateByUrl("/");
     }
   }
 
-
-
   private comprobarContrasena(group: FormGroup) {
     const password = group.get('passnueva')?.value;
     const confirmPassword = group.get('passconfirm')?.value;
 
-    return password && confirmPassword && password !== confirmPassword ? { passNoCoinciden: true } : null;
+    return password && confirmPassword && password !== confirmPassword
+      ? { passNoCoinciden: true }
+      : null;
   }
 
 }

@@ -11,14 +11,14 @@ export class AdminService {
 
   constructor(private http: HttpClient) { }
 
-  private urlApi = "https://mrgg.onrender.com/admin"
+  private urlApi = "http://localhost:8080/admin"
 
   getAllAdmins(): Observable<Actor[]> {
     return this.http.get<Actor[]>(this.urlApi);
   }
 
   getOneAdminLogin(): Observable<Actor> {
-    const url = "https://mrgg.onrender.com/actorLogueado";
+    const url = "http://localhost:8080/actorLogueado";
     return this.http.get<Actor>(url);
   }
 

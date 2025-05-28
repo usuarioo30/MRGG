@@ -46,6 +46,7 @@ public class SecurityConfiguration {
 				.requestMatchers("/login").permitAll()
 				.requestMatchers("/actorLogueado").permitAll()
 				.requestMatchers("/actorExiste/**").permitAll()
+				.requestMatchers("/actorExisteEmail/**").permitAll()
 
 				// ACTOR
 				.requestMatchers(HttpMethod.PUT, "/actor/recuperarContrasena/{claveSegura}").permitAll()
@@ -105,6 +106,7 @@ public class SecurityConfiguration {
 				// MENSAJE
 				.requestMatchers(HttpMethod.POST, "/mensaje/enviar").hasAuthority("USER")
 				.requestMatchers(HttpMethod.POST, "/mensaje/enviar/{username}").hasAuthority("ADMIN")
+				.requestMatchers(HttpMethod.POST, "/mensaje/{id}/leido").hasAnyAuthority("ADMIN", "USER")
 				.requestMatchers(HttpMethod.GET, "/mensaje/{id}").hasAnyAuthority("ADMIN", "USER")
 				.requestMatchers(HttpMethod.GET, "/mensaje/usuario").permitAll()
 				.requestMatchers(HttpMethod.GET, "/mensaje/admin").hasAuthority("ADMIN")
@@ -127,7 +129,7 @@ public class SecurityConfiguration {
 	public CorsFilter corsFilter() {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(List.of("https://mrgg-phi.vercel.app/"));
+		config.setAllowedOrigins(List.of("http://localhost:4200"));
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 		config.setAllowCredentials(true);

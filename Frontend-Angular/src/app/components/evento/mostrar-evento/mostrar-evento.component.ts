@@ -9,6 +9,7 @@ import { Evento } from '../../../interfaces/evento';
 import { Usuario } from '../../../interfaces/usuario';
 import { jwtDecode } from 'jwt-decode';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-mostrar-evento',
@@ -70,8 +71,6 @@ export class MostrarEventoComponent {
           this.userLogin = usuario;
           this.nombreUsuario = usuario.username;
 
-          const isBaneado = usuario.baneado;
-
           this.activatedRoute.params.subscribe(params => {
             const idParam = params['id'];
             const eventoId = Number(idParam);
@@ -83,7 +82,6 @@ export class MostrarEventoComponent {
                 next: (evento) => {
                   this.eventoUnico = evento;
                   this.esMio = evento.usuario?.id === this.userLogin.id;
-
                   this.cargarJugadoresAceptados(evento.id);
                 },
                 error: (err) => {
@@ -91,7 +89,6 @@ export class MostrarEventoComponent {
                   this.router.navigate(['/']);
                 }
               });
-
             }
           });
         },
@@ -131,7 +128,6 @@ export class MostrarEventoComponent {
     const year = now.getFullYear();
     const month = (now.getMonth() + 1).toString().padStart(2, '0');
     const day = now.getDate().toString().padStart(2, '0');
-
     return `${year}-${month}-${day}`;
   }
 
@@ -143,7 +139,7 @@ export class MostrarEventoComponent {
       (error) => {
         console.error('Error al obtener el juego:', error);
         if (error.status === 404) {
-          alert('Juego no encontrado');
+          Swal.fire('Error', 'Juego no encontrado', 'error');
           this.router.navigate(['/']);
         }
       }
@@ -151,7 +147,6 @@ export class MostrarEventoComponent {
   }
 
   findEventosByJuego(juegoId: number) {
-    console.log(juegoId)
     this.eventoService.getEventosPorJuego(juegoId).subscribe(
       result => {
         this.eventos = result;
@@ -173,24 +168,25 @@ export class MostrarEventoComponent {
     if (this.eventoForm.valid) {
       const eventoAEnviar: Evento = this.eventoForm.value;
       const fechaInicioSeleccionada = new Date(eventoAEnviar.fecha_inicio);
-
       const hoy = new Date();
       hoy.setHours(0, 0, 0, 0);
       fechaInicioSeleccionada.setHours(0, 0, 0, 0);
 
       if (fechaInicioSeleccionada < hoy) {
-        alert("La fecha de inicio no puede ser anterior a hoy.");
+        Swal.fire('Advertencia', 'La fecha de inicio no puede ser anterior a hoy.', 'warning');
         return;
       }
 
       this.eventoService.saveEventoPorJuego(this.juegoId, eventoAEnviar).subscribe(
         () => {
+          Swal.fire('Éxito', 'Evento creado correctamente.', 'success');
           this.findEventosByJuego(this.juegoId);
           this.router.navigate(['/juego', this.juegoId, 'eventos']);
           window.location.reload();
         },
         error => {
           console.error('Error al crear el evento:', error);
+          Swal.fire('Error', 'No se pudo crear el evento.', 'error');
         }
       );
     } else {
@@ -201,12 +197,12 @@ export class MostrarEventoComponent {
   solicitarUnirse(eventoId: number): void {
     this.solicitudService.saveSolicitud(eventoId).subscribe({
       next: () => {
-        alert('Solicitud enviada correctamente.');
+        Swal.fire('Éxito', 'Solicitud enviada correctamente.', 'success');
         this.findEventosByJuego(this.juegoId);
       },
       error: (error) => {
         console.error('Error al enviar la solicitud:', error);
-        alert('No se pudo enviar la solicitud.');
+        Swal.fire('Error', 'No se pudo enviar la solicitud.', 'error');
       }
     });
   }
@@ -227,28 +223,51 @@ export class MostrarEventoComponent {
 
       this.eventoService.editEvento(this.eventoSeleccionado.id!, eventoActualizado).subscribe(
         () => {
+          Swal.fire('Éxito', 'Evento editado correctamente.', 'success');
           this.findEventosByJuego(this.juegoId);
           this.eventoSeleccionado = undefined!;
           window.location.reload();
         },
         error => {
           console.error("Error al editar el evento:", error);
+          Swal.fire('Error', 'No se pudo editar el evento.', 'error');
         }
       );
     }
   }
 
-  eliminarEvento(id: number) {
-    var confirmacion = window.confirm("¿Estas seguro de eliminar el evento?");
-    if (confirmacion) {
-      this.eventoService.deleteEvento(id).subscribe(
-        result => {
-          this.findEventosByJuego(this.juegoId);
-          window.location.reload();
-        },
-        error => { console.log(error.status) }
-      );
-    }
+  cancelarEvento(id: number) {
+    Swal.fire({
+      title: '¿Estás seguro de cancelar el evento?',
+      text: 'El evento cambiará a estado CANCELADO y no podrá unirse nadie más.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, cancelar',
+      cancelButtonText: 'No'
+    }).then(result => {
+      if (result.isConfirmed) {
+        this.eventoService.cancelarEvento(id).subscribe({
+          next: () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Evento cancelado',
+              showConfirmButton: false,
+              timer: 1500
+            });
+            window.location.reload();
+            this.findEventosByJuego(this.juegoId);
+          },
+          error: (err) => {
+            console.error('Error al cancelar el evento:', err);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo cancelar el evento.'
+            });
+          }
+        });
+      }
+    });
   }
 
   copiarCodigo(codigo: string): void {
@@ -257,12 +276,13 @@ export class MostrarEventoComponent {
       this.mostrarToast();
     }).catch(err => {
       console.error('Error al copiar el código:', err);
+      Swal.fire('Error', 'No se pudo copiar el código.', 'error');
     });
   }
 
   mostrarToast(): void {
     setTimeout(() => {
-      this.mostrarToastFlag = false
+      this.mostrarToastFlag = false;
     }, 2000);
   }
 
@@ -277,5 +297,4 @@ export class MostrarEventoComponent {
   obtenerEstadoEvento(evento: Evento): string {
     return this.estaLleno(evento) ? 'CERRADO' : evento.estado.toString();
   }
-
 }

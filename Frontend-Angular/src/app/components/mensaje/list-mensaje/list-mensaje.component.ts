@@ -27,6 +27,9 @@ export class ListMensajeComponent implements OnInit {
   usernameDestino: string = '';
   mensajeSeleccionado: Mensaje | null = null;
 
+  filtroTipo: 'USUARIO' | 'ADMIN' = 'USUARIO';
+
+
   constructor(
     private mensajeService: MensajeService,
     private usuarioService: UsuarioService,
@@ -53,9 +56,41 @@ export class ListMensajeComponent implements OnInit {
     }
   }
 
+  mensajeLeido(mensaje: Mensaje): boolean {
+    if (!mensaje.usuarioQueLee) return false;
+    return mensaje.usuarioQueLee.includes(this.nombreUsuario);
+  }
+
+  get mensajesFiltrados(): Mensaje[] {
+    if (this.filtroTipo === 'USUARIO') {
+      return this.mensajes.filter(m => !m.esAdmin);
+    }
+    if (this.filtroTipo === 'ADMIN') {
+      return this.mensajes.filter(m => m.esAdmin);
+    }
+    return this.mensajes; // fallback, aunque no debería llegar aquí
+  }
+
+
   abrirModalDetalle(mensaje: Mensaje): void {
     this.mensajeSeleccionado = mensaje;
+
+    if (!this.mensajeLeido(mensaje)) {
+      this.mensajeService.marcarComoLeido(mensaje.id).subscribe({
+        next: (mensajeActualizado) => {
+          // Actualizamos el mensaje local con la info nueva (usuarioQueLee actualizado)
+          const index = this.mensajes.findIndex(m => m.id === mensaje.id);
+          if (index !== -1) {
+            this.mensajes[index] = mensajeActualizado;
+          }
+        },
+        error: () => {
+          // Aquí podrías mostrar error si quieres, o ignorar
+        }
+      });
+    }
   }
+
 
   cargarMensajesAdmin(): void {
     this.mensajeService.getMensajesAdmin().subscribe(mensajes => {

@@ -70,16 +70,21 @@
                                 {{ evento.fecha_inicio | date: 'dd/MM/yyyy' }}
                             </td>
                             <td *ngIf="rol === 'USER'">
-                                <button type="button" class="btn btn-sm btn-outline-primary"
-                                    [routerLink]="['/solicitudes/delEvento/', evento.id]">
-                                    Solicitudes
-                                    <span class="text-warning"><b>{{ contarSolicitudes(evento) }}</b></span>
-                                </button> &nbsp;
-                                <button type="button" class="btn btn-sm btn-primary"
-                                    [routerLink]="['/evento/', evento.id]">
-                                    <i class="bi bi-eye"></i>
-                                </button>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <button type="button"
+                                        class="btn btn-sm btn-outline-primary d-flex align-items-center"
+                                        [routerLink]="['/solicitudes/delEvento/', evento.id]">
+                                        Solicitudes&nbsp;
+                                        <span class="text-warning fw-bold">{{ contarSolicitudes(evento) }}</span>
+                                    </button>
+
+                                    <button type="button" class="btn btn-sm btn-primary"
+                                        [routerLink]="['/evento/', evento.id]">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
                             </td>
+
                         </tr>
                         }
                     </tbody>

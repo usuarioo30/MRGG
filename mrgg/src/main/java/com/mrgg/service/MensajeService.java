@@ -132,4 +132,22 @@ public class MensajeService {
         return res;
     }
 
+    @Transactional
+    public Mensaje marcarComoLeido(int mensajeId) {
+        Mensaje mensaje = mensajeRepository.findById(mensajeId).orElse(null);
+        Actor actor = jwtUtils.userLogin();
+
+        if (mensaje != null && actor != null) {
+            if (mensaje.getUsuarioQueLee() == null) {
+                mensaje.setUsuarioQueLee(new ArrayList<>());
+            }
+            String username = actor.getUsername();
+            if (!mensaje.getUsuarioQueLee().contains(username)) {
+                mensaje.getUsuarioQueLee().add(username);
+                mensajeRepository.save(mensaje);
+            }
+        }
+        return mensaje;
+    }
+
 }

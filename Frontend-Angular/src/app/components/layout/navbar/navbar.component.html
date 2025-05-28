@@ -1,76 +1,84 @@
-<nav class="navbar navbar-expand-lg navegacion">
-    <a class="navbar-brand ms-3" [routerLink]="['/']" style="color: white;">MRGG</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item me-1" *ngIf="token == null || token != null">
-                <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-                    [routerLink]="['/']">
-                    <i class="bi bi-house"></i> Inicio
-                </a>
-            </li>
-            <li class="nav-item me-1 ms-1" *ngIf="rol == 'ADMIN'">
-                <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-                    [routerLink]="['/usuarios']">
-                    <i class="bi bi-people"></i> Usuarios
-                </a>
-            </li>
-            <li class="nav-item me-1 ms-1" *ngIf="rol == 'ADMIN'">
-                <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-                    [routerLink]="['/juego/crear']">
-                    <i class="bi bi-controller"></i> Crear juego
-                </a>
-            </li>
-            <li class="nav-item me-1 ms-1" *ngIf="rol == 'USER'">
-                <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-                    [routerLink]="['/misEventos']">
-                    <i class="bi bi-calendar2-event"></i> Eventos creados
-                </a>
-            </li>
-            <li class="nav-item me-1 ms-1" *ngIf="rol == 'USER'">
-                <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-                    [routerLink]="['/solicitudes/enviadas']">
-                    <i class="bi bi-hourglass"></i> Solicitudes enviadas
-                </a>
-            </li>
+<nav class="navbar navbar-expand-lg navegacion px-3 py-2">
+    <div class="container-fluid">
+        <!-- Logo y nombre -->
+        <a class="navbar-brand d-flex align-items-center" [routerLink]="['/']" style="color: white;">
+            <img src="./logo.png" alt="Logo" class="me-2 logo-img">
+            <span>MRGG</span>
+        </a>
 
-            <li class="nav-item me-1 ms-1" *ngIf="token != null">
-                <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-                    [routerLink]="['/mensajes']">
-                    <i class="bi bi-inbox"></i> Mensajes
-                </a>
-            </li>
-        </ul>
-    </div>
+        <!-- Botón de hamburguesa -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+            aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <div class="d-flex ms-auto me-5" style="color: white;">
-        <div class="dropdown" *ngIf="token != null">
-            <span class="dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
-                <img [src]="foto" alt="avatar" class="me-2">{{ nombreUsuario }} ({{rol}})
-            </span>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                <li *ngIf="rol == 'USER' || rol == 'ADMIN'">
-                    <a class="dropdown-item" [routerLink]="[rol === 'ADMIN' ? '/admin/editar' : '/usuario/editar']">
-                        Editar usuario
+        <!-- Contenido colapsable -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <!-- Menú principal -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item" *ngIf="token == null || token != null">
+                    <a class="nav-link me-1" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                        [routerLink]="['/']">
+                        <i class="bi bi-house ms-1"></i> Inicio
                     </a>
                 </li>
-                <li>
-                    <a class="dropdown-item" [routerLink]="['/actor/actualizarContrasena']">Cambiar contraseña</a>
+                <li class="nav-item" *ngIf="rol == 'ADMIN'">
+                    <a class="nav-link me-1" routerLinkActive="active" [routerLink]="['/usuarios']">
+                        <i class="bi bi-people ms-1"></i> Usuarios
+                    </a>
                 </li>
-                <li>
-                    <button class="btn btn-danger ms-4 mt-2" (click)="logout()">Cerrar sesión</button>
+                <li class="nav-item" *ngIf="rol == 'ADMIN'">
+                    <a class="nav-link me-1" routerLinkActive="active" [routerLink]="['/juego/crear']">
+                        <i class="bi bi-controller ms-1"></i> Crear juego
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="rol == 'USER'">
+                    <a class="nav-link me-1" routerLinkActive="active" [routerLink]="['/misEventos']">
+                        <i class="bi bi-calendar2-event ms-1"></i> Eventos creados
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="rol == 'USER'">
+                    <a class="nav-link me-1" routerLinkActive="active" [routerLink]="['/solicitudes/enviadas']">
+                        <i class="bi bi-hourglass ms-1"></i> Solicitudes enviadas
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="token != null">
+                    <a class="nav-link me-1" routerLinkActive="active" [routerLink]="['/mensajes']">
+                        <i class="bi bi-inbox ms-1"></i> Mensajes
+                    </a>
                 </li>
             </ul>
-        </div>
 
-        <button class="btn btn-light me-0"
-            *ngIf="token == null && obtenerRuta() != '/login' && obtenerRuta() != '/usuario/nuevo'"
-            (click)="login()">Iniciar
-            sesión
-        </button>
+            <!-- Menú de usuario o botón login -->
+            <div class="d-flex align-items-center">
+                <div class="dropdown me-3" *ngIf="token != null">
+                    <span class="dropdown-toggle text-white d-flex align-items-center" id="dropdownMenuButton"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">
+                        <img [src]="foto" alt="avatar" class="me-2 rounded-circle" style="height: 30px; width: 30px;">
+                        {{ nombreUsuario }} ({{ rol }})
+                    </span>
+                    <ul class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="dropdownMenuButton">
+                        <li *ngIf="rol == 'USER' || rol == 'ADMIN'">
+                            <a class="dropdown-item"
+                                [routerLink]="[rol === 'ADMIN' ? '/admin/editar' : '/usuario/editar']">
+                                Editar usuario
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" [routerLink]="['/actor/actualizarContrasena']">Cambiar
+                                contraseña</a>
+                        </li>
+                        <li class="px-3">
+                            <button class="btn btn-sm btn-danger mt-2 w-100" (click)="logout()">Cerrar sesión</button>
+                        </li>
+                    </ul>
+                </div>
+
+                <button class="btn btn-light"
+                    *ngIf="token == null && obtenerRuta() != '/login' && obtenerRuta() != '/usuario/nuevo'"
+                    (click)="login()">Iniciar sesión
+                </button>
+            </div>
+        </div>
     </div>
 </nav>

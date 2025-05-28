@@ -1,23 +1,21 @@
 <div class="container mt-4 mb-4">
     <div class="card shadow-sm">
         <div class="card-header text-white">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <h5 class="mb-0">Mis Solicitudes</h5>
-                <div>
-                    <select class="form-select" [(ngModel)]="filtroEstado" (change)="filtrarSolicitudes()">
-                        <option value="">Filtrar por estado</option>
-                        <option value="PENDIENTE">Pendiente</option>
-                        <option value="ACEPTADA">Aceptada</option>
-                        <option value="RECHAZADA">Rechazada</option>
-                    </select>
-                </div>
+                <select class="form-select w-auto" [(ngModel)]="filtroEstado" (change)="filtrarSolicitudes()">
+                    <option value="">Filtrar por estado</option>
+                    <option value="PENDIENTE">Pendiente</option>
+                    <option value="ACEPTADA">Aceptada</option>
+                    <option value="RECHAZADA">Rechazada</option>
+                </select>
             </div>
         </div>
 
         <div class="card-body">
-            <div *ngIf="solicitudesFiltradas.length === 0 && !baneado" class="alert alert-warning text-center mb-0"
-                role="alert">
-                <b>No hay solicitudes disponibles.</b>
+            <!-- Alertas -->
+            <div *ngIf="solicitudesFiltradas.length === 0 && !baneado" class="alert alert-warning text-center mb-0">
+                <strong>No hay solicitudes disponibles.</strong>
             </div>
 
             <div *ngIf="baneado" class="alert alert-danger text-center mt-4">
@@ -26,7 +24,8 @@
                 restricción.
             </div>
 
-            <div *ngIf="solicitudesFiltradas.length > 0 && !baneado" class="table-responsive">
+            <!-- Tabla de solicitudes -->
+            <div *ngIf="solicitudesFiltradas.length > 0 && !baneado" class="table-responsive mt-3">
                 <table class="table table-hover align-middle text-center">
                     <thead class="table-light">
                         <tr>
@@ -36,32 +35,48 @@
                             <th scope="col">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr *ngFor="let solicitud of solicitudesFiltradas">
-                            <td>
-                                {{ eventos[solicitud.id]?.juego?.nombre }}<br>
-                                <small>Evento creado por: {{ eventos[solicitud.id]?.usuario?.username }}</small>
+                    <tbody *ngFor="let solicitud of solicitudesFiltradas">
+                        <tr>
+                            <!-- Info del juego -->
+                            <td *ngIf="eventos[solicitud.id]?.juego">
+                                <strong>{{ eventos[solicitud.id]?.juego?.nombre }}</strong><br>
+                                <small>Evento creado por: {{ eventos[solicitud.id]?.usuario?.username || 'Usuario
+                                    desconocido' }}</small>
                             </td>
-                            <td>
+
+                            <!-- Código sala -->
+                            <td *ngIf="eventos[solicitud.id]?.juego">
                                 {{ eventos[solicitud.id]?.codigo_sala }}
                             </td>
+
+                            <!-- Si el juego fue eliminado -->
+                            <td *ngIf="!eventos[solicitud.id]?.juego" colspan="2" class="text-danger text-center">
+                                Este juego ya no existe
+                            </td>
+
+                            <!-- Estado -->
                             <td>
                                 <span class="badge" [ngClass]="{
-                'bg-secondary': solicitud.estado.toString() === 'PENDIENTE',
-                'bg-success': solicitud.estado.toString() === 'ACEPTADA',
-                'bg-danger': solicitud.estado.toString() === 'RECHAZADA' || solicitud.estado.toString() === 'CANCELADA',
-            }">
+                    'bg-secondary': solicitud.estado.toString() === 'PENDIENTE',
+                    'bg-success': solicitud.estado.toString() === 'ACEPTADA',
+                    'bg-danger': solicitud.estado.toString() === 'RECHAZADA' || solicitud.estado.toString() === 'CANCELADA'
+                  }">
                                     {{ solicitud.estado }}
                                 </span>
                             </td>
+
+                            <!-- Botones -->
                             <td>
-                                <button type="button" class="btn btn-primary"
-                                    [routerLink]="['/evento/', eventos[solicitud.id]?.id]">
-                                    <i class="bi bi-eye"></i>
-                                </button>&nbsp;
-                                <button type="button" class="btn btn-danger" (click)="eliminarSolicitud(solicitud.id)">
-                                    <i class="bi bi-trash"></i>
-                                </button>
+                                <div class="d-flex justify-content-center gap-2 flex-wrap">
+                                    <button type="button" class="btn btn-sm btn-primary"
+                                        [routerLink]="['/evento/', eventos[solicitud.id]?.id]">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-danger"
+                                        (click)="eliminarSolicitud(solicitud.id)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     </tbody>

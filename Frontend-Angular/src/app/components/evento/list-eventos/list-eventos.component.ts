@@ -290,19 +290,6 @@ export class ListEventosComponent implements OnInit {
     }
   }
 
-  eliminarEvento(id: number) {
-    var confirmacion = window.confirm("¿Estas seguro de eliminar el evento?");
-    if (confirmacion) {
-      this.eventoService.deleteEvento(id).subscribe(
-        result => {
-          this.findEventosByJuego(this.juegoId);
-          window.location.reload();
-        },
-        error => { console.log(error.status) }
-      );
-    }
-  }
-
   cancelarEvento(id: number) {
     Swal.fire({
       title: '¿Estás seguro de cancelar el evento?',

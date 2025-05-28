@@ -52,28 +52,35 @@ export class ListUsuarioComponent implements OnInit {
     if (this.token) {
       this.rol = jwtDecode<{ rol: string }>(this.token).rol;
 
+      // Paso 1: Obtener el admin logueado
       this.adminService.getOneAdminLogin().subscribe({
-        next: result => this.id = result.id,
-        error: () => console.log("Ha ocurrido un error"),
-      });
+        next: result => {
+          this.id = result.id;
 
-      this.usuarioService.getAllUsuarios().subscribe({
-        next: usuarios => {
-          this.usuarios = usuarios;
-          this.unificarUsuariosYAdmins();
-        },
-        error: err => console.log(err)
-      });
+          // Paso 2: Obtener usuarios
+          this.usuarioService.getAllUsuarios().subscribe({
+            next: usuarios => {
+              this.usuarios = usuarios;
 
-      this.adminService.getAllAdmins().subscribe({
-        next: admins => {
-          this.admins = admins.filter(admin => admin.id !== this.id);
-          this.unificarUsuariosYAdmins();
+              // Paso 3: Obtener admins (ya tenemos this.id)
+              this.adminService.getAllAdmins().subscribe({
+                next: admins => {
+                  this.admins = admins.filter(admin => admin.id !== this.id);
+
+                  // Paso 4: Unificar usuarios y admins
+                  this.unificarUsuariosYAdmins();
+                },
+                error: err => console.error("Error al obtener administradores", err)
+              });
+            },
+            error: err => console.log("Error al obtener usuarios", err)
+          });
         },
-        error: err => console.error("Error al obtener administradores", err)
+        error: () => console.log("Ha ocurrido un error al obtener el admin logueado"),
       });
     }
   }
+
 
   unificarUsuariosYAdmins(): void {
     this.todos = [...this.usuarios, ...this.admins];

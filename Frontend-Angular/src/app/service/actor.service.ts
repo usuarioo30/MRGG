@@ -11,9 +11,9 @@ export class ActorService {
   constructor(private http: HttpClient) { }
 
   // URL API Backend
-  private urlAPI = "https://mrgg.onrender.com"
+  private urlAPI = "http://localhost:8080"
 
-  private urlApi = "https://mrgg.onrender.com/actor"
+  private urlApi = "http://localhost:8080/actor"
 
   login(actorLogin: ActorLogin): Observable<any> {
     return this.http.post<any>(`${this.urlAPI}/login`, actorLogin);
@@ -25,6 +25,10 @@ export class ActorService {
 
   actorExist(username: string): Observable<any> {
     return this.http.get<any>(`${this.urlAPI}/actorExiste/${username}`);
+  }
+
+  actorExistEmail(email: string): Observable<any> {
+    return this.http.get<any>(`${this.urlAPI}/actorExisteEmail/${email}`);
   }
 
   mandarCorreoParaRecuperarContrasena(email: string) {

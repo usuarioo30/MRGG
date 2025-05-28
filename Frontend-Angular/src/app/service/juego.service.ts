@@ -10,7 +10,7 @@ export class JuegoService {
 
   constructor(private http: HttpClient) { }
 
-  private urlApi = 'https://mrgg.onrender.com/juego';
+  private urlApi = 'http://localhost:8080/juego';
 
   getAllJuegosPorCategoria(categoria: string): Observable<Juego[]> {
     const url = `${this.urlApi}/categoria?categoria=${categoria}`;
