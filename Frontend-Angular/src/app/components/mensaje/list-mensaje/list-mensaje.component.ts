@@ -81,7 +81,38 @@ export class ListMensajeComponent implements OnInit {
     return filtrados;
   }
 
-
+  eliminarMensaje(mensaje: Mensaje): void {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.mensajeService.deleteMensaje(mensaje.id).subscribe({
+          next: () => {
+            this.mensajes = this.mensajes.filter(m => m.id !== mensaje.id);
+            Swal.fire(
+              'Eliminado',
+              'El mensaje ha sido eliminado.',
+              'success'
+            );
+          },
+          error: () => {
+            Swal.fire(
+              'Error',
+              'No se pudo eliminar el mensaje.',
+              'error'
+            );
+          }
+        });
+      }
+    });
+  }
 
   abrirModalDetalle(mensaje: Mensaje): void {
     this.mensajeSeleccionado = mensaje;
@@ -146,21 +177,13 @@ export class ListMensajeComponent implements OnInit {
         }
 
         this.mensajeService.enviarMensajeDesdeAdmin(nuevoMensaje, destinatario).subscribe({
-          next: (res) => {
-            if (res) {
-              Swal.fire({
-                icon: 'success',
-                title: 'Mensaje enviado',
-                text: 'El mensaje fue enviado correctamente.',
-              });
-              this.finalizarEnvio();
-            } else {
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo enviar el mensaje.',
-              });
-            }
+          next: () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Mensaje enviado',
+              text: 'El mensaje fue enviado correctamente.',
+            });
+            this.finalizarEnvio();
           },
           error: () => {
             Swal.fire({
@@ -173,21 +196,13 @@ export class ListMensajeComponent implements OnInit {
 
       } else {
         this.mensajeService.enviarMensajeDesdeUsuario(nuevoMensaje).subscribe({
-          next: (res) => {
-            if (res) {
-              Swal.fire({
-                icon: 'success',
-                title: 'Mensaje enviado',
-                text: 'El mensaje fue enviado correctamente.',
-              });
-              this.finalizarEnvio();
-            } else {
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo enviar el mensaje.',
-              });
-            }
+          next: () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Mensaje enviado',
+              text: 'El mensaje fue enviado correctamente.',
+            });
+            this.finalizarEnvio();
           },
           error: () => {
             Swal.fire({

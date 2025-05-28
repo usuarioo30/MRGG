@@ -46,4 +46,9 @@ export class MensajeService {
     return this.http.put<Mensaje>(`${this.urlApi}/${mensajeId}/leido`, {});
   }
 
+  deleteMensaje(id: number): Observable<void> {
+    const url = `${this.urlApi}/${id}`;
+    return this.http.delete<void>(url);
+  }
+
 }

@@ -5,5 +5,4 @@ export interface Mensaje {
     cuerpo: string;
     usuarioQueLee: string[];
     esAdmin: boolean;
-    leido?: boolean;
 }

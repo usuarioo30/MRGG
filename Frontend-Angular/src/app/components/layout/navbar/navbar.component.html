@@ -6,7 +6,6 @@
             <span>MRGG</span>
         </a>
 
-        <!-- Botón de hamburguesa -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
             aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -54,7 +53,7 @@
                 <div class="dropdown me-3" *ngIf="token != null">
                     <span class="dropdown-toggle text-white d-flex align-items-center" id="dropdownMenuButton"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">
-                        <img [src]="foto" alt="avatar" class="me-2 rounded-circle" style="height: 30px; width: 30px;">
+                        <img [src]="foto" alt="avatar" class="me-2" style="height: 30px; width: 30px;">
                         {{ nombreUsuario }} ({{ rol }})
                     </span>
                     <ul class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="dropdownMenuButton">

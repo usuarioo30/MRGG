@@ -16,8 +16,8 @@
                 <div class="d-flex align-items-center ms-3">
                     <span class="me-2">Estado:</span>
                     <select class="form-select form-select-sm w-auto" [(ngModel)]="filtroLeido">
-                        <option value="LEIDOS">Leídos</option>
                         <option value="NO_LEIDOS">No leídos</option>
+                        <option value="LEIDOS">Leídos</option>
                     </select>
                 </div>
 
@@ -66,11 +66,14 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#modalDetalleMensaje" (click)="abrirModalDetalle(mensaje)">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#modalDetalleMensaje" (click)="abrirModalDetalle(mensaje)">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </div>
                                 </td>
+
                             </tr>
                         </tbody>
                     </table>

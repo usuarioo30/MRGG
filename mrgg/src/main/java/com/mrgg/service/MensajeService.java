@@ -71,6 +71,39 @@ public class MensajeService {
         return res;
     }
 
+    @Transactional
+    public boolean eliminarMensaje(int mensajeId) {
+        Actor actor = jwtUtils.userLogin();
+
+        if (actor == null) {
+            return false;
+        }
+
+        Optional<Mensaje> mensajeOpt = mensajeRepository.findById(mensajeId);
+
+        if (mensajeOpt.isEmpty()) {
+            return false;
+        }
+
+        Mensaje mensaje = mensajeOpt.get();
+
+        if (actor.getRol() == Roles.ADMIN) {
+            mensajeRepository.delete(mensaje);
+            return true;
+
+        } else if (actor.getRol() == Roles.USER) {
+            Usuario usuario = (Usuario) actor;
+            if (usuario.getMensajes().contains(mensaje)) {
+                usuario.getMensajes().remove(mensaje);
+                usuarioService.saveUsuarioGeneral(usuario);
+                mensajeRepository.delete(mensaje);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public Mensaje getMensaje(int id) {
         Mensaje m = mensajeRepository.findById(id).orElse(null);
 

@@ -104,6 +104,7 @@ public class SecurityConfiguration {
 				.requestMatchers(HttpMethod.DELETE, "/juego/{id}").hasAuthority("ADMIN")
 
 				// MENSAJE
+				.requestMatchers(HttpMethod.DELETE, "/mensaje/{id}").hasAnyAuthority("ADMIN", "USER")
 				.requestMatchers(HttpMethod.POST, "/mensaje/enviar").hasAuthority("USER")
 				.requestMatchers(HttpMethod.POST, "/mensaje/enviar/{username}").hasAuthority("ADMIN")
 				.requestMatchers(HttpMethod.POST, "/mensaje/{id}/leido").hasAnyAuthority("ADMIN", "USER")
