@@ -1,83 +1,88 @@
 <div class="container mt-4 mb-4">
     <div class="card shadow-sm">
         <div class="card-header text-white">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <h5 class="mb-0">
-                    <i class="bi bi-inbox me-2"></i> Bandeja de entrada y salida
-                </h5>
-                <div class="d-flex align-items-center">
+            <div class="row gy-2 gx-3 align-items-center">
+                <div class="col-12 col-md">
+                    <h5 class="mb-0 text-center text-md-start">
+                        <i class="bi bi-inbox me-2"></i> Bandeja de entrada y salida
+                    </h5>
+                </div>
+
+                <div class="col-6 col-md-auto d-flex align-items-center">
                     <span class="me-2">Tipo:</span>
-                    <select class="form-select form-select-sm w-auto" [(ngModel)]="filtroTipo">
+                    <select class="form-select form-select-sm" [(ngModel)]="filtroTipo">
                         <option value="USUARIO">Usuario</option>
                         <option value="ADMIN">Administrador</option>
                     </select>
                 </div>
 
-                <div class="d-flex align-items-center ms-3">
+                <div class="col-6 col-md-auto d-flex align-items-center">
                     <span class="me-2">Estado:</span>
-                    <select class="form-select form-select-sm w-auto" [(ngModel)]="filtroLeido">
+                    <select class="form-select form-select-sm" [(ngModel)]="filtroLeido">
                         <option value="NO_LEIDOS">No leídos</option>
                         <option value="LEIDOS">Leídos</option>
                     </select>
                 </div>
 
-                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modalNuevoMensaje">
-                    <i class="bi bi-plus-circle me-1"></i> Nuevo mensaje
-                </button>
+                <div class="col-12 col-md-auto text-center text-md-end">
+                    <button class="btn btn-success btn-sm w-100 w-md-auto" data-bs-toggle="modal"
+                        data-bs-target="#modalNuevoMensaje">
+                        <i class="bi bi-plus-circle me-1"></i> Nuevo mensaje
+                    </button>
+                </div>
             </div>
         </div>
 
         <div class="card-body">
-            <div class="card-body">
-                <div *ngIf="mensajes.length === 0" class="alert alert-info text-center mb-0">
-                    <i class="bi bi-envelope-slash me-2"></i>
-                    <b>No tienes mensajes.</b>
-                </div>
+            <div *ngIf="mensajes.length === 0" class="alert alert-info text-center mb-0">
+                <i class="bi bi-envelope-slash me-2"></i>
+                <b>No tienes mensajes.</b>
+            </div>
 
-                <div *ngIf="mensajes.length > 0 && mensajesFiltrados.length === 0"
-                    class="alert alert-warning text-center mb-0">
-                    <i class="bi bi-exclamation-triangle me-2"></i>
-                    <b>No hay {{ filtroTipo === 'ADMIN' ? 'administradores' : filtroTipo === 'USUARIO' ? 'usuarios' :
-                        'mensajes' }} para mostrar.</b>
-                </div>
+            <div *ngIf="mensajes.length > 0 && mensajesFiltrados.length === 0"
+                class="alert alert-warning text-center mb-0">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <b>No hay {{ filtroTipo === 'ADMIN' ? 'administradores' : filtroTipo === 'USUARIO' ? 'usuarios' :
+                    'mensajes' }} para mostrar.</b>
+            </div>
 
-
-                <div class="table-responsive" *ngIf="mensajesFiltrados.length > 0">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
-                            <tr class="text-center">
-                                <th scope="col">Usuario</th>
-                                <th scope="col">Asunto</th>
-                                <th scope="col">Fecha</th>
-                                <th scope="col">Tipo</th>
-                                <th scope="col">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let mensaje of mensajesFiltrados;" class="text-center"
-                                [ngClass]="mensajeLeido(mensaje) ? 'mensaje-leido' : 'mensaje-no-leido'">
-                                <td>{{ usuarios[mensaje.id] || (mensaje.esAdmin ? 'Administración' : nombreUsuario) }}
-                                </td>
-                                <td>{{ mensaje.asunto || '(Sin asunto)' }}</td>
-                                <td>{{ mensaje.fechaEnvio | date: 'dd/MM/yyyy' }}</td>
-                                <td>
-                                    <span class="badge" [ngClass]="mensaje.esAdmin ? 'bg-primary' : 'bg-secondary'">
-                                        {{ mensaje.esAdmin ? 'Admin' : 'Usuario' }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="d-flex flex-wrap gap-2">
-                                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                            data-bs-target="#modalDetalleMensaje" (click)="abrirModalDetalle(mensaje)">
-                                            <i class="bi bi-eye"></i>
-                                        </button>
-                                    </div>
-                                </td>
-
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="table-responsive mt-3" *ngIf="mensajesFiltrados.length > 0">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light text-center">
+                        <tr>
+                            <th scope="col">Usuario</th>
+                            <th scope="col">Asunto</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let mensaje of mensajesFiltrados;" class="text-center"
+                            [ngClass]="mensajeLeido(mensaje) ? 'mensaje-leido' : 'mensaje-no-leido'">
+                            <td>{{ usuarios[mensaje.id] || (mensaje.esAdmin ? 'Administración' : nombreUsuario) }}</td>
+                            <td>{{ mensaje.asunto || '(Sin asunto)' }}</td>
+                            <td>{{ mensaje.fechaEnvio | date: 'dd/MM/yyyy' }}</td>
+                            <td>
+                                <span class="badge" [ngClass]="mensaje.esAdmin ? 'bg-primary' : 'bg-secondary'">
+                                    {{ mensaje.esAdmin ? 'Admin' : 'Usuario' }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="d-flex flex-wrap justify-content-center gap-2">
+                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#modalDetalleMensaje" (click)="abrirModalDetalle(mensaje)">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button *ngIf="rol === 'ADMIN'" type="button" class="btn btn-sm btn-danger"
+                                        (click)="eliminarMensaje(mensaje)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -143,3 +148,4 @@
             </div>
         </div>
     </div>
+</div>
