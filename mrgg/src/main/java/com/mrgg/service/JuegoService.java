@@ -103,7 +103,7 @@ public class JuegoService {
         if (this.getAllJuegos().size() <= 0) {
             Juego juego1 = new Juego();
             juego1.setNombre("Fc 25");
-            juego1.setDescripcion("Descripción del juego 1");
+            juego1.setDescripcion("Juego de fútbol el cuál podrás disfrutar experiencia individual o multijugador");
             juego1.setFoto(imagenGeneratedUrl(juego1.getNombre()));
             juego1.setCategoria(TipoCategoria.DEPORTES);
 
@@ -111,7 +111,8 @@ public class JuegoService {
 
             Juego juego2 = new Juego();
             juego2.setNombre("NBA 2K25");
-            juego2.setDescripcion("Descripción del juego 2");
+            juego2.setDescripcion(
+                    "Juego de baloncesto, en el que podrás disfrutar de una experiencia tanto individual como multijugador con tus amigos");
             juego2.setCategoria(TipoCategoria.DEPORTES);
             juego2.setFoto(imagenGeneratedUrl(juego2.getNombre()));
 
@@ -119,11 +120,39 @@ public class JuegoService {
 
             Juego juego3 = new Juego();
             juego3.setNombre("Madden NFL 25");
-            juego3.setDescripcion("Descripción del juego 3");
+            juego3.setDescripcion(
+                    "Juego de fútbol americano, en el que podrás disfrutar de una experiencia tanto individual como multijugador");
             juego3.setCategoria(TipoCategoria.DEPORTES);
             juego3.setFoto(imagenGeneratedUrl(juego3.getNombre()));
 
             juegoRepository.save(juego3);
+
+            Juego juego4 = new Juego();
+            juego4.setNombre("F1 25");
+            juego4.setDescripcion(
+                    "Juego de carreras, en el que podrás disfrutar de una experiencia tanto individual como multijugador");
+            juego4.setCategoria(TipoCategoria.CARRERAS);
+            juego4.setFoto(imagenGeneratedUrl(juego4.getNombre()));
+
+            juegoRepository.save(juego4);
+
+            Juego juego5 = new Juego();
+            juego5.setNombre("Gran Turismo 5");
+            juego5.setDescripcion(
+                    "Juego de carreras, en el que podrás disfrutar de una experiencia individual o multijugador");
+            juego5.setCategoria(TipoCategoria.CARRERAS);
+            juego5.setFoto(imagenGeneratedUrl(juego5.getNombre()));
+
+            juegoRepository.save(juego5);
+
+            Juego juego6 = new Juego();
+            juego6.setNombre("Forza Horizon 5");
+            juego6.setDescripcion(
+                    "Juego de carreras , en el que podrás disfrutar de una experiencia individual o multijugador");
+            juego6.setCategoria(TipoCategoria.CARRERAS);
+            juego6.setFoto(imagenGeneratedUrl(juego6.getNombre()));
+
+            juegoRepository.save(juego6);
 
             System.out.println("Juegos creados por defecto");
 
