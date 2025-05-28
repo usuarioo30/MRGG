@@ -128,7 +128,7 @@ public class JuegoService {
             juegoRepository.save(juego3);
 
             Juego juego4 = new Juego();
-            juego4.setNombre("F1 25");
+            juego4.setNombre("F1 24");
             juego4.setDescripcion(
                     "Juego de carreras, en el que podrás disfrutar de una experiencia tanto individual como multijugador");
             juego4.setCategoria(TipoCategoria.CARRERAS);
