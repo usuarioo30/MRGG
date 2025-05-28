@@ -28,6 +28,8 @@ export class ListMensajeComponent implements OnInit {
   mensajeSeleccionado: Mensaje | null = null;
 
   filtroTipo: 'USUARIO' | 'ADMIN' = 'USUARIO';
+  filtroLeido: 'LEIDOS' | 'NO_LEIDOS' = 'NO_LEIDOS';
+
 
 
   constructor(
@@ -62,14 +64,23 @@ export class ListMensajeComponent implements OnInit {
   }
 
   get mensajesFiltrados(): Mensaje[] {
+    let filtrados = this.mensajes;
+
     if (this.filtroTipo === 'USUARIO') {
-      return this.mensajes.filter(m => !m.esAdmin);
+      filtrados = filtrados.filter(m => !m.esAdmin);
+    } else if (this.filtroTipo === 'ADMIN') {
+      filtrados = filtrados.filter(m => m.esAdmin);
     }
-    if (this.filtroTipo === 'ADMIN') {
-      return this.mensajes.filter(m => m.esAdmin);
+
+    if (this.filtroLeido === 'LEIDOS') {
+      filtrados = filtrados.filter(m => this.mensajeLeido(m));
+    } else if (this.filtroLeido === 'NO_LEIDOS') {
+      filtrados = filtrados.filter(m => !this.mensajeLeido(m));
     }
-    return this.mensajes; // fallback, aunque no debería llegar aquí
+
+    return filtrados;
   }
+
 
 
   abrirModalDetalle(mensaje: Mensaje): void {
@@ -78,19 +89,16 @@ export class ListMensajeComponent implements OnInit {
     if (!this.mensajeLeido(mensaje)) {
       this.mensajeService.marcarComoLeido(mensaje.id).subscribe({
         next: (mensajeActualizado) => {
-          // Actualizamos el mensaje local con la info nueva (usuarioQueLee actualizado)
           const index = this.mensajes.findIndex(m => m.id === mensaje.id);
           if (index !== -1) {
             this.mensajes[index] = mensajeActualizado;
           }
         },
         error: () => {
-          // Aquí podrías mostrar error si quieres, o ignorar
         }
       });
     }
   }
-
 
   cargarMensajesAdmin(): void {
     this.mensajeService.getMensajesAdmin().subscribe(mensajes => {

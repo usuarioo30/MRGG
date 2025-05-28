@@ -13,8 +13,13 @@
                     </select>
                 </div>
 
-
-
+                <div class="d-flex align-items-center ms-3">
+                    <span class="me-2">Estado:</span>
+                    <select class="form-select form-select-sm w-auto" [(ngModel)]="filtroLeido">
+                        <option value="LEIDOS">Leídos</option>
+                        <option value="NO_LEIDOS">No leídos</option>
+                    </select>
+                </div>
 
                 <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modalNuevoMensaje">
                     <i class="bi bi-plus-circle me-1"></i> Nuevo mensaje
