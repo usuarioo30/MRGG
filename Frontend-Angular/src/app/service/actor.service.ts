@@ -11,9 +11,10 @@ export class ActorService {
   constructor(private http: HttpClient) { }
 
   // URL API Backend
-  private urlAPI = "https://mrgg.onrender.com"
 
-  private urlApi = "https://mrgg.onrender.com/actor"
+  private urlAPI = "http://localhost:8080"
+
+  private urlApi = "http://localhost:8080/actor"
 
   login(actorLogin: ActorLogin): Observable<any> {
     return this.http.post<any>(`${this.urlAPI}/login`, actorLogin);

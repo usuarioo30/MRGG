@@ -11,7 +11,8 @@ export class UsuarioService {
 
   constructor(private http: HttpClient) { }
 
-  private urlApi = "https://mrgg.onrender.com/usuario";
+  private urlApi = "http://localhost:8080/usuario";
+
   private idUsuario!: number;
 
   getAllUsuarios(): Observable<Actor[]> {
@@ -24,7 +25,7 @@ export class UsuarioService {
   }
 
   getOneUsuarioLogin(): Observable<Actor> {
-    const url = "https://mrgg.onrender.com/actorLogueado"
+    const url = "http://localhost:8080/actorLogueado"
     return this.http.get<Actor>(url);
   }
 
