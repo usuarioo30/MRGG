@@ -10,7 +10,7 @@ export class MensajeService {
 
   constructor(private http: HttpClient) { }
 
-  private urlApi = 'http://localhost:8080/mensaje';
+  private urlApi = 'https://mrgg.onrender.com/mensaje';
 
   enviarMensajeDesdeAdmin(mensaje: Mensaje, username: string): Observable<boolean> {
     const url = `${this.urlApi}/enviar/${username}`;
