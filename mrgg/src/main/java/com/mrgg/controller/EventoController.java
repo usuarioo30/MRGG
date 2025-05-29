@@ -2,6 +2,7 @@ package com.mrgg.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,8 +41,18 @@ public class EventoController {
         return ResponseEntity.ok(eventos);
     }
 
+    @GetMapping("/deUsuario")
+    @Operation(summary = "Obtener todos eventos de usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de tareas de reparaciones de cliente obtenida exitosamente"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor") })
+    public ResponseEntity<Set<Evento>> listarEventosDeUsuario() {
+        Set<Evento> listSolicitud = eventoService.getAllEventosByUsuario();
+        return ResponseEntity.ok(listSolicitud);
+    }
+
     @GetMapping("/{id}")
-    @Operation(summary = "Buscar un producto por ID")
+    @Operation(summary = "Buscar un evento por ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Producto encontrado"),
             @ApiResponse(responseCode = "404", description = "Producto no encontrado")
@@ -55,49 +66,119 @@ public class EventoController {
         }
     }
 
-    @PostMapping
-    @Operation(summary = "Guardar un nuevo evento")
+    @GetMapping("/porJuego/{id}")
+    @Operation(summary = "Obtener todos los eventos de un juego específico")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Evento creado exitosamente"),
-            @ApiResponse(responseCode = "400", description = "Solicitud inválida")
+            @ApiResponse(responseCode = "200", description = "Lista de eventos obtenida exitosamente"),
+            @ApiResponse(responseCode = "404", description = "Juego no encontrado"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
-    public ResponseEntity<String> guardarEvento(@RequestBody Evento evento) {
-        Evento e = eventoService.saveEvento(evento);
-        if (e != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("Evento creado exitosamente");
+    public ResponseEntity<List<Evento>> getEventosByJuego(@PathVariable Integer id) {
+        List<Evento> eventos = eventoService.getEventosByJuegoId(id);
+        if (eventos != null && !eventos.isEmpty()) {
+            return ResponseEntity.ok(eventos);
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se pudo crear el producto");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
-    @PutMapping("/{id}")
-    @Operation(summary = "Actualizar un producto existente")
+    @GetMapping("/porSolicitud/{id}")
+    @Operation(summary = "Obtener todos los eventos de un juego específico")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Evento actualizado exitosamente"),
-            @ApiResponse(responseCode = "404", description = "Evento no encontrado"),
-            @ApiResponse(responseCode = "400", description = "Solicitud inválida, e\"Producto no encontrado o no es propietario el usuario loguead")
+            @ApiResponse(responseCode = "200", description = "Lista de eventos obtenida exitosamente"),
+            @ApiResponse(responseCode = "404", description = "Juego no encontrado"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
-    public ResponseEntity<String> actualizarEvento(@PathVariable int id, @RequestBody Evento eventoActualizado) {
-        Evento response = eventoService.updateEvento(id, eventoActualizado);
-        if (response != null) {
-            return ResponseEntity.status(HttpStatus.OK).body("Evento actualizado exitosamente");
+    public ResponseEntity<Evento> getEventosBySolicitud(@PathVariable int id) {
+        Evento evento = eventoService.findBySolicitudId(id);
+        if (evento != null) {
+            return ResponseEntity.ok(evento);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @GetMapping("/cantidad/{juegoId}")
+    public ResponseEntity<Integer> obtenerCantidadEventosPorJuego(@PathVariable Long juegoId) {
+        int cantidad = eventoService.obtenerCantidadEventosPorJuego(juegoId);
+        return ResponseEntity.ok(cantidad);
+    }
+
+    @GetMapping("/usuario/{id}")
+    @Operation(summary = "Obtener el usuario propietario de un evento por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuario encontrado"),
+            @ApiResponse(responseCode = "404", description = "Evento no encontrado")
+    })
+    public ResponseEntity<String> getUsuarioByEventoId(@PathVariable int id) {
+        Optional<Evento> evento = eventoService.getEventoById(id);
+        if (evento.isPresent()) {
+            return ResponseEntity.ok(evento.get().getUsuario().getUsername());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Evento no encontrado");
         }
     }
 
+    @PostMapping("/crear/{juegoId}")
+    @Operation(summary = "Crear un nuevo evento asociado a un juego específico")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Evento creado exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Solicitud inválida o juego no encontrado")
+    })
+    public ResponseEntity<Void> guardarEventoPorJuego(@PathVariable Integer juegoId, @RequestBody Evento evento) {
+        Evento e = eventoService.saveEventoPorJuego(evento, juegoId);
+        if (e != null) {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .build();
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .build();
+        }
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Actualizar un evento existente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Evento actualizado exitosamente"),
+            @ApiResponse(responseCode = "404", description = "Evento no encontrado"),
+            @ApiResponse(responseCode = "400", description = "Solicitud inválida, e\"Evento no encontrado o no es propietario el usuario logueado")
+    })
+    public ResponseEntity<Void> actualizarEvento(@PathVariable int id, @RequestBody Evento eventoActualizado) {
+        Evento response = eventoService.updateEvento(id, eventoActualizado);
+        if (response != null) {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PutMapping("/cancelar/{id}")
+    @Operation(summary = "Cancelar un evento (no eliminar), cambia estado de evento y solicitudes a CANCELADO")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Evento cancelado exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Evento no encontrado o no es propietario el usuario logueado")
+    })
+    public ResponseEntity<Void> cancelarEvento(@PathVariable int id) {
+        boolean cancelado = eventoService.cancelarEvento(id);
+        if (cancelado) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
     @DeleteMapping("/{id}")
-    @Operation(summary = "Eliminar un producto por ID")
+    @Operation(summary = "Eliminar un evento por ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Evento eliminado exitosamente"),
             @ApiResponse(responseCode = "404", description = "Evento no encontrado o no es propietario el usuario logueado")
     })
-    public ResponseEntity<String> eliminarEvento(@PathVariable int id) {
+    public ResponseEntity<Void> eliminarEvento(@PathVariable int id) {
         if (eventoService.deleteEvento(id)) {
-            return ResponseEntity.status(HttpStatus.OK).body("Evento eliminado exitosamente");
+            return ResponseEntity.status(HttpStatus.OK).build();
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Evento no encontrado o no es propietario el usuario logueado");
+                    .build();
         }
     }
 

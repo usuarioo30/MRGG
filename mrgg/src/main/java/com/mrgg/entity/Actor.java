@@ -1,7 +1,5 @@
 package com.mrgg.entity;
 
-import org.hibernate.validator.constraints.URL;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Inheritance;
@@ -21,13 +19,9 @@ public abstract class Actor extends DomainEntity {
     @Email
     private String email;
 
-    // Clave segura (ejemplo correo electronico recuperar contraseña)
-    private String clave_segura;
-    
-    private int chat_id;
+    private String claveSegura;
 
     @NotBlank
-    @URL
     private String foto;
 
     @NotBlank
@@ -40,13 +34,13 @@ public abstract class Actor extends DomainEntity {
     @NotBlank
     @Pattern(regexp = "^[6789]\\d{8}$")
     private String telefono;
-    
+
     private boolean baneado;
 
     private Roles rol;
 
     public Actor() {
-        
+
     }
 
     public String getNombre() {
@@ -66,19 +60,11 @@ public abstract class Actor extends DomainEntity {
     }
 
     public String getClave_segura() {
-        return clave_segura;
+        return claveSegura;
     }
 
-    public void setClave_segura(String clave_segura) {
-        this.clave_segura = clave_segura;
-    }
-
-    public int getChat_id() {
-        return chat_id;
-    }
-
-    public void setChat_id(int chat_id) {
-        this.chat_id = chat_id;
+    public void setClave_segura(String claveSegura) {
+        this.claveSegura = claveSegura;
     }
 
     public String getFoto() {

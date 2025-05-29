@@ -1,0 +1,361 @@
+<section class="section mt-4 mb-5">
+    <div class="container">
+        <div class="card shadow-sm border-0 mb-4">
+            <div
+                class="card-body d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+
+                <div class="d-flex align-items-start gap-3">
+                    <div style="width: 140px; height: 190px;">
+                        <img [src]="juego?.foto" alt="Carátula del juego"
+                            class="rounded shadow-sm w-100 h-100 object-fit-cover" />
+                    </div>
+
+                    <div>
+                        <h2 class="fw-bold mb-2 juego">🎮 {{ juego?.nombre }}</h2>
+                        <p class="text-muted mb-0">Gestiona aquí los eventos activos para este juego.</p>
+                    </div>
+                </div>
+
+                <div class="input-group input-group-sm" style="width: 220px;">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="bi bi-person"></i>
+                    </span>
+                    <input id="filtroUsuario" type="text" class="form-control border-start-0"
+                        placeholder="Buscar usuario..." [(ngModel)]="nombreUsuarioFiltro" (input)="aplicarFiltros()">
+                </div>
+
+                <div class="input-group input-group-sm" style="width: 220px;">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input id="filtroCodigoSala" type="text" class="form-control border-start-0"
+                        placeholder="Buscar código..." [(ngModel)]="codigoSalaFiltro"
+                        (input)="aplicarFiltroCodigoSala()">
+                </div>
+
+                <div class="btn-group btn-group-sm ms-2" role="group" aria-label="Filtro Estado">
+                    <input type="radio" class="btn-check" name="estadoFiltro" id="estadoTodos" autocomplete="off"
+                        [(ngModel)]="estadoFiltro" [value]="''" (change)="aplicarFiltroEstado()">
+                    <label class="btn btn-outline-dark" for="estadoTodos">Todos</label>
+
+                    <input type="radio" class="btn-check" name="estadoFiltro" id="estadoAbierto" autocomplete="off"
+                        [(ngModel)]="estadoFiltro" value="ABIERTO" (change)="aplicarFiltroEstado()">
+                    <label class="btn btn-outline-dark" for="estadoAbierto">Abierto</label>
+
+                    <input type="radio" class="btn-check" name="estadoFiltro" id="estadoCerrado" autocomplete="off"
+                        [(ngModel)]="estadoFiltro" value="CERRADO" (change)="aplicarFiltroEstado()">
+                    <label class="btn btn-outline-dark" for="estadoCerrado">Cerrado</label>
+
+                    <input type="radio" class="btn-check" name="estadoFiltro" id="estadoCancelado" autocomplete="off"
+                        [(ngModel)]="estadoFiltro" value="CANCELADO" (change)="aplicarFiltroEstado()">
+                    <label class="btn btn-outline-dark" for="estadoCancelado">Cancelado</label>
+                </div>
+
+                <button *ngIf="rol == 'USER' && !userLogin?.baneado"
+                    class="btn btn-success mt-3 mt-md-0 d-flex align-items-center" data-bs-toggle="modal"
+                    data-bs-target="#createEventModal" (click)="abrirModalCrear()">
+                    <i class="bi bi-plus-lg me-1"></i>Crear&nbsp;Evento
+                </button>
+
+
+            </div>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+
+            <div *ngIf="token == null" class="col-12">
+                <div class="alert alert-info text-center" role="alert">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Tienes que iniciar sesión si quieres unirte o crear eventos</strong>
+                </div>
+            </div>
+
+            <div *ngIf="userLogin?.baneado" class="alert alert-danger text-center mt-4">
+                <i class="bi bi-ban me-2"></i>
+                Tu cuenta ha sido <strong>suspendida</strong>. No puedes acceder a eventos hasta que se levante la
+                restricción.
+            </div>
+
+            <div *ngIf="eventos.length === 0 && !userLogin?.baneado" class="col-12">
+                <div class="alert alert-warning text-center" role="alert">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>No hay eventos disponibles para este juego.</strong>
+                </div>
+            </div>
+
+            <!-- Mis Eventos -->
+            <div *ngIf="misEventos.length > 0 && !userLogin?.baneado" class="col-12 mb-5">
+                <div class="custom-header-glass bg-gradient-success mb-4">
+                    <i class="bi bi-person-circle fs-4 me-2"></i>
+                    <div>
+                        <h5 class="mb-0 fw-bold">Tus Eventos Creados</h5>
+                        <small class="text-light">Gestiona y edita tus eventos activos</small>
+                    </div>
+                </div>
+
+                <div class="row g-4 justify-content-center">
+                    <div *ngFor="let evento of misEventos" class="col-12 col-md-4 d-flex mb-3">
+                        <div class="notification flex-fill h-100 d-flex flex-column" style="min-height: 260px;">
+                            <div class="notiglow"></div>
+                            <div class="notiborderglow"></div>
+
+                            <!-- Código de sala -->
+                            <div class="notititle d-flex align-items-center justify-content-between">
+                                <span>
+                                    Código de Sala: {{ evento.codigo_sala }}
+                                    <button type="button" class="btn btn-sm btn-outline-light ms-2 p-0"
+                                        title="Copiar código" (click)="copiarCodigo(evento.codigo_sala)">
+                                        <i class="bi bi-clipboard"></i>
+                                    </button>
+                                </span>
+                            </div>
+
+                            <!-- Contenido del evento -->
+                            <div class="notibody flex-grow-1 d-flex flex-column justify-content-between">
+                                <div>
+                                    <p>
+                                        <strong>Estado:</strong>
+                                        <span [ngClass]="{
+  'text-success': obtenerEstadoEvento(evento) === 'CERRADO',
+  'text-warning': obtenerEstadoEvento(evento) === 'ABIERTO',
+  'text-danger': obtenerEstadoEvento(evento) === 'CANCELADO'
+}">
+                                            {{ obtenerEstadoEvento(evento) }}
+                                        </span>
+
+                                    </p>
+                                    <p><strong>Inicio:</strong> {{ evento.fecha_inicio | date: 'dd/MM/yyyy' }}</p>
+                                    <p class="truncar-descripcion" [attr.title]="evento.descripcion">
+                                        <strong>Descripción:</strong> {{ evento.descripcion }}
+                                    </p>
+                                    <p *ngIf="evento.estado.toString() != 'CANCELADO'">
+                                        <strong>Jugadores:</strong>
+                                        <span class="fw-semibold" [ngStyle]="{
+      color: estaLleno(evento) ? '#198754' : '#fd7e14'
+    }">
+                                            {{ contarJugadores(evento) }}/{{ evento.num_jugadores }}
+                                        </span>
+                                        <small class="ms-1" [ngClass]="{
+      'text-success': estaLleno(evento),
+      'text-light': !estaLleno(evento)
+    }">
+                                            {{ estaLleno(evento) ? 'Completo' : 'Disponible' }}
+                                        </small>
+                                    </p>
+                                    <p><strong>Creado por:</strong>&nbsp;
+                                        <img [src]="evento.usuario.foto" alt="Foto" class="rounded-circle me-1"
+                                            width="20" height="20">
+                                        {{ evento.usuario.username }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Botones de acción -->
+                            <div *ngIf="evento.estado.toString() != 'CANCELADO'"
+                                class="mt-1 d-flex justify-content-end btn-eliminar-container gap-2 me-4 mb-2">
+                                <button class="btn btn-outline-warning btn-sm" title="Editar evento"
+                                    data-bs-toggle="modal" data-bs-target="#editEventModal"
+                                    (click)="abrirModalEditar(evento)">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm" (click)="cancelarEvento(evento.id)"
+                                    title="Eliminar evento">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Eventos de Otros Jugadores -->
+            <div *ngIf="otrosEventos.length > 0 && !userLogin?.baneado" class="col-12">
+                <div class="custom-header-glass bg-gradient-primary mb-4">
+                    <i class="bi bi-people-fill fs-4 me-2"></i>
+                    <div>
+                        <h5 class="mb-0 fw-bold">Eventos de Otros Jugadores</h5>
+                        <small class="text-light">Únete a partidas creadas por la comunidad</small>
+                    </div>
+                </div>
+
+                <div class="row g-4 justify-content-center">
+                    <div *ngFor="let evento of otrosEventos" class="col-12 col-md-4 d-flex mb-3">
+                        <div class="notification flex-fill h-100 d-flex flex-column" style="min-height: 260px;">
+                            <div class="notiglow"></div>
+                            <div class="notiborderglow"></div>
+
+                            <!-- Código de sala -->
+                            <div class="notititle d-flex align-items-center justify-content-between">
+                                <span>
+                                    Código de Sala: {{ evento.codigo_sala }}
+                                    <button type="button" class="btn btn-sm btn-outline-light ms-2 p-0"
+                                        title="Copiar código" (click)="copiarCodigo(evento.codigo_sala)">
+                                        <i class="bi bi-clipboard"></i>
+                                    </button>
+                                </span>
+                            </div>
+
+                            <!-- Contenido del evento -->
+                            <div class="notibody flex-grow-1 d-flex flex-column justify-content-between">
+                                <div>
+                                    <p>
+                                        <strong>Estado:</strong>
+                                        <span [ngClass]="{
+  'text-success': obtenerEstadoEvento(evento) === 'CERRADO',
+  'text-warning': obtenerEstadoEvento(evento) === 'ABIERTO',
+  'text-danger': obtenerEstadoEvento(evento) === 'CANCELADO'
+}">
+                                            {{ obtenerEstadoEvento(evento) }}
+                                        </span>
+
+                                    </p>
+                                    <p><strong>Inicio:</strong> {{ evento.fecha_inicio | date: 'dd/MM/yyyy' }}</p>
+                                    <p class="truncar-descripcion" [attr.title]="evento.descripcion">
+                                        <strong>Descripción:</strong> {{ evento.descripcion }}
+                                    </p>
+                                    <p *ngIf="evento.estado.toString() != 'CANCELADO'">
+                                        <strong>Jugadores:</strong>
+                                        <span class="fw-semibold" [ngStyle]="{
+                                color: estaLleno(evento) ? '#198754' : '#fd7e14'
+                              }">
+                                            {{ contarJugadores(evento) }}/{{ evento.num_jugadores }}
+                                        </span>
+                                        <small class="ms-1" [ngClass]="{
+                                'text-success': estaLleno(evento),
+                                'text-light': !estaLleno(evento)
+                              }">
+                                            {{ estaLleno(evento) ? 'Completo' : 'Disponible' }}
+                                        </small>
+                                    </p>
+
+                                    <p><strong>Creado por:</strong>&nbsp;
+                                        <img [src]="evento.usuario.foto" alt="Foto" class="rounded-circle me-1"
+                                            width="20" height="20">
+                                        {{ evento.usuario.username }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Botón para unirse -->
+                            <div
+                                *ngIf="token != null && rol == 'USER' && !estaLleno(evento) && evento.estado.toString() != 'CERRADO' && tieneSolicitud[evento.id] == false && evento.estado.toString() != 'CANCELADO'">
+                                <button class="btn btn-primary d-flex align-items-center justify-content-center"
+                                    (click)="solicitarUnirse(evento.id)">
+                                    <i class="bi bi-person-plus me-2"></i>Solicitar Unirse
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast de éxito para copiar -->
+    <div class="toast-container position-fixed top-0 end-0 p-4" style="z-index: 9999;">
+        <div id="toast" class="toast fade" role="alert" aria-live="assertive" aria-atomic="true"
+            [class.show]="mostrarToastFlag">
+            <div class="toast-header bg-success text-white">
+                <i class="bi bi-clipboard-check me-2"></i>
+                <strong class="me-auto">Código Copiado</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"
+                    aria-label="Cerrar"></button>
+            </div>
+            <div class="toast-body">
+                El código de sala se ha copiado al portapapeles.
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal para crear evento -->
+<div class="modal fade" tabindex="-1" id="createEventModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Crear Evento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="eventoForm" (ngSubmit)="saveEvento()">
+                    <div class="mb-3">
+                        <label for="num_jugadores" class="form-label">Número de Jugadores</label>
+                        <input type="number" class="form-control" id="num_jugadores" formControlName="num_jugadores">
+                        <small
+                            *ngIf="eventoForm.get('num_jugadores')?.hasError('required') && eventoForm.get('num_jugadores')?.touched"
+                            class="text-danger">
+                            El número de jugadores es obligatorio.
+                        </small>
+                        <small
+                            *ngIf="eventoForm.get('num_jugadores')?.hasError('min') && eventoForm.get('num_jugadores')?.touched"
+                            class="text-danger">
+                            El número de jugadores debe ser al menos 2.
+                        </small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="descripcion" formControlName="descripcion"
+                            rows="3"></textarea>
+                        <small
+                            *ngIf="eventoForm.get('descripcion')?.hasError('required') && eventoForm.get('descripcion')?.touched"
+                            class="text-danger">
+                            La descripción es obligatoria.
+                        </small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="fecha_inicio" class="form-label">Fecha de Inicio</label>
+                        <input type="date" class="form-control" id="fecha_inicio" formControlName="fecha_inicio"
+                            [min]="minFechaInicio">
+                        <small
+                            *ngIf="eventoForm.get('fecha_inicio')?.hasError('required') && eventoForm.get('fecha_inicio')?.touched"
+                            class="text-danger">
+                            La fecha de inicio es obligatoria.
+                        </small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100" [disabled]="eventoForm.invalid">Crear
+                        Evento</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para editar evento -->
+<div class="modal fade" tabindex="-1" id="editEventModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Evento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="eventoForm" (ngSubmit)="editarEvento()">
+                    <div class="mb-3">
+                        <label for="edit_num_jugadores" class="form-label">Número de Jugadores</label>
+                        <input type="number" class="form-control" id="edit_num_jugadores"
+                            formControlName="num_jugadores">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_descripcion" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="edit_descripcion" formControlName="descripcion"
+                            rows="3"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_fecha_inicio" class="form-label">Fecha de Inicio</label>
+                        <input type="date" class="form-control" id="edit_fecha_inicio" formControlName="fecha_inicio"
+                            [min]="minFechaInicio">
+                    </div>
+
+                    <button type="submit" class="btn btn-warning w-100" [disabled]="eventoForm.invalid">Guardar
+                        Cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

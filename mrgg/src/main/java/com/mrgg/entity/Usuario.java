@@ -1,5 +1,6 @@
 package com.mrgg.entity;
 
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.Entity;
@@ -9,21 +10,13 @@ import jakarta.persistence.OneToMany;
 public class Usuario extends Actor {
 
     @OneToMany
-    private Set<Evento> eventos;
+    private Set<Solicitud> solicitudes;
 
     @OneToMany
-    private Set<Solicitud> solicitudes;
+    private List<Mensaje> mensajes;
 
     public Usuario() {
         super();
-    }
-
-    public Set<Evento> getEventos() {
-        return eventos;
-    }
-
-    public void setEventos(Set<Evento> eventos) {
-        this.eventos = eventos;
     }
 
     public Set<Solicitud> getSolicitudes() {
@@ -32,6 +25,14 @@ public class Usuario extends Actor {
 
     public void setSolicitudes(Set<Solicitud> solicitudes) {
         this.solicitudes = solicitudes;
+    }
+
+    public List<Mensaje> getMensajes() {
+        return mensajes;
+    }
+
+    public void setMensajes(List<Mensaje> mensajes) {
+        this.mensajes = mensajes;
     }
 
 }

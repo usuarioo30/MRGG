@@ -7,5 +7,5 @@ import com.mrgg.entity.Solicitud;
 
 @Repository
 public interface SolicitudRepository extends JpaRepository<Solicitud, Integer> {
-
+    
 }

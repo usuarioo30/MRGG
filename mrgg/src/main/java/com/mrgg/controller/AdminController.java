@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mrgg.entity.Admin;
+import com.mrgg.entity.Usuario;
 import com.mrgg.service.AdminService;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import okhttp3.Response;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @RestController
@@ -44,32 +46,44 @@ public class AdminController {
 
         Admin respuesta = adminService.updateAdmin(adminActualizado);
         if (respuesta != null) {
-            ResponseEntity.status(HttpStatus.OK).body("Administrador actualizado correctamente");
+            ResponseEntity.status(HttpStatus.OK).build();
         } else {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Administrdor no encontrado");
+            ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PutMapping("/updateContrasena")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Contraseña actualziado correctamente"),
+            @ApiResponse(responseCode = "404", description = "Contraseña no encontrada"),
+            @ApiResponse(responseCode = "400", description = "Solicitud inválida")
+    })
+    public ResponseEntity<Void> actualizarContrasena(@RequestBody String contrasena) {
+        Admin respuesta = adminService.updatePassword(contrasena);
+
+        if (respuesta != null) {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
     @PostMapping
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Administrador creado exitosamente"),
-            @ApiResponse(responseCode = "400", description = "Solicitud inválida"),
-            @ApiResponse(responseCode = "409", description = "El username ya está en uso")
+            @ApiResponse(responseCode = "201", description = "Usuario creado exitosamente"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
-    public void guardarAdmin(@RequestBody Admin admin) {
+    public ResponseEntity<Void> crearUsuario(@RequestBody Admin admin) {
         if (adminService.findByUsername(admin.getUsername()).isPresent()) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("El username ya está en uso");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         Admin a = adminService.saveAdmin(admin);
 
         if (a != null) {
-            ResponseEntity.status(HttpStatus.CREATED)
-                    .body("Administrador creado exitosamente");
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("No se puede crear el administrador");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 

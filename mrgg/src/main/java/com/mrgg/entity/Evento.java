@@ -1,6 +1,6 @@
 package com.mrgg.entity;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Set;
 
 import jakarta.persistence.Entity;
@@ -8,29 +8,33 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Evento extends DomainEntity {
     @NotBlank
     private String codigo_sala;
 
-    @Min(0)
-    private int num_usuario;
+    @Min(2)
+    private int num_jugadores;
 
-    @NotBlank
+    @NotNull
     private EstadoEvento estado;
 
-    @NotBlank
-    private Date fecha_inicio;
+    @NotNull
+    private LocalDate fecha_inicio;
 
     @NotBlank
-    private String comentario;
+    private String descripcion;
 
     @OneToMany
     private Set<Solicitud> solicitudes;
 
     @ManyToOne
     private Juego juegos;
+
+    @ManyToOne
+    private Usuario usuario;
 
     public Evento() {
         super();
@@ -44,12 +48,12 @@ public class Evento extends DomainEntity {
         this.codigo_sala = codigo_sala;
     }
 
-    public int getNum_usuario() {
-        return num_usuario;
+    public Integer getNum_jugadores() {
+        return num_jugadores;
     }
 
-    public void setNum_usuario(int num_usuario) {
-        this.num_usuario = num_usuario;
+    public void setNum_jugadores(int num_jugadores) {
+        this.num_jugadores = num_jugadores;
     }
 
     public EstadoEvento getEstado() {
@@ -60,20 +64,20 @@ public class Evento extends DomainEntity {
         this.estado = estado;
     }
 
-    public Date getFecha_inicio() {
+    public LocalDate getFecha_inicio() {
         return fecha_inicio;
     }
 
-    public void setFecha_inicio(Date fecha_inicio) {
+    public void setFecha_inicio(LocalDate fecha_inicio) {
         this.fecha_inicio = fecha_inicio;
     }
 
-    public String getComentario() {
-        return comentario;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setComentario(String comentario) {
-        this.comentario = comentario;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public Set<Solicitud> getSolicitudes() {
@@ -90,5 +94,13 @@ public class Evento extends DomainEntity {
 
     public void setJuego(Juego juegos) {
         this.juegos = juegos;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

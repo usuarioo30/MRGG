@@ -1,0 +1,245 @@
+<section *ngIf="eventoUnico && eventoUnico.juego" class="section mt-4 mb-5">
+    <div class="container">
+        <div class="d-flex gap-4">
+            <!-- Card del evento principal -->
+            <div class="card shadow-sm border-0 mb-4 flex-grow-1" style="min-width: 350px;">
+                <div
+                    class="card-body d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                    <div class="d-flex align-items-start gap-3">
+                        <div style="width: 80px; height: 120px;">
+                            <img [src]="eventoUnico.juego.foto" alt="Carátula del juego"
+                                class="rounded shadow-sm w-100 h-100 object-fit-cover" />
+                        </div>
+                        <div>
+                            <h2 class="fw-bold mb-2 juego">🎮 {{ eventoUnico.juego.nombre }}</h2>
+                            <p class="text-muted mb-0">Gestiona aquí los eventos activos para este juego.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="jugadoresAceptados.length > 0 || nombreUsuario" class="card shadow-sm border-0 mb-4"
+                style="min-width: 250px; max-width: 300px;">
+                <div class="card-header jugadores text-white">
+                    <h5 class="mb-0">Jugadores Unidos</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item fw-bold">
+                        <img [src]="eventoUnico.usuario.foto" alt="Carátula del juego" class="rounded-circle me-1"
+                            width="20" height="20">
+                        {{ eventoUnico.usuario.username }} <small class="text-muted">(Creador)</small>
+                    </li>
+                    <li *ngFor="let jugador of jugadoresAceptados" class="list-group-item">
+                        <img [src]="jugador.foto" alt="Foto" class="rounded-circle me-1" width="20" height="20">
+                        {{ jugador.username }}
+                        <small class="text-muted fw-bold">{{ jugador.username === nombreUsuario ? '(Tú)' : ''
+                            }}</small>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Mis Eventos -->
+        <div *ngIf="esMio" class="col-12 mb-5">
+            <div class="custom-header-glass bg-gradient-success mb-4">
+                <i class="bi bi-person-circle fs-4 me-2"></i>
+                <div>
+                    <h5 class="mb-0 fw-bold">Tus Eventos Creados</h5>
+                    <small class="text-light">Gestiona y edita tus eventos activos</small>
+                </div>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+                <div class="col-12 col-md-4 d-flex mb-3">
+                    <div class="notification flex-fill h-100 d-flex flex-column" style="min-height: 260px;">
+                        <div class="notiglow"></div>
+                        <div class="notiborderglow"></div>
+
+                        <!-- Código de sala -->
+                        <div class="notititle d-flex align-items-center justify-content-between">
+                            <span>
+                                Código de Sala: {{ eventoUnico.codigo_sala }}
+                                <button type="button" class="btn btn-sm btn-outline-light ms-2 p-0"
+                                    title="Copiar código" (click)="copiarCodigo(eventoUnico.codigo_sala)">
+                                    <i class="bi bi-clipboard"></i>
+                                </button>
+                            </span>
+                        </div>
+
+                        <!-- Contenido del evento -->
+                        <div class="notibody flex-grow-1 d-flex flex-column justify-content-between">
+                            <div>
+                                <p>
+                                    <strong>Estado:</strong>
+                                    <span [ngClass]="{
+  'text-success': obtenerEstadoEvento(eventoUnico) === 'CERRADO',
+  'text-warning': obtenerEstadoEvento(eventoUnico) === 'ABIERTO',
+  'text-danger': obtenerEstadoEvento(eventoUnico) === 'CANCELADO'
+}">
+                                        {{ obtenerEstadoEvento(eventoUnico) }}
+                                    </span>
+                                </p>
+                                <p><strong>Inicio:</strong> {{ eventoUnico.fecha_inicio | date: 'dd/MM/yyyy' }}</p>
+                                <p class="truncar-descripcion" [attr.title]="eventoUnico.descripcion">
+                                    <strong>Descripción:</strong> {{ eventoUnico.descripcion }}
+                                </p>
+                                <p *ngIf="eventoUnico.estado.toString() != 'CANCELADO'">
+                                    <strong>Jugadores:</strong>
+                                    <span class="fw-semibold" [ngStyle]="{
+      color: estaLleno(eventoUnico) ? '#198754' : '#fd7e14'
+    }">
+                                        {{ contarJugadores(eventoUnico) }}/{{ eventoUnico.num_jugadores }}
+                                    </span>
+                                    <small class="ms-1" [ngClass]="{
+      'text-success': estaLleno(eventoUnico),
+      'text-light': !estaLleno(eventoUnico)
+    }">
+                                        {{ estaLleno(eventoUnico) ? 'Completo' : 'Disponible' }}
+                                    </small>
+                                </p>
+
+
+                                <p><strong>Creado por:</strong>&nbsp;
+                                    <img [src]="eventoUnico.usuario.foto" alt="Foto" class="rounded-circle me-1"
+                                        width="20" height="20">
+                                    {{ eventoUnico.usuario.username }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Botones de acción -->
+                        <div class="mt-1 d-flex justify-content-end btn-eliminar-container gap-2 me-4 mb-2"
+                            *ngIf="eventoUnico.estado.toString() !== 'CANCELADO'">
+                            <button class="btn btn-outline-warning btn-sm" title="Editar evento" data-bs-toggle="modal"
+                                data-bs-target="#editEventModal" (click)="abrirModalEditar(eventoUnico)">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm" (click)="cancelarEvento(eventoUnico.id)"
+                                title="Eliminar evento">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!token && otrosEventos.length > 0" class="alert alert-info text-center mb-4">
+            <i class="bi bi-exclamation-circle me-2"></i>
+            ¡Tienes que <b>iniciar sesión</b> para poder unirte a estos eventos!
+        </div>
+
+        <!-- Eventos de Otros Jugadores -->
+        <div *ngIf="!esMio" class="col-12">
+            <div class="custom-header-glass bg-gradient-primary mb-4">
+                <i class="bi bi-people-fill fs-4 me-2"></i>
+                <div>
+                    <h5 class="mb-0 fw-bold">Eventos de Otros Jugadores</h5>
+                    <small class="text-light">Únete a partidas creadas por la comunidad</small>
+                </div>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+                <div class="col-12 col-md-4 d-flex mb-3">
+                    <div class="notification flex-fill h-100 d-flex flex-column" style="min-height: 260px;">
+                        <div class="notiglow"></div>
+                        <div class="notiborderglow"></div>
+
+                        <!-- Código de sala -->
+                        <div class="notititle d-flex align-items-center justify-content-between">
+                            <span>
+                                Código de Sala: {{ eventoUnico.codigo_sala }}
+                                <button type="button" class="btn btn-sm btn-outline-light ms-2 p-0"
+                                    title="Copiar código" (click)="copiarCodigo(eventoUnico.codigo_sala)">
+                                    <i class="bi bi-clipboard"></i>
+                                </button>
+                            </span>
+                        </div>
+
+                        <!-- Contenido del evento -->
+                        <div class="notibody flex-grow-1 d-flex flex-column justify-content-between">
+                            <div>
+                                <p>
+                                    <strong>Estado:</strong>
+                                    <span [ngClass]="{
+  'text-success': obtenerEstadoEvento(eventoUnico) === 'CERRADO',
+  'text-warning': obtenerEstadoEvento(eventoUnico) === 'ABIERTO',
+  'text-danger': obtenerEstadoEvento(eventoUnico) === 'CANCELADO'
+}">
+                                        {{ obtenerEstadoEvento(eventoUnico) }}
+                                    </span>
+                                </p>
+                                <p><strong>Inicio:</strong> {{ eventoUnico.fecha_inicio | date: 'dd/MM/yyyy' }}</p>
+                                <p class="truncar-descripcion" [attr.title]="eventoUnico.descripcion">
+                                    <strong>Descripción:</strong> {{ eventoUnico.descripcion }}
+                                </p>
+                                <p *ngIf="obtenerEstadoEvento(eventoUnico) !== 'CANCELADO'">
+                                    <strong>Jugadores:</strong>
+                                    <span class="fw-semibold" [ngStyle]="{
+                                color: estaLleno(eventoUnico) ? '#198754' : '#fd7e14'
+                              }">
+                                        {{ contarJugadores(eventoUnico) }}/{{ eventoUnico.num_jugadores }}
+                                    </span>
+                                    <small class="ms-1" [ngClass]="{
+                                'text-success': estaLleno(eventoUnico),
+                                'text-light': !estaLleno(eventoUnico)
+                              }">
+                                        {{ estaLleno(eventoUnico) ? 'Completo' : 'Disponible' }}
+                                    </small>
+                                </p>
+
+                                <p><strong>Creado por:</strong>&nbsp;
+                                    <img [src]="eventoUnico.usuario.foto" alt="Foto" class="rounded-circle me-1"
+                                        width="20" height="20">
+                                    {{ eventoUnico.usuario.username }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Botón para unirse -->
+                        <div
+                            *ngIf="token != null && rol == 'USER' && !estaLleno(eventoUnico) && eventoUnico.estado.toString() != 'CERRADO' && tieneSolicitud[eventoUnico.id] == false">
+                            <button class="btn btn-primary d-flex align-items-center justify-content-center"
+                                (click)="solicitarUnirse(eventoUnico.id)">
+                                <i class="bi bi-person-plus me-2"></i>Solicitar Unirse
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal Editar Evento -->
+<div class="modal fade" id="editEventModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form [formGroup]="eventoForm" (ngSubmit)="editarEvento()">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Evento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Número de Jugadores</label>
+                        <input type="number" class="form-control" formControlName="num_jugadores" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Descripción</label>
+                        <textarea class="form-control" rows="3" formControlName="descripcion"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fecha de Inicio</label>
+                        <input type="date" class="form-control" formControlName="fecha_inicio" [min]="minFechaInicio" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-warning w-100" type="submit" [disabled]="eventoForm.invalid">Guardar
+                        Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

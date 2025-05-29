@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.context.annotation.Lazy;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,8 +19,8 @@ import com.mrgg.service.ActorService;
 
 @Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter{
-    @Autowired
-    private ActorService actorService;
+	@Autowired
+	private ActorService actorService;
 
     public JWTAuthenticationFilter(ActorService actorService) {
 		this.actorService = actorService;

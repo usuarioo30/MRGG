@@ -1,0 +1,84 @@
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-lg border-0 rounded-4 p-4" style="width: 100%; max-width: 420px;">
+        <div class="text-center mb-4">
+            <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" width="64" alt="Login Icon">
+            <h4 class="mt-3">Bienvenido de nuevo</h4>
+            <p class="text-muted mb-0">Inicia sesión para continuar</p>
+        </div>
+
+        <form (ngSubmit)="login()" [formGroup]="formLogin">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="floatingUsername" placeholder="Usuario"
+                    formControlName="username">
+                <label for="floatingUsername">Usuario</label>
+                <div *ngIf="formLogin.get('username')?.touched && formLogin.get('username')?.invalid" class="mt-1">
+                    <small class="text-danger" *ngIf="formLogin.get('username')?.errors?.['required']">Este campo es
+                        obligatorio.</small>
+                    <small class="text-danger" *ngIf="formLogin.get('username')?.errors?.['minlength']">Debe tener al
+                        menos 3 caracteres.</small>
+                </div>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="floatingPassword" placeholder="Contraseña"
+                    formControlName="password">
+                <label for="floatingPassword">Contraseña</label>
+                <div *ngIf="formLogin.get('password')?.touched && formLogin.get('password')?.invalid" class="mt-1">
+                    <small class="text-danger" *ngIf="formLogin.get('password')?.errors?.['required']">Este campo es
+                        obligatorio.</small>
+                    <small class="text-danger" *ngIf="formLogin.get('password')?.errors?.['minlength']">Debe tener al
+                        menos 3 caracteres.</small>
+                </div>
+            </div>
+
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary btn-lg" [disabled]="formLogin.invalid">
+                    Iniciar sesión
+                </button>
+            </div>
+        </form>
+
+        <div class="text-center">
+            <p class="mb-2">¿Has olvidado tu <a routerLinkActive="router-link-active" class="text-decoration-none
+                        fw-semibold" data-bs-toggle="modal" data-bs-target="#recuperarModal">contraseña</a>?
+            </p>
+            <hr>
+            <p class="mb-0">¿No tienes una cuenta?
+                <a routerLink="/usuario/nuevo" routerLinkActive="router-link-active" class="text-decoration-none
+                        fw-semibold">Regístrate</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="recuperarModal" tabindex="-1" aria-labelledby="recuperarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content rounded-4 shadow">
+            <div class="modal-header">
+                <h5 class="modal-title" id="recuperarModalLabel">Recuperar contraseña</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <form (ngSubmit)="recuperarContrasena()" [formGroup]="formRecuperar">
+                <div class="modal-body">
+                    <div class="form-floating">
+                        <input type="email" class="form-control" id="correoRecuperacion"
+                            placeholder="correo@ejemplo.com" formControlName="email">
+                        <label for="correoRecuperacion">Correo electrónico</label>
+                        <div *ngIf="formRecuperar.get('email')?.touched && formRecuperar.get('email')?.invalid"
+                            class="mt-1">
+                            <small class="text-danger" *ngIf="formRecuperar.get('email')?.errors?.['required']">Este
+                                campo es obligatorio.</small>
+                            <small class="text-danger" *ngIf="formRecuperar.get('email')?.errors?.['email']">Debe ser
+                                un correo válido.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="formRecuperar.invalid">Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

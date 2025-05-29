@@ -1,0 +1,156 @@
+/* Estilo para la tarjeta de evento */
+.notification {
+    display: flex;
+    flex-direction: column;
+    isolation: isolate;
+    position: relative;
+    width: 18rem;
+    min-height: 8rem;
+    background: #29292c;
+    border-radius: 1rem;
+    overflow: hidden;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 16px;
+    --gradient: linear-gradient(to bottom, #ffffff, #812264, #581845);
+    --color: #ffffff;
+}
+
+.notification:before {
+    position: absolute;
+    content: "";
+    inset: 0.0625rem;
+    border-radius: 0.9375rem;
+    background: #18181b;
+    z-index: 2;
+}
+
+.notification:after {
+    position: absolute;
+    content: "";
+    width: 0.25rem;
+    inset: 0.65rem auto 0.65rem 0.5rem;
+    border-radius: 0.125rem;
+    background: var(--gradient);
+    transition: transform 300ms ease;
+    z-index: 4;
+}
+
+.notification:hover:after {
+    transform: translateX(0.15rem);
+}
+
+/* Estilos del título de la tarjeta */
+.notititle {
+    color: var(--color);
+    padding: 0.65rem 0.25rem 0.4rem 1.25rem;
+    font-weight: 500;
+    font-size: 1.1rem;
+    transition: transform 300ms ease;
+    z-index: 5;
+}
+
+.notification:hover .notititle {
+    transform: translateX(0.15rem);
+}
+
+/* Estilos del cuerpo de la tarjeta */
+.notibody {
+    color: #99999d;
+    padding: 0 1.25rem;
+    transition: transform 300ms ease;
+    z-index: 5;
+}
+
+.notification:hover .notibody {
+    transform: translateX(0.25rem);
+}
+
+/* Efectos de luz y bordes */
+.notiglow,
+.notiborderglow {
+    position: absolute;
+    width: 20rem;
+    height: 20rem;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle closest-side at center, white, transparent);
+    opacity: 0;
+    transition: opacity 300ms ease;
+}
+
+.notiglow {
+    z-index: 3;
+}
+
+.notiborderglow {
+    z-index: 1;
+}
+
+.notification:hover .notiglow {
+    opacity: 0.1;
+}
+
+.notification:hover .notiborderglow {
+    opacity: 0.1;
+}
+
+/* Botón Solicitar Unirse */
+.notification .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    font-weight: 600;
+    font-size: 0.875rem;
+    position: relative;
+    z-index: 6;
+    text-align: center;
+    float: right;
+}
+
+.notification .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+/* Botón de eliminar */
+.notification .btn-eliminar-container {
+    z-index: 6;
+    position: relative;
+}
+
+.notification .d-flex.justify-content-end {
+    position: relative;
+    z-index: 6;
+}
+
+/* Estilos de la descripción truncada */
+.truncar-descripcion {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    hyphens: auto;
+    max-height: 4.5em;
+}
+
+.custom-header-glass {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    color: #fff;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Gradientes personalizados */
+.bg-gradient-success {
+    background: linear-gradient(135deg, #198754 0%, #28c76f 100%);
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #0d6efd 0%, #5a8dee 100%);
+}

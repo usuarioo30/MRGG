@@ -1,6 +1,5 @@
 package com.mrgg.controller;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,19 +13,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import okhttp3.OkHttpClient;
-
-import okhttp3.Request;
-import okhttp3.Response;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mrgg.entity.Actor;
 import com.mrgg.entity.ActorLogin;
+import com.mrgg.entity.Usuario;
 import com.mrgg.service.ActorService;
+
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import com.mrgg.security.JWTUtils;
 
 @RestController
@@ -55,7 +52,7 @@ public class ActorController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/userLogin")
+    @GetMapping("/actorLogueado")
     public ResponseEntity<Actor> login() {
         Actor a = JWTUtils.userLogin();
         if (a == null) {
@@ -70,30 +67,51 @@ public class ActorController {
         return ResponseEntity.ok(exists);
     }
 
-    public String imagenGeneratedUrl(String textoParaImagen) throws IOException {
-        OkHttpClient client = new OkHttpClient();
+    @PutMapping("/updateContrasena")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Contraseña actualziado correctamente"),
+            @ApiResponse(responseCode = "404", description = "Contraseña no encontrada"),
+            @ApiResponse(responseCode = "400", description = "Solicitud inválida")
+    })
+    public ResponseEntity<Void> actualizarContrasena(@RequestBody String contrasena) {
+        Actor respuesta = actorService.updatePassword(contrasena);
 
-        Request request = new Request.Builder()
-                .url("https://free-images-api.p.rapidapi.com/v2/" + textoParaImagen + "/1")
-                .get()
-                .header("x-rapidapi-key", "53dc8b2a7emsh438d417686c202cp142797jsn2f0a25e199b5")
-                .header("x-rapidapi-host", "free-images-api.p.rapidapi.com")
-                .build();
-
-        Response response = client.newCall(request).execute();
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode rootNode = objectMapper.readTree(response.body().string());
-        JsonNode resultsNode = rootNode.path("results");
-
-        String imageUrl = "https://www.gipuzkoa.eus/documents/20933/32665092/03-deportes_3.png.jpg/e35046ab-3cfd-d709-0d65-6b1221001f3b?t=1637930583543";
-        if (resultsNode.isArray() && resultsNode.size() > 0) {
-            JsonNode firstResult = resultsNode.get(0);
-            if (firstResult.has("image")) {
-                imageUrl = firstResult.path("image").asText();
-            }
+        if (respuesta != null) {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
 
-        return imageUrl;
+    @PutMapping("/actor/enviarEmailParaRecuperarContrasena")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Contraseña actualziado correctamente"),
+            @ApiResponse(responseCode = "404", description = "Contraseña no encontrada"),
+            @ApiResponse(responseCode = "400", description = "Solicitud inválida")
+    })
+    public ResponseEntity<Void> enviarEmailParaRecuperarContrasena(@RequestBody String email) {
+        boolean respuesta = actorService.enviarEmailParaRecuperarContrasena(email);
+
+        if (respuesta == true) {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PutMapping("/actor/recuperarContrasena/{claveSegura}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Contraseña actualziado correctamente"),
+            @ApiResponse(responseCode = "404", description = "Contraseña no encontrada"),
+            @ApiResponse(responseCode = "400", description = "Solicitud inválida")
+    })
+    public ResponseEntity<Void> recuperarContrasena(@RequestBody String contrasena, @PathVariable String claveSegura) {
+        boolean respuesta = actorService.recuperarContrasena(claveSegura, contrasena);
+
+        if (respuesta == true) {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }

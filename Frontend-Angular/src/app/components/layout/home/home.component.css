@@ -1,0 +1,169 @@
+/* CARD vertical */
+.flip-card {
+    background-color: transparent;
+    width: 200px;
+    /* Más estrecho */
+    height: 300px;
+    /* Más alto */
+    perspective: 1000px;
+    color: white;
+}
+
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+    border-radius: 1rem;
+}
+
+.flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+    box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.2);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    /* texto al pie de la imagen */
+    align-items: center;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 1rem;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+/* Imagen de fondo en la cara frontal */
+.flip-card-front {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.flip-card-back {
+    transform: rotateY(180deg);
+    color: white;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+/* Añade esto */
+.flip-card-back::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* oscurece solo el fondo */
+    border-radius: 1rem;
+    z-index: 0;
+}
+
+.flip-card-back .code {
+    position: relative;
+    z-index: 1;
+    color: white;
+    font-weight: bold;
+}
+
+.flip-card-back .descripcion {
+    position: relative;
+    z-index: 1;
+    color: white;
+    font-size: 0.85em;
+    margin-top: 0.5rem;
+    text-align: center;
+    padding: 0 0.5rem;
+    font-weight: 300;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    line-height: 1.2em;
+}
+
+.flip-card-back .btn-eliminar {
+    position: relative;
+    z-index: 1;
+    background-color: #dc3545;
+    /* rojo Bootstrap */
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85em;
+    font-weight: bold;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.flip-card-back .btn-eliminar:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+
+
+/* Texto de nombre en la parte frontal */
+.heading_8264 {
+    font-size: 1em;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    margin: 0;
+    padding: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    text-align: center;
+    border-radius: 0.5rem;
+}
+
+/* =================================================== */
+
+/* Estilo modernizado para el título h2 */
+.categoria {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-left: 1rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    border-left: 4px solid #581845;
+    transition: all 0.3s ease;
+}
+
+.categoria:hover {
+    color: #581845;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    transform: translateX(5px);
+}
+
+.categoria::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #581845;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.categoria:hover::after {
+    opacity: 1;
+}
+
+.categoria {
+    background: linear-gradient(135deg, rgba(88, 24, 69, 0.2), rgba(88, 24, 69, 0.1));
+    padding: 1rem;
+    border-radius: 0.5rem;
+}

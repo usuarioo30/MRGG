@@ -1,0 +1,43 @@
+button.btn {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* NAVBAR */
+.navegacion {
+    background-color: #581845;
+}
+
+.navbar-nav .nav-link {
+    color: white;
+    transition: color 0.3s, background-color 0.3s;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #ffc107;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+/* Enlace activo */
+.navbar-nav .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    color: #ffc107 !important;
+}
+
+.dropdown-menu a.dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+.dropdown-toggle {
+    cursor: pointer;
+}
+
+.me-2 {
+    width: 30px !important;
+}
+
+.logo-img {
+    width: 85px !important;
+}
