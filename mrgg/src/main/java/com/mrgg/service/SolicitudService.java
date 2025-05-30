@@ -132,6 +132,19 @@ public class SolicitudService {
         return true;
     }
 
+    /**
+     * Verifica si el usuario actualmente autenticado ha realizado una solicitud
+     * para un evento específico.
+     *
+     * @param id el identificador del evento que se desea comprobar.
+     * @return true si el usuario ha realizado una solicitud para el evento; false
+     *         en caso contrario.
+     *
+     *         El método obtiene el evento por su ID, recupera el usuario
+     *         autenticado mediante JWT, y luego
+     *         compara las solicitudes del usuario con las del evento. Si existe al
+     *         menos una solicitud en común, se devuelve true.
+     */
     public boolean isEventoTieneSoliciutdByUser(int id) {
         Optional<Evento> eventoO = eventoService.getEventoById(id);
         boolean res = false;

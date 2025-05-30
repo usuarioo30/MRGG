@@ -31,6 +31,17 @@ public class MensajeService {
     @Autowired
     private JWTUtils jwtUtils;
 
+    /**
+     * Esta función lo que hce es mandar un mensaje tanto de administrador a usuario
+     * como de usuario a administrador, de manera que si el rol del actor es usuario
+     * ignora e parámetro de username, ya que el usuario envía un mensaje a todos
+     * los administrdores, y en cambio el administrador deberá de poner un username
+     * para saber a quien va el mensaje
+     * 
+     * @param mensaje
+     * @param username
+     * @return
+     */
     @Transactional
     public boolean mandarMensaje(Mensaje mensaje, String username) {
         Actor actor = jwtUtils.userLogin();
@@ -104,6 +115,15 @@ public class MensajeService {
         return false;
     }
 
+    /**
+     * Este método se utiliza para obtener todos los mensajes de un usuario o
+     * administrador de
+     * manera que almacena en usuario que lee el usuario o administrador que hace
+     * esta petición
+     * 
+     * @param id
+     * @return
+     */
     public Mensaje getMensaje(int id) {
         Mensaje m = mensajeRepository.findById(id).orElse(null);
 
@@ -165,6 +185,13 @@ public class MensajeService {
         return res;
     }
 
+    /**
+     * Este método devuelve un mensaje por su id, y se centra en leer el mensaje
+     * para una funcionalidad del backend
+     * 
+     * @param mensajeId
+     * @return
+     */
     @Transactional
     public Mensaje marcarComoLeido(int mensajeId) {
         Mensaje mensaje = mensajeRepository.findById(mensajeId).orElse(null);
