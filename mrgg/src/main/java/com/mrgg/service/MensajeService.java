@@ -116,13 +116,27 @@ public class MensajeService {
     }
 
     /**
-     * Este método se utiliza para obtener todos los mensajes de un usuario o
-     * administrador de
-     * manera que almacena en usuario que lee el usuario o administrador que hace
-     * esta petición
-     * 
-     * @param id
-     * @return
+     * Recupera un mensaje por su ID y registra al usuario o administrador que lo ha
+     * leído.
+     *
+     * @param id el identificador del mensaje a obtener.
+     * @return el objeto {@link Mensaje} si el usuario tiene acceso al mensaje, o
+     *         null en caso contrario.
+     *
+     *         Este método realiza lo siguiente:
+     *         - Busca el mensaje por ID en la base de datos.
+     *         - Obtiene el usuario autenticado mediante JWT.
+     *         - Si el usuario es administrador, siempre puede ver el mensaje y se
+     *         registra su lectura.
+     *         - Si el usuario es de rol USER, solo puede acceder a los mensajes que
+     *         le pertenecen.
+     *         En tal caso, si no ha leído el mensaje previamente, se registra su
+     *         lectura.
+     *         - En ambos casos, si el usuario aún no estaba registrado en la lista
+     *         de lectores,
+     *         se le añade y se guarda el mensaje actualizado.
+     *         - Si el usuario no tiene permiso para ver el mensaje, se devuelve
+     *         null.
      */
     public Mensaje getMensaje(int id) {
         Mensaje m = mensajeRepository.findById(id).orElse(null);
@@ -186,11 +200,23 @@ public class MensajeService {
     }
 
     /**
-     * Este método devuelve un mensaje por su id, y se centra en leer el mensaje
-     * para una funcionalidad del backend
-     * 
-     * @param mensajeId
-     * @return
+     * Marca un mensaje como leído por el usuario actualmente autenticado.
+     *
+     * @param mensajeId el identificador del mensaje que se desea marcar como leído.
+     * @return el objeto {@link Mensaje} actualizado con el usuario añadido a la
+     *         lista de lectores,
+     *         o null si el mensaje no existe.
+     *
+     *         Este método realiza lo siguiente:
+     *         - Recupera el mensaje por su ID desde la base de datos.
+     *         - Obtiene el usuario autenticado mediante JWT.
+     *         - Verifica si el usuario ya ha leído el mensaje.
+     *         - Si no lo ha hecho, lo añade a la lista de usuarios que han leído el
+     *         mensaje.
+     *         - Guarda el mensaje actualizado en la base de datos.
+     *
+     *         La operación está marcada como @Transactional para asegurar la
+     *         persistencia de los cambios.
      */
     @Transactional
     public Mensaje marcarComoLeido(int mensajeId) {
