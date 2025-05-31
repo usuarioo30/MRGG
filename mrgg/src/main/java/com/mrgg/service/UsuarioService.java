@@ -52,7 +52,7 @@ public class UsuarioService {
                 "        <p>Gracias por registrarte. Para completar tu registro, por favor verifica tu dirección de correo electrónico haciendo clic en el siguiente botón:</p>"
                 +
                 "        <p style=\"text-align: center; margin: 40px 0;\">" +
-                "            <a href=\"https://mrgg-ten.vercel.app/usuario/verificarUsuario/" + usuario.getClave_segura()
+                "            <a href=\"https://mrgg-beige.vercel.app/usuario/verificarUsuario/" + usuario.getClave_segura()
                 + "\" " +
                 "               style=\"display: inline-block; padding: 12px 20px; color: #ffffff; background-color: #007BFF; text-decoration: none; border-radius: 5px;\">"
                 +
@@ -61,8 +61,8 @@ public class UsuarioService {
                 "        </p>" +
                 "        <p>Si el botón no funciona, puedes copiar y pegar el siguiente enlace en tu navegador:</p>" +
                 "        <p style=\"word-break: break-all;\">" +
-                "            <a href=\"https://mrgg-ten.vercel.app/usuario/verificarUsuario/" + usuario.getClave_segura()
-                + "\">https://mrgg-ten.vercel.app/usuario/verificarUsuario/" + usuario.getClave_segura() + "</a>" +
+                "            <a href=\"https://mrgg-beige.vercel.app/usuario/verificarUsuario/" + usuario.getClave_segura()
+                + "\">https://mrgg-beige.vercel.app/usuario/verificarUsuario/" + usuario.getClave_segura() + "</a>" +
                 "        </p>" +
                 "        <p>Gracias,<br>El equipo de MR.GG</p>" +
                 "    </div>" +
