@@ -101,8 +101,8 @@ public class ActorService implements UserDetailsService {
                     "        </p>" +
                     "        <p>Si el botón no funciona, copia y pega el siguiente enlace en tu navegador:</p>" +
                     "        <p style=\"word-break: break-all;\">" +
-                    "            <a href=\"http://localhost:4200/actor/actualizarContrasena"
-                    + actor.get().getClave_segura() + "\">http://localhost:4200/actor/actualizarContrasena"
+                    "            <a href=\">https://mrgg-beige.vercel.app/actor/actualizarContrasena"
+                    + actor.get().getClave_segura() + "\">>https://mrgg-beige.vercel.app/actor/actualizarContrasena"
                     + actor.get().getClave_segura() + "</a>" +
                     "        </p>" +
                     "        <p>Si no solicitaste este cambio, puedes ignorar este mensaje.</p>" +
