@@ -92,7 +92,7 @@ public class ActorService implements UserDetailsService {
                     "        <p>Hemos recibido una solicitud para restablecer tu contraseña. Si fuiste tú, haz clic en el siguiente botón para continuar:</p>"
                     +
                     "        <p style=\"text-align: center; margin: 40px 0;\">" +
-                    "            <a href=\"http://localhost:4200/actor/actualizarContrasena/"
+                    "            <a href=\">https://mrgg-beige.vercel.app/actor/actualizarContrasena/"
                     + actor.get().getClave_segura() + "\" " +
                     "               style=\"display: inline-block; padding: 12px 20px; color: #ffffff; background-color: #28a745; text-decoration: none; border-radius: 5px;\">"
                     +
